@@ -1,0 +1,2400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeutscheDeck — A1/A2 Mastery</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="description"
+    content="DeutscheDeck — Interactive German vocabulary and grammar learning app for Netzwerk A1/A2 with flashcards, typing quizzes, spaced repetition and verb conjugation tables.">
+  
+  
+  <script src="vocab.js?v=1.0.3"></script>
+  <script src="vocab_extra.js?v=1.0.3"></script>
+  <script src="tenses.js?v=1.0.3"></script>
+  <style>
+        :root {
+      --bau-red:    #b71a49;
+      --bau-black:  #000000;
+      --bau-white:  #ffffff;
+      --bau-blue:   #1a3a6b;
+      --bau-yellow: #d4960a;
+
+      --bg:    #ffffff;
+      --surf:  #ffffff;
+      --surf2: #f4f4f4;
+      --border:#e0e0e0;
+      --tx:    #000000;
+      --tx2:   #444444;
+      --tx3:   #777777;
+      --accent:  #b71a49;
+      --accent2: #8a1336;
+      --al:      #fdf1f4;
+      
+      --green:   #008b45;
+      --gl:      #e6f4ea;
+      --red:     #b71a49;
+      --rl:      #fdf1f4;
+      --amber:   #d4960a;
+      --aml:     #fcf5e6;
+      --purple:  #000000;
+      --pl:      #f2f2f2;
+      
+      --r:  0px;
+      --rs: 0px;
+      --sh:  none;
+      --shl: none;
+      --transition: .1s ease
+    }
+
+        body.dark {
+      --bg:    #000000;
+      --surf:  #000000;
+      --surf2: #111111;
+      --border:#333333;
+      --tx:    #ffffff;
+      --tx2:   #cccccc;
+      --tx3:   #999999;
+      --accent:  #b71a49;
+      --accent2: #ff4d85;
+      --al:      #330814;
+      --green:   #008b45;
+      --gl:      #002411;
+      --red:     #b71a49;
+      --rl:      #330814;
+      --amber:   #d4960a;
+      --aml:     #2a2000;
+      --purple:  #ffffff;
+      --pl:      #222222;
+      --sh:  none;
+      --shl: none;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      font-family: 'Fira Sans', sans-serif;
+      background: var(--bg);
+      color: var(--tx);
+      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.6;
+      transition: background var(--transition), color var(--transition)
+    }
+
+    /* LAYOUT */
+    .app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh
+    }
+
+    .topbar {
+      background: var(--surf);
+      border-bottom: 2px solid var(--bau-red);
+      padding: 0 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background var(--transition)
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bau-white);
+      padding: 4px 12px;
+      margin-left: -12px;
+      border-radius: 4px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--bau-red);
+      border: 1px solid var(--bau-yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 15px;
+      font-family: 'Fira Sans', sans-serif;
+      font-weight: 400;
+      letter-spacing: 1px
+    }
+
+    .logo-text {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--bau-black)
+    }
+
+    .logo-text span {
+      color: var(--bau-red)
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    .spill {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      color: var(--tx);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background var(--transition)
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%
+    }
+
+    .dg {
+      background: var(--green)
+    }
+
+    .dr {
+      background: var(--red)
+    }
+
+    .da {
+      background: var(--accent)
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all var(--transition);
+      color: var(--tx)
+    }
+
+    .icon-btn:hover {
+      border-color: var(--bau-red);
+      background: var(--rl);
+      color: var(--bau-black)
+    }
+
+    .hamburger {
+      display: none
+    }
+
+    .main {
+      display: flex;
+      flex: 1
+    }
+
+    .sidebar {
+      width: 272px;
+      min-width: 272px;
+      background: var(--surf);
+      border-right: 1px solid var(--border);
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      position: sticky;
+      top: 60px;
+      transition: background var(--transition)
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 199
+    }
+
+    .sl {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--bau-red);
+      font-weight: 400;
+      padding: 8px 14px 4px
+    }
+
+    .nb {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      border-left: 1px solid var(--border);
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--tx2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all .15s
+    }
+
+    .nb:hover {
+      background: var(--surf2);
+      color: var(--tx);
+      border-left-color: var(--bau-yellow)
+    }
+
+    .nb.active {
+      background: var(--bau-blue);
+      color: #fff;
+      border-left-color: var(--bau-yellow)
+    }
+
+    .nb .ic {
+      font-size: 15px;
+      width: 20px;
+      text-align: center
+    }
+
+    .nb .bdg {
+      margin-left: auto;
+      font-size: 11px;
+      background: var(--surf2);
+      padding: 2px 7px;
+      color: var(--tx3)
+    }
+
+    .nb.active .bdg {
+      background: var(--bau-yellow);
+      color: var(--bau-black)
+    }
+
+    .div {
+      height: 2px;
+      background: var(--border);
+      margin: 8px 0;
+      opacity: .15
+    }
+
+    .tog-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      font-size: 13px;
+      color: var(--tx2)
+    }
+
+    .tog {
+      width: 38px;
+      height: 22px;
+      border-radius: 11px;
+      background: var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: background .2s
+    }
+
+    .tog.on {
+      background: var(--accent)
+    }
+
+    .tog::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .2s
+    }
+
+    .tog.on::after {
+      transform: translateX(16px)
+    }
+
+    .slider-row {
+      padding: 4px 8px;
+      font-size: 12px;
+      color: var(--tx3)
+    }
+
+    .slider-row input[type=range] {
+      width: 100%;
+      accent-color: var(--accent);
+      margin-top: 4px
+    }
+
+    .content {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto
+    }
+
+    .screen {
+      display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .3s, transform .3s
+    }
+
+    .screen.active {
+      display: block
+    }
+
+    .screen.fade-in {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    /* CHIPS */
+    .chip {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--tx2);
+      transition: all .15s
+    }
+
+    .chip:hover {
+      border-color: var(--bau-blue);
+      color: var(--bau-blue);
+      transform: translateY(-1px);
+      }
+
+    .chip.active {
+      background: var(--bau-blue);
+      border-color: var(--bau-blue);
+      color: #fff;
+      }
+
+    .row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    /* FLASHCARD */
+    .fc-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      max-width: 700px;
+      margin: 0 auto;
+      width: 100%
+    }
+
+    #flashcardWrap {
+      width: 100%
+    }
+
+    .prog-bar {
+      width: 100%;
+      max-width: 640px;
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: var(--bau-red);
+      transition: width .4s ease
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      max-width: 640px;
+      width: 100%;
+      justify-content: flex-end
+    }
+
+    .alink {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--tx2);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .15s
+    }
+
+    .alink:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--al)
+    }
+
+    .scene {
+      border: 1px solid var(--border);
+
+      perspective: 1200px;
+      width: 100%;
+      max-width: 640px;
+      min-height: 340px;
+      height: 50vh;
+      max-height: 420px;
+      cursor: pointer;
+      margin: 0 auto
+    }
+
+    .inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .6s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .inner.flipped {
+      transform: rotateX(180deg)
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      background: var(--surf);
+      border: 1px solid var(--border);
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+      transition: background var(--transition), border var(--transition)
+    }
+
+    .back {
+      transform: rotateX(180deg)
+    }
+
+    .ctag {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      padding: 4px 10px;
+      border: 1px solid currentColor
+    }
+
+    .tv {
+      background: var(--al);
+      color: var(--accent)
+    }
+
+    .tvb {
+      background: var(--pl);
+      color: var(--purple)
+    }
+
+    .tph {
+      background: var(--gl);
+      color: var(--green)
+    }
+
+    .tn {
+      background: var(--aml);
+      color: var(--amber)
+    }
+
+    .clvl {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--surf2);
+      color: var(--tx2)
+    }
+
+    .art {
+      font-size: 26px;
+      color: var(--bau-red);
+      font-family: 'Fira Sans', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: -4px
+    }
+
+    .cword {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 64px;
+      line-height: 1;
+      margin-bottom: 6px;
+      color: var(--tx);
+      letter-spacing: 2px
+    }
+
+    .csub {
+      font-size: 14px;
+      color: var(--tx2);
+      margin-top: 4px
+    }
+
+    .chint {
+      font-size: 12px;
+      color: var(--tx3);
+      margin-top: 24px;
+      animation: pulse 2s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: .4
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    .ctrans {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 46px;
+      letter-spacing: 2px;
+      color: var(--bau-blue);
+      margin-bottom: 8px
+    }
+
+    .cex {
+      font-size: 15px;
+      color: var(--tx2);
+      font-style: italic;
+      max-width: 480px;
+      line-height: 1.6;
+      margin-bottom: 4px
+    }
+
+    .cexen {
+      font-size: 13px;
+      color: var(--tx3)
+    }
+
+    .plural-note {
+      font-size: 12px;
+      color: var(--tx3);
+      margin-top: 8px
+    }
+
+    .ans {
+      display: flex;
+      gap: 10px;
+      max-width: 640px;
+      width: 100%
+    }
+
+    .ab {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .aw {
+      background: var(--rl);
+      color: var(--red);
+      border-color: var(--red)
+    }
+
+    .aw:hover {
+      background: var(--red);
+      color: #fff;
+      }
+
+    .ah {
+      background: var(--aml);
+      color: var(--amber);
+      border-color: var(--amber)
+    }
+
+    .ah:hover {
+      background: var(--amber);
+      color: #fff;
+      }
+
+    .ac {
+      background: var(--gl);
+      color: var(--green);
+      border-color: var(--green)
+    }
+
+    .ac:hover {
+      background: var(--green);
+      color: #fff;
+      }
+
+    .flipnote {
+      font-size: 13px;
+      color: var(--tx3)
+    }
+
+    /* EXAMPLE PANEL */
+    .exp {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px;
+      max-width: 640px;
+      width: 100%;
+      transition: background var(--transition)
+    }
+
+    .exp-h {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px
+    }
+
+    .exp-badge {
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--gl);
+      color: var(--green);
+      padding: 3px 10px;
+      border-radius: 6px
+    }
+
+    /* TYPING QUIZ */
+    .typ-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      max-width: 640px;
+      margin: 0 auto
+    }
+
+    .typ-q {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 36px;
+      text-align: center;
+      margin-bottom: 4px
+    }
+
+    .typ-hint {
+      font-size: 14px;
+      color: var(--tx3);
+      margin-bottom: 8px
+    }
+
+    .typ-input {
+      width: 100%;
+      max-width: 400px;
+      padding: 14px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      font-size: 20px;
+      text-align: center;
+      background: var(--surf);
+      color: var(--tx);
+      font-family: inherit;
+      transition: border var(--transition)
+    }
+
+    .typ-input:focus {
+      outline: none;
+      border-color: var(--accent)
+    }
+
+    .typ-fb {
+      padding: 12px 20px;
+      border-radius: var(--rs);
+      font-size: 15px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center
+    }
+
+    .typ-fb.correct {
+      background: var(--gl);
+      color: var(--green)
+    }
+
+    .typ-fb.wrong {
+      background: var(--rl);
+      color: var(--red)
+    }
+
+    /* TENSES */
+    .verb-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px
+    }
+
+    .vchip {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 13px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s;
+      font-family: inherit;
+      color: var(--tx)
+    }
+
+    .vchip:hover {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .vchip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff
+    }
+
+    .tgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .tcard {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: background var(--transition)
+    }
+
+    .thead {
+      padding: 10px 16px;
+      background: var(--bau-black);
+      color: #fff;
+      border-bottom: 1px dotted var(--bau-red);
+      font-weight: 700;
+      font-size: 11px;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .tde {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--tx3)
+    }
+
+    table.cj {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    table.cj td {
+      padding: 8px 16px;
+      font-size: 14px;
+      border-bottom: 1px dotted var(--bau-red)}
+
+    table.cj td:first-child {
+      color: var(--tx3);
+      font-size: 12px;
+      width: 90px
+    }
+
+    table.cj td:last-child {
+      font-weight: 500
+    }
+
+    table.cj tr:last-child td {
+      border-bottom: none
+    }
+
+    table.cj tr:hover td {
+      background: var(--surf2)
+    }
+
+    .verb-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 5px;
+      margin-left: 6px
+    }
+
+    .verb-badge.irregular {
+      background: var(--rl);
+      color: var(--red)
+    }
+
+    .verb-badge.separable {
+      background: var(--aml);
+      color: var(--amber)
+    }
+
+    .verb-badge.reflexive {
+      background: var(--gl);
+      color: var(--green)
+    }
+
+    .gram-card {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      padding: 18px 20px;
+      margin-bottom: 14px
+    }
+
+    .gram-title {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .gram-body {
+      font-size: 14px;
+      color: var(--tx2);
+      line-height: 1.7
+    }
+
+    .gram-body strong {
+      color: var(--tx)
+    }
+
+    .gram-body em {
+      color: var(--accent);
+      font-style: italic
+    }
+
+    .sep-badge {
+      background: var(--aml);
+      color: var(--amber);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px
+    }
+
+    .art-btn {
+      min-width: 90px
+    }
+
+    .art-btn.der {
+      background: var(--surf2);
+      color: var(--tx2);
+      border-color: var(--border)
+    }
+
+    .art-btn.der:hover {
+      background: var(--bau-blue);
+      color: #fff;
+      border-color: var(--bau-blue);
+    }
+
+    .art-btn.die {
+      background: var(--surf2);
+      color: var(--tx2);
+      border-color: var(--border)
+    }
+
+    .art-btn.die:hover {
+      background: var(--bau-red);
+      color: #fff;
+      border-color: var(--bau-red);
+    }
+
+    .art-btn.das {
+      background: var(--surf2);
+      color: var(--tx2);
+      border-color: var(--border)
+    }
+
+    .art-btn.das:hover {
+      background: var(--bau-yellow);
+      color: #fff;
+      border-color: var(--bau-yellow);
+    }
+
+    .conj-prompt {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 4px
+    }
+
+    .conj-pronoun {
+      font-size: 42px;
+      font-family: 'Fira Sans', sans-serif;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 12px
+    }
+
+    /* PROGRESS */
+    .pgrid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 24px
+    }
+
+    .pcard {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      padding: 18px;
+      text-align: center;
+      transition: background var(--transition)
+    }
+
+    .pcard:nth-child(1) { border-top: 1px solid var(--border)}
+    .pcard:nth-child(2) { border-top: 1px solid var(--border)}
+    .pcard:nth-child(3) { border-top: 1px solid var(--border)}
+    .pcard:nth-child(4) { border-top: 1px solid var(--border)}
+    .pcard:nth-child(5) { border-top: 1px solid var(--border)}
+
+    .pnum {
+      font-size: 36px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 2px
+    }
+
+    .plbl {
+      font-size: 11px;
+      color: var(--tx3);
+      margin-top: 2px
+    }
+
+    .ng {
+      color: var(--green)
+    }
+
+    .nr {
+      color: var(--red)
+    }
+
+    .na {
+      color: var(--accent)
+    }
+
+    .namb {
+      color: var(--amber)
+    }
+
+    .npur {
+      color: var(--purple)
+    }
+
+    .progress-ring-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px
+    }
+
+    .progress-ring {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) calc(var(--pct)*3.6deg), var(--border) 0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative
+    }
+
+    .progress-ring-inner {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition)
+    }
+
+    .progress-ring-inner .pct {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent)
+    }
+
+    .progress-ring-inner .plbl {
+      font-size: 11px;
+      color: var(--tx3)
+    }
+
+    .hmap {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      padding: 18px;
+      margin-bottom: 20px
+    }
+
+    .hmap-inner {
+      display: flex;
+      gap: 3px;
+      flex-wrap: wrap
+    }
+
+    .hc {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: var(--surf2);
+      transition: background var(--transition)
+    }
+
+    .l1 {
+      background: #bfdbfe
+    }
+
+    .l2 {
+      background: #60a5fa
+    }
+
+    .l3 {
+      background: var(--accent)
+    }
+
+    .wlist {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      overflow: hidden
+    }
+
+    .wrow {
+      display: flex;
+      align-items: center;
+      padding: 9px 18px;
+      border-bottom: 1px dotted var(--bau-red);
+      font-size: 14px;
+      gap: 10px
+    }
+
+    .wrow:last-child {
+      border-bottom: none
+    }
+
+    .wde {
+      font-weight: 500;
+      flex: 1
+    }
+
+    .wen {
+      color: var(--tx2);
+      flex: 1;
+      font-size: 13px
+    }
+
+    .wdots {
+      display: flex;
+      gap: 3px
+    }
+
+    .sd {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border)
+    }
+
+    .sd.on {
+      background: var(--green)
+    }
+
+    .wcnt {
+      font-size: 11px;
+      color: var(--tx3)
+    }
+
+    /* DYNAMICALLY RENDERED ROWS (Browse, Progress) */
+    .word-row {
+      display: flex;
+      align-items: center;
+      padding: 9px 18px;
+      border-bottom: 1px dotted var(--bau-red);
+      font-size: 14px;
+      gap: 10px;
+      cursor: pointer;
+      transition: background .1s
+    }
+    .word-row:hover { background: var(--surf2) }
+    .word-row:last-child { border-bottom: none }
+    .word-row .w-info { flex: 1 }
+    .word-row .de { font-weight: 600 }
+    .word-row .en { font-size: 13px; color: var(--tx2) }
+    .word-row .art-b { font-weight: 700 }
+    .word-row .w-meta { display: flex; gap: 8px; align-items: center; font-size: 12px }
+    .word-row .lvl { background: var(--surf2); padding: 2px 8px; font-size: 11px; font-weight: 600 }
+    .word-row .stars { color: var(--amber); letter-spacing: 1px }
+
+    /* TENSES — dynamically rendered verbs */
+    .v-chip {
+      display: inline-block;
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      padding: 5px 13px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s;
+      font-family: inherit;
+      color: var(--tx);
+      margin: 2px
+    }
+    .v-chip:hover { border-color: var(--accent); color: var(--accent) }
+    .v-chip.active { background: var(--accent); border-color: var(--accent); color: #fff }
+
+    .v-card { border: 1px solid var(--border); margin-top: 16px }
+    .v-header {
+      padding: 14px 20px;
+      background: var(--bau-black);
+      color: #fff;
+      border-bottom: 1px dotted var(--bau-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+    .v-title { font-family: 'Fira Sans', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase }
+    .v-meaning { font-weight: 400; font-size: 14px; color: var(--bau-yellow) }
+    .v-type { font-size: 11px; font-weight: 600; background: rgba(255,255,255,.15); padding: 3px 10px }
+    .v-tenses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0 }
+    .tense-col { padding: 14px 18px; border-right: 1px solid var(--border); border-bottom: 1px dotted var(--bau-red) }
+    .t-name { font-family: 'Fira Sans', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px }
+    .t-list { font-size: 14px; line-height: 1.8 }
+    .t-list .pron { color: var(--tx3); font-size: 12px; width: 65px; display: inline-block }
+
+    /* BROWSE */
+    .btable {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      overflow: hidden
+    }
+
+    .btable table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .btable thead td {
+      padding: 10px 14px;
+      background: var(--bau-black);
+      border-bottom: 1px dotted var(--bau-red);
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #fff
+    }
+
+    .btable tbody tr {
+      border-bottom: 1px dotted var(--bau-red);
+      transition: background .1s
+    }
+
+    .btable tbody tr:hover {
+      background: var(--surf2)
+    }
+
+    .btable tbody tr:last-child {
+      border-bottom: none
+    }
+
+    .btable tbody td {
+      padding: 8px 14px;
+      font-size: 13px
+    }
+
+    .lvl-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--surf2)
+    }
+
+    .speak-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: background .15s
+    }
+
+    .speak-btn:hover {
+      background: var(--al)
+    }
+
+    .pager {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--tx2)
+    }
+
+    /* HOME */
+    .sgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      margin-bottom: 24px;
+      border: 1px solid var(--border)
+    }
+
+    .sc {
+      background: var(--surf);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px dotted var(--bau-red);
+      padding: 22px 20px;
+      cursor: pointer;
+      transition: all .15s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .sc::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 4px;
+      background: var(--bau-red);
+      transition: width .2s ease
+    }
+
+    .sc:nth-child(2)::before { background: var(--bau-blue) }
+    .sc:nth-child(3)::before { background: var(--bau-yellow) }
+    .sc:nth-child(4)::before { background: var(--bau-yellow) }
+    .sc:nth-child(5)::before { background: var(--bau-blue) }
+    .sc:nth-child(6)::before { background: var(--bau-red) }
+    .sc:nth-child(7)::before { background: var(--bau-red) }
+    .sc:nth-child(8)::before { background: var(--bau-yellow) }
+    .sc:nth-child(9)::before { background: var(--bau-blue) }
+
+    .sc:hover {
+      background: var(--surf2)
+    }
+    .sc:hover::before { width: 100% }
+
+    .sc-ic {
+      font-size: 22px;
+      margin-bottom: 8px
+    }
+
+    .sc-ti {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 3px
+    }
+
+    .sc-de {
+      font-size: 12px;
+      color: var(--tx3)
+    }
+
+    .goal-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 6px
+    }
+
+    .goal-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--accent));
+      border-radius: 4px;
+      transition: width .5s ease
+    }
+
+    .goal-text {
+      font-size: 13px;
+      color: var(--tx2);
+      margin-bottom: 16px
+    }
+
+    .due-badge {
+      font-size: 12px;
+      color: var(--amber);
+      font-weight: 600
+    }
+
+    .streak-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      align-items: flex-end
+    }
+
+    .streak-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1
+    }
+
+    .std-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      transition: all .2s
+    }
+
+    .streak-day.done .std-dot {
+      background: var(--green);
+      border-color: var(--green)
+    }
+
+    .streak-day.today .std-dot {
+      border-color: var(--accent);
+      }
+
+    .std-lbl {
+      font-size: 10px;
+      color: var(--tx3);
+      font-weight: 600
+    }
+
+    .streak-num {
+      font-size: 13px;
+      color: var(--tx2)
+    }
+
+    .streak-num strong {
+      color: var(--accent);
+      font-size: 18px
+    }
+
+    /* SESSION COMPLETE */
+    .done {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center
+    }
+
+    .done-em {
+      font-size: 64px;
+      margin-bottom: 16px
+    }
+
+    .done-ti {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 52px;
+      letter-spacing: 3px;
+      margin-bottom: 8px
+    }
+
+    .done-su {
+      color: var(--tx2);
+      margin-bottom: 28px;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      font-size: 13px
+    }
+
+    .done-st {
+      display: flex;
+      gap: 0;
+      margin-bottom: 36px;
+      border: 1px solid var(--border)
+    }
+    .done-st > div {
+      padding: 20px 40px;
+      border-right: 1px solid var(--border)}
+    .done-st > div:last-child { border-right: none }
+
+    .done-n {
+      font-size: 48px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 2px
+    }
+
+    .done-l {
+      font-size: 11px;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--tx3)
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all .15s
+    }
+
+    .bp {
+      background: var(--bau-red);
+      color: var(--bau-white);
+      border: 1px solid var(--bau-red);
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .bp:hover {
+      background: var(--bg);
+      color: var(--bau-red);
+      border: 1px solid var(--bau-red);
+      transform: none;
+    }
+
+    .bo {
+      background: var(--bg);
+      border: 1px solid var(--bau-red);
+      color: var(--bau-red);
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .bo:hover {
+      background: var(--bau-red);
+      color: var(--bau-white);
+      transform: none;
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .stitle {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 44px;
+      letter-spacing: 3px;
+      margin-bottom: 22px;
+      position: relative;
+      display: inline-block
+    }
+    .stitle::after {
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 0;
+      width: 40px; height: 4px;
+      background: var(--bau-red)
+    }
+
+    .search-w {
+      position: relative;
+      margin-bottom: 18px
+    }
+
+    .search-i {
+      width: 100%;
+      padding: 11px 16px 11px 40px;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      font-size: 14px;
+      background: var(--surf);
+      color: var(--tx);
+      font-family: inherit;
+      transition: border var(--transition)
+    }
+
+    .search-i:focus {
+      outline: none;
+      border-color: var(--accent)
+    }
+
+    .sico {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--tx3)
+    }
+
+    select.sty {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      padding: 7px 12px;
+      font-size: 13px;
+      color: var(--tx);
+      font-family: inherit;
+      cursor: pointer
+    }
+
+    select.sty:focus {
+      outline: none;
+      border-color: var(--accent)
+    }
+
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--tx2)
+    }
+
+    .notif {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bau-black);
+      color: #fff;
+      border-left: 1px solid var(--border);
+      padding: 12px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all .3s;
+      z-index: 999;
+      }
+
+    .notif.show {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      background: rgba(17,17,17,.65)
+    }
+
+    .modal.active {
+      display: flex
+    }
+
+    .modal-box {
+      background: var(--surf);
+      border: 1px solid var(--bau-black);
+      padding: 28px;
+      max-width: 480px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      }
+
+    .modal-title {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      font-weight: 400;
+      margin-bottom: 16px
+    }
+
+    .shortcut-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--bau-red);
+      font-size: 14px
+    }
+
+    .kbd {
+      background: var(--bau-black);
+      color: var(--bau-yellow);
+      border: 1px solid var(--bau-black);
+      padding: 2px 8px;
+      font-size: 11px;
+      font-family: 'Space Grotesk', monospace;
+      font-weight: 600
+    }
+
+    /* ═══ QUIZ MODULE STYLES ═══ */
+    .qz-filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+    .qz-filter-label{font-family: 'Fira Sans', sans-serif;font-size:14px;letter-spacing:2px;color:var(--bau-red);margin-right:4px}
+    .qz-lvl-chip,.qz-sec-chip{background:var(--surf);border: 1px solid var(--border);padding:5px 14px;font-size:11px;font-weight:700;font-family: 'Fira Sans', sans-serif;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--tx2);transition:all .15s}
+    .qz-lvl-chip:hover,.qz-sec-chip:hover{border-color:var(--bau-blue);color:var(--bau-blue);transform:translateY(-1px);}
+    .qz-lvl-chip.active,.qz-sec-chip.active{background:var(--bau-blue);border-color:var(--bau-blue);color:#fff;}
+    .qz-section-group{margin-bottom:32px}
+    .qz-section-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom: 1px dotted var(--bau-red)}
+    .qz-sec-icon{font-size:20px}
+    .qz-sec-title{font-family: 'Fira Sans', sans-serif;font-size:20px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+    .qz-sec-count{font-size:11px;font-family: 'Fira Sans', sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-left:auto;background:var(--surf2);border: 1px solid var(--border);padding:3px 10px}
+    .qz-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0;border: 1px solid var(--border)}
+    .qz-card{background:var(--surf);border-right: 1px solid var(--border);border-bottom: 1px dotted var(--bau-red);padding:18px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+    .qz-card::before{content:'';position:absolute;bottom:0;left:0;width:0;height:3px;background:var(--bau-red);transition:width .2s ease}
+    .qz-card:hover{background:var(--surf2)}
+    .qz-card:hover::before{width:100%}
+    .qz-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .qz-lvl-tag{font-size:10px;font-weight:700;font-family: 'Fira Sans', sans-serif;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border: 1px solid currentColor}
+    .qz-done-badge{font-size:10px;font-weight:700;font-family: 'Fira Sans', sans-serif;letter-spacing:1px;text-transform:uppercase;background:var(--bau-yellow);color:var(--bau-black);padding:3px 10px}
+    .qz-card-title{font-family: 'Fira Sans', sans-serif;font-size:17px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+    .qz-card-part{font-size:12px;color:var(--tx3);margin-bottom:6px}
+    .qz-card-meta{font-size:11px;font-family: 'Fira Sans', sans-serif;letter-spacing:.8px;text-transform:uppercase;color:var(--tx3)}
+    .qz-history-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--bau-black);border: 1px solid var(--bau-black);padding:14px 18px;margin-top:20px;font-size:12px;color:rgba(255,255,255,.7);border-left: 1px solid var(--border)}
+
+    /* Quiz Play */
+    .qz-play-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .qz-play-meta{display:flex;align-items:center;gap:10px}
+    .qz-text-block{background:var(--surf);border: 1px solid var(--border);border-left: 1px solid var(--border);padding:18px 20px;font-size:14px;line-height:1.7;margin-bottom:18px;white-space:pre-line;color:var(--tx)}
+    .qz-question{font-family: 'Fira Sans', sans-serif;font-size:30px;letter-spacing:1.5px;margin-bottom:16px;line-height:1.2}
+    .qz-options{display:flex;flex-direction:column;gap:6px;max-width:560px}
+    .qz-opt{text-align:left;padding:14px 18px;border: 1px solid var(--border);background:var(--surf);font-size:14px;font-family:inherit;cursor:pointer;transition:all .15s;color:var(--tx)}
+    .qz-opt:hover:not(:disabled){border-color:var(--bau-blue);background:var(--al);transform:translateX(4px);}
+    .qz-opt.qz-correct{border-color:var(--green);background:var(--gl);color:var(--green);font-weight:700;}
+    .qz-opt.qz-wrong{border-color:var(--red);background:var(--rl);color:var(--red)}
+    .qz-opt:disabled{cursor:default;opacity:.9}
+
+    .qz-situation-box{background:var(--bau-black);color:#fff;border: 1px solid var(--bau-black);border-left: 1px solid var(--border);padding:20px;font-size:15px;line-height:1.6;margin-bottom:18px;font-style:italic}
+
+    /* RF */
+    .qz-rf-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border: 1px solid var(--border);margin-bottom:6px;background:var(--surf);flex-wrap:wrap}
+    .qz-rf-text{flex:1;min-width:200px;font-size:14px}
+    .qz-rf-btns{display:flex;gap:6px}
+    .qz-rf-btn{padding:6px 18px;border: 1px solid var(--border);background:var(--surf2);font-size:12px;font-family: 'Fira Sans', sans-serif;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .15s}
+    .qz-rf-btn:hover:not(:disabled){border-color:var(--bau-blue);color:var(--bau-blue);}
+    .qz-rf-btn:disabled{opacity:.7;cursor:default}
+    .qz-rf-fb{font-size:18px;min-width:28px;text-align:center}
+
+    /* Cloze */
+    .qz-cloze-sentence{font-family: 'Fira Sans', sans-serif;font-size:32px;letter-spacing:2px;text-align:center;margin-bottom:10px;line-height:1.3}
+    .qz-blank{background:var(--bau-yellow);color:var(--bau-black);padding:2px 16px;border-bottom: 1px dotted var(--bau-red)}
+    .qz-cloze-hint{font-size:12px;font-family: 'Fira Sans', sans-serif;letter-spacing:.8px;text-transform:uppercase;color:var(--tx3);text-align:center;margin-bottom:16px}
+    .qz-cloze-input-wrap{display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+    .qz-cloze-fb{padding:12px 20px;border-left: 1px solid var(--border);font-size:15px;text-align:left;max-width:480px;margin:0 auto;font-weight:600}
+    .qz-fb-correct{background:var(--gl);color:var(--green)}
+    .qz-fb-wrong{background:var(--rl);color:var(--red)}
+
+    /* Matching */
+    .qz-match-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .qz-match-sits{display:flex;flex-direction:column;gap:6px}
+    .qz-match-sit{background:var(--surf);border: 1px solid var(--border);border-left: 1px solid var(--border);padding:12px 14px;font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;transition:all .2s}
+    .qz-match-sit.qz-match-ok{border-color:var(--green);border-left-color:var(--green);background:var(--gl)}
+    .qz-match-sit.qz-match-err{border-color:var(--red);border-left-color:var(--red);background:var(--rl)}
+    .qz-match-num{font-family: 'Fira Sans', sans-serif;font-size:18px;letter-spacing:1px;color:var(--bau-blue);min-width:22px}
+    .qz-match-ads{display:flex;flex-direction:column;gap:6px}
+    .qz-match-ad{background:var(--surf2);border: 1px solid var(--border);border-left: 1px solid var(--border);padding:12px 14px;font-size:13px;line-height:1.5}
+
+    /* Ordering */
+    .qz-order-bank{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+    .qz-order-word{padding:8px 16px;border: 1px solid var(--border);background:var(--surf);font-size:14px;font-family: 'Fira Sans', sans-serif;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .15s;color:var(--tx)}
+    .qz-order-word:hover:not(:disabled){border-color:var(--bau-blue);background:var(--al);transform:translateY(-2px);}
+    .qz-order-result{min-height:60px;border:2px dashed var(--border);padding:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s}
+    .qz-order-result:hover{border-color:var(--bau-blue)}
+    .qz-order-placed{background:var(--bau-black);color:#fff;padding:6px 14px;font-size:14px;font-family: 'Fira Sans', sans-serif;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+
+    /* Results */
+    .qz-result-card{text-align:center;padding:40px 20px}
+    .qz-result-emoji{font-size:64px;margin-bottom:12px}
+    .qz-result-title{font-family: 'Fira Sans', sans-serif;font-size:44px;letter-spacing:3px;margin-bottom:6px}
+    .qz-result-subtitle{font-family: 'Fira Sans', sans-serif;font-size:15px;letter-spacing:.8px;text-transform:uppercase;color:var(--tx2);margin-bottom:24px}
+    .qz-result-score-ring{width:140px;height:140px;background:conic-gradient(var(--bau-blue) calc(var(--qpct)*3.6deg),var(--surf2) 0deg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+    .qz-result-score-inner{width:108px;height:108px;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .qz-result-pct{font-family: 'Fira Sans', sans-serif;font-size:36px;letter-spacing:2px;color:var(--bau-blue)}
+    .qz-result-label{font-size:11px;font-family: 'Fira Sans', sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--tx3)}
+    .qz-result-info{font-size:11px;font-family: 'Fira Sans', sans-serif;letter-spacing:.8px;color:var(--tx3);background:var(--surf2);border: 1px solid var(--border);border-left: 1px solid var(--border);padding:10px 16px;display:inline-block;margin-top:8px}
+
+    @media(max-width:768px) {
+      .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 60px;
+        z-index: 200;
+        height: calc(100vh - 60px);
+        transition: left .3s ease;
+        }
+
+      body.menu-open .sidebar {
+        left: 0
+      }
+
+      body.menu-open .overlay {
+        display: block
+      }
+
+      .hamburger {
+        display: flex
+      }
+
+      .stats-bar {
+        display: none
+      }
+
+      .pgrid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .tgrid {
+        grid-template-columns: 1fr
+      }
+
+      .sgrid {
+        grid-template-columns: 1fr
+      }
+
+      .content {
+        padding: 20px
+      }
+
+      .qz-match-grid{grid-template-columns:1fr}
+      .qz-cards-grid{grid-template-columns:1fr}
+      .qz-cloze-sentence{font-size:20px}
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;700&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,1,0&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="icon-btn hamburger" onclick="toggleMobile()"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu</span></button>
+        <div class="logo">
+          <img src="favicon.png" class="logo-mark" alt="Logo" style="padding:0; background:transparent;">
+          <div class="logo-text">Deutsche<span>Deck</span></div>
+        </div>
+      </div>
+      <div class="top-right">
+        <div class="stats-bar">
+          <div class="spill"><span class="dot dg"></span><span id="sC">0</span> correct</div>
+          <div class="spill"><span class="dot dr"></span><span id="sW">0</span> wrong</div>
+          <div class="spill"><span class="dot da"></span><span id="sSt">0</span> <span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">local_fire_department</span></div>
+        </div>
+        <button class="icon-btn" onclick="toggleShortcuts()" title="Keyboard shortcuts"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span></button>
+        <button class="icon-btn" onclick="toggleDark()" title="Toggle dark mode"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">dark_mode</span></button>
+      </div>
+    </div>
+
+    <div class="overlay" onclick="closeMobile()"></div>
+
+    <div class="main">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="sl">Study</div>
+        <button class="nb active" onclick="nav('home')" id="n-home"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">home</span></span>Home</button>
+        <button class="nb" onclick="nav('cards')" id="n-cards"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">style</span></span>Flashcards</button>
+        <button class="nb" onclick="nav('tenses')" id="n-tenses"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">architecture</span></span>Tenses &amp; Grammar</button>
+        <button class="nb" onclick="nav('browse')" id="n-browse"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu_book</span></span>Browse<span class="bdg"
+            id="tb">0</span></button>
+        <button class="nb" onclick="nav('quiz')" id="n-quiz"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">school</span></span>Prüfungstrainer</button>
+        <div class="div"></div>
+        <div class="sl">Progress</div>
+        <button class="nb" onclick="nav('progress')" id="n-progress"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">bar_chart</span></span>My Progress</button>
+
+        <div class="div"></div>
+        <div class="sl">Settings</div>
+        <div class="slider-row" style="padding-top:8px; margin-bottom:4px">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            Voice: <span title="Local voices work offline. Online voices require internet."
+              style="cursor:help; font-size:10px; background:var(--surf2); padding:2px 5px; border-radius:4px;"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">info</span></span>
+          </div>
+          <div style="display:flex;gap:6px">
+            <select id="voiceSelect" onchange="setVoice()"
+              style="flex:1; padding:6px; font-size:12px; background:var(--surf); color:var(--tx); border: 1px solid var(--border); border-radius:var(--rs); font-family:inherit; cursor:pointer;">
+              <option value="">Default (Auto)</option>
+            </select>
+            <button onclick="testVoice()" class="icon-btn" style="width:32px;height:32px;font-size:13px"
+              title="Test voice"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">volume_up</span></button>
+          </div>
+          <div style="font-size:10px;color:var(--tx3);margin-top:4px"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">language</span> = online only &middot; <span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">wifi_off</span> = works
+            offline<br>Fallback voice if Google TTS unavailable.</div>
+        </div>
+        <div class="tog-row">Shuffle cards <div class="tog" id="shuffleToggle" onclick="toggleShuffle()"></div>
+        </div>
+        <div class="tog-row">Auto-pronounce <div class="tog" id="autoSpeakToggle" onclick="toggleAutoSpeak()"></div>
+        </div>
+        <div class="slider-row">Session size: <strong id="sessVal">20</strong><input type="range" id="sessSlider"
+            min="5" max="50" step="5" oninput="setSessSize()"></div>
+        <div class="slider-row">Daily goal: <strong id="goalVal">10</strong><input type="range" id="goalSlider" min="5"
+            max="50" step="5" oninput="setGoal()"></div>
+        <div class="div"></div>
+        <div class="sl">Data</div>
+        <button class="nb" onclick="exportProgress()"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">download</span></span>Export Progress</button>
+        <button class="nb" onclick="showImportModal()"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">upload</span></span>Import Progress</button>
+        <button class="nb" onclick="exportDatabase()"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">database</span></span>Export Database</button>
+        <button class="nb" onclick="showDbImportModal()"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">cloud_upload</span></span>Import Database</button>
+        <button class="nb" onclick="resetProgress()" style="color:var(--red)"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">delete</span></span>Reset
+          Progress</button>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content">
+
+        <!-- HOME -->
+        <div class="screen active fade-in" id="sc-home">
+          <div style="max-width:680px; margin: 0 auto">
+            <div style="font-family: 'Fira Sans', sans-serif;font-size:38px;line-height:1.2;margin-bottom:8px">Guten
+              Tag! <span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">waving_hand</span><br>Ready to learn?</div>
+            <div style="color:var(--tx2);margin-bottom:16px">Netzwerk A1 &amp; A2 — <span id="homeCount">0</span> words
+              · verb tables · grammar notes</div>
+            <div class="goal-bar">
+              <div class="goal-fill" id="goalFill" style="width:0%"></div>
+            </div>
+            <div class="goal-text"><span id="goalText">0 / 10 words today</span> · <span class="due-badge"
+                id="dueBadge"></span></div>
+            <div class="streak-row" id="streakBar"></div>
+            <div class="streak-num" style="margin-bottom:20px"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">local_fire_department</span> <strong id="streakNum">0</strong> day streak</div>
+            <div class="sgrid">
+              <div class="sc" onclick="session('vocab')">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">edit_document</span></div>
+                <div class="sc-ti">Vocabulary</div>
+                <div class="sc-de">Nouns, adjectives, adverbs</div>
+              </div>
+              <div class="sc" onclick="session('verb')">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">sync</span></div>
+                <div class="sc-ti">Verb Cards</div>
+                <div class="sc-de">Infinitives and conjugations</div>
+              </div>
+              <div class="sc" onclick="session('phrase')">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">chat</span></div>
+                <div class="sc-ti">Phrases</div>
+                <div class="sc-de">Everyday expressions</div>
+              </div>
+              <div class="sc" onclick="session('weak')">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">track_changes</span></div>
+                <div class="sc-ti">Weak Words</div>
+                <div class="sc-de">Cards you got wrong</div>
+              </div>
+              <div class="sc" onclick="session('due')">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">schedule</span></div>
+                <div class="sc-ti">Due Today</div>
+                <div class="sc-de">Spaced repetition review</div>
+              </div>
+              <div class="sc" onclick="sessionTyping('all')">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span></div>
+                <div class="sc-ti">Typing Quiz</div>
+                <div class="sc-de">Type the German translation</div>
+              </div>
+              <div class="sc" onclick="sessionListening('all')">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">headphones</span></div>
+                <div class="sc-ti">Listening Quiz</div>
+                <div class="sc-de">Hear it, type it</div>
+              </div>
+              <div class="sc" onclick="sessionArticle()">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">palette</span></div>
+                <div class="sc-ti">der/die/das</div>
+                <div class="sc-de">Practice noun genders</div>
+              </div>
+              <div class="sc" onclick="sessionConj()">
+                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">extension</span></div>
+                <div class="sc-ti">Conjugation</div>
+                <div class="sc-de">Type the correct verb form</div>
+              </div>
+            </div>
+            <div class="btns">
+              <button class="btn bp" onclick="session('all')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">rocket_launch</span> Start All Cards</button>
+              <button class="btn bo" onclick="sessionTyping('all')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span> Typing Mode</button>
+              <button class="btn bo" onclick="sessionListening('all')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">headphones</span> Listening</button>
+              <button class="btn bo" onclick="nav('browse')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu_book</span> Browse</button>
+              <button class="btn bo" onclick="nav('tenses')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">architecture</span> Tenses</button>
+            </div>
+
+            <div style="margin-top: 32px; padding-top: 24px; border-top: 1px dotted var(--border);">
+              <div style="font-family: 'Fira Sans', sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;color:var(--tx2);">Practice Specific Topics & Levels</div>
+              <div class="row" style="gap:8px;">
+                <button class="chip" onclick="session('A1')">Level A1</button>
+                <button class="chip" onclick="session('A2')">Level A2</button>
+                <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+                <button class="chip" onclick="session('greeting')">Greetings</button>
+                <button class="chip" onclick="session('numbers')">Numbers</button>
+                <button class="chip" onclick="session('time')">Time & Date</button>
+                <button class="chip" onclick="session('food')">Food & Drink</button>
+                <button class="chip" onclick="session('travel')">Travel</button>
+                <button class="chip" onclick="session('clothing')">Clothing</button>
+                <button class="chip" onclick="session('family')">Family</button>
+                <button class="chip" onclick="session('body')">Body & Health</button>
+                <button class="chip" onclick="session('home')">Home</button>
+                <button class="chip" onclick="session('profession')">Work</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FLASHCARDS -->
+        <div class="screen" id="sc-cards">
+          <div id="fc-ui">
+            <div class="fc-wrap">
+              <div class="card-actions">
+                <button class="alink" onclick="showExamples()"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Examples</button>
+                <button class="alink" onclick="speakCurrent()"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">volume_up</span> Listen</button>
+                <button class="alink" onclick="nav('home')">✕ End</button>
+              </div>
+              <div class="prog-bar">
+                <div class="prog-fill" id="pf" style="width:0%"></div>
+              </div>
+              <div style="font-size:12px;color:var(--tx3);align-self:flex-end" id="ctr">0/0</div>
+
+              <!-- Flashcard mode -->
+              <div id="flashcardWrap">
+                <div class="scene" id="scene" onclick="flip()">
+                  <div class="inner" id="inner">
+                    <div class="face front">
+                      <div class="ctag tv" id="ftag">Vocabulary</div>
+                      <div class="clvl" id="flvl">A1</div>
+                      <div class="art" id="fart"></div>
+                      <div class="cword" id="fword">—</div>
+                      <div class="csub" id="fsub"></div>
+                      <div class="chint">Click to reveal →</div>
+                    </div>
+                    <div class="face back">
+                      <div class="ctag tv" id="btag">Vocabulary</div>
+                      <div class="clvl" id="b-lvl">A1</div>
+                      <div class="ctrans" id="btrans">—</div>
+                      <div class="cex" id="bex"></div>
+                      <div class="cexen" id="bexen"></div>
+                      <div class="plural-note" id="bpl"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Typing mode -->
+              <div id="typingWrap" class="typ-wrap" style="display:none">
+                <div class="typ-q" id="typQ"></div>
+                <div class="typ-hint" id="typHint"></div>
+                <input class="typ-input" id="typInput" type="text" autocomplete="off" placeholder="Type in German...">
+                <div class="typ-fb" id="typFeedback" style="display:none"></div>
+                <div class="btns">
+                  <button class="btn bp" id="typCheck" onclick="checkTyping()">Check</button>
+                  <button class="btn bp" id="typNext" onclick="nextTyping()" style="display:none">Next →</button>
+                </div>
+              </div>
+
+              <!-- Listening Quiz mode -->
+              <div id="listeningWrap" class="typ-wrap" style="display:none">
+                <div class="typ-q" id="listenQ"></div>
+                <div class="typ-hint" id="listenHint"></div>
+                <button class="btn bo" onclick="listenReplay()" style="margin-bottom:8px">🔁 Play Again</button>
+                <input class="typ-input" id="listenInput" type="text" autocomplete="off"
+                  placeholder="Type what you heard...">
+                <div class="typ-fb" id="listenFb" style="display:none"></div>
+                <div class="btns">
+                  <button class="btn bp" id="listenCheck" onclick="checkListening()">Check</button>
+                  <button class="btn bp" id="listenNext" onclick="nextListening()" style="display:none">Next →</button>
+                </div>
+              </div>
+
+              <!-- Article Practice mode -->
+              <div id="articleWrap" class="typ-wrap" style="display:none">
+                <div style="font-size:14px;color:var(--tx3);margin-bottom:8px">What article does this noun take?</div>
+                <div class="typ-q" id="artWord"></div>
+                <div class="typ-hint" id="artHint"></div>
+                <div class="ans" style="max-width:400px;width:100%">
+                  <button class="ab art-btn der" onclick="ansArticle('der')">der</button>
+                  <button class="ab art-btn die" onclick="ansArticle('die')">die</button>
+                  <button class="ab art-btn das" onclick="ansArticle('das')">das</button>
+                </div>
+                <div class="typ-fb" id="artFb" style="display:none"></div>
+                <div class="btns"><button class="btn bp" id="artNext" onclick="nextArticle()" style="display:none">Next
+                    →</button></div>
+              </div>
+
+              <!-- Conjugation Quiz mode -->
+              <div id="conjWrap" class="typ-wrap" style="display:none">
+                <div class="conj-prompt" id="conjVerb"></div>
+                <div class="conj-pronoun" id="conjPronoun"></div>
+                <input class="typ-input" id="conjInput" type="text" autocomplete="off"
+                  placeholder="Type the conjugation...">
+                <div class="typ-fb" id="conjFb" style="display:none"></div>
+                <div class="btns">
+                  <button class="btn bp" id="conjCheck" onclick="checkConj()">Check</button>
+                  <button class="btn bp" id="conjNext" onclick="nextConj()" style="display:none">Next →</button>
+                </div>
+              </div>
+
+              <div class="ans" id="ansBtns" style="display:none">
+                <button class="ab aw" onclick="ans('w')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">replay</span> Again</button>
+                <button class="ab ah" onclick="ans('h')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">help</span> Hard</button>
+                <button class="ab ac" onclick="ans('c')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">check_circle</span> Got it!</button>
+              </div>
+              <div class="flipnote" id="fn">Space/click to flip · 1/2/3 to rate</div>
+
+              <div class="exp" id="exPanel" style="display:none">
+                <div class="exp-h">
+                  <div class="exp-badge"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Details</div>
+                </div>
+                <div id="exContent"></div>
+              </div>
+            </div>
+          </div>
+          <div id="fc-done" style="display:none">
+            <div class="done">
+              <div class="done-em"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">celebration</span></div>
+              <div class="done-ti">Session Complete!</div>
+              <div class="done-su">Here's how you did:</div>
+              <div class="done-st">
+                <div>
+                  <div class="done-n ng" id="dc">0</div>
+                  <div class="done-l">Correct</div>
+                </div>
+                <div>
+                  <div class="done-n nr" id="dw">0</div>
+                  <div class="done-l">Again</div>
+                </div>
+                <div>
+                  <div class="done-n na" id="dp">0%</div>
+                  <div class="done-l">Accuracy</div>
+                </div>
+              </div>
+              <div class="btns">
+                <button class="btn bp" onclick="session(lastST)"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">sync</span> Again</button>
+                <button class="btn bo" onclick="nav('home')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">home</span> Home</button>
+                <button class="btn bo" onclick="nav('progress')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">bar_chart</span> Progress</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TENSES -->
+        <div class="screen" id="sc-tenses">
+          <div style="max-width:860px; margin: 0 auto">
+            <div class="stitle">Tenses &amp; Grammar</div>
+            <div style="margin-bottom:20px">
+              <div style="font-size:13px;font-weight:600;color:var(--tx2);margin-bottom:8px">Select a verb:</div>
+              <div class="verb-grid" id="vgrid"></div>
+            </div>
+            <div id="tdisp"></div>
+            <div style="margin-top:28px"><button class="btn bo" onclick="showGrammarHelp()"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Explain this
+                verb</button></div>
+            <div class="exp" id="agp" style="display:none;margin-top:14px">
+              <div class="exp-h">
+                <div class="exp-badge"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Grammar Help</div>
+              </div>
+              <div id="agc"></div>
+            </div>
+            <div style="margin-top:32px;border-top: 1px solid var(--border);padding-top:24px">
+              <div style="font-size:16px;font-weight:600;margin-bottom:16px">Grammar Notes</div>
+              <div id="gnotes"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BROWSE -->
+        <div class="screen" id="sc-browse">
+          <div style="max-width:960px; margin: 0 auto">
+            <div
+              style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+              <div class="stitle" style="margin:0">Browse Words</div>
+              <div class="row">
+                <select class="sty" id="blvl" onchange="renderBrowse()">
+                  <option value="all">All Levels</option>
+                  <option value="A1">A1</option>
+                  <option value="A2">A2</option>
+                </select>
+                <select class="sty" id="bcat" onchange="renderBrowse()">
+                  <option value="all">All Types</option>
+                  <option value="noun">Nouns</option>
+                  <option value="verb">Verbs</option>
+                  <option value="phrase">Phrases</option>
+                  <option value="adjective">Adjectives</option>
+                  <option value="adverb">Adverbs</option>
+                  <option value="number">Numbers</option>
+                  <option value="preposition">Prepositions</option>
+                  <option value="conjunction">Conjunctions</option>
+                  <option value="question">Questions</option>
+                </select>
+              </div>
+            </div>
+            <div class="search-w">
+              <div class="sico"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">search</span></div><input class="search-i" id="sq" type="text"
+                placeholder="Search German or English…" oninput="renderBrowse()">
+            </div>
+            <div id="browse"></div>
+            <div id="browsePages"></div>
+          </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="screen" id="sc-progress">
+          <div style="max-width:820px; margin: 0 auto">
+            <div class="stitle">My Progress</div>
+            <div class="progress-ring-wrap">
+              <div class="progress-ring" id="progressRing" style="--pct:0">
+                <div class="progress-ring-inner">
+                  <div class="pct" id="progressPct">0%</div>
+                  <div class="plbl">Complete</div>
+                </div>
+              </div>
+            </div>
+            <div class="pgrid">
+              <div class="pcard">
+                <div class="pnum na" id="pS">0</div>
+                <div class="plbl">Words Seen</div>
+              </div>
+              <div class="pcard">
+                <div class="pnum ng" id="pM">0</div>
+                <div class="plbl">Mastered</div>
+              </div>
+              <div class="pcard">
+                <div class="pnum nr" id="pW">0</div>
+                <div class="plbl">Need Practice</div>
+              </div>
+              <div class="pcard">
+                <div class="pnum namb" id="pA">0%</div>
+                <div class="plbl">Accuracy</div>
+              </div>
+              <div class="pcard">
+                <div class="pnum npur" id="pDue">0</div>
+                <div class="plbl">Due Today</div>
+              </div>
+            </div>
+            <div class="hmap">
+              <div style="font-size:14px;font-weight:600;margin-bottom:12px">Study activity — last 63 days</div>
+              <div class="hmap-inner" id="hm"></div>
+              <div class="row" style="margin-top:8px;font-size:11px;color:var(--tx3)">Less <div class="hc"></div>
+                <div class="hc l1"></div>
+                <div class="hc l2"></div>
+                <div class="hc l3"></div> More
+              </div>
+            </div>
+            <div class="wlist">
+              <div
+                style="display:flex;padding:10px 18px;background:var(--surf2);border-bottom: 1px dotted var(--bau-red);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2)">
+                <span style="flex:1">Word</span><span style="flex:1">Translation</span><span
+                  style="width:80px;text-align:center">Mastery</span><span
+                  style="width:55px;text-align:center">Seen</span>
+              </div>
+              <div id="wlistb"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUIZ / PRÜFUNGSTRAINER -->
+        <div class="screen" id="sc-quiz">
+          <div style="max-width:860px; margin: 0 auto">
+            <div class="stitle"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">school</span> Prüfungstrainer</div>
+            <div style="color:var(--tx2);margin-bottom:18px;font-size:14px">Goethe-Zertifikat Stil — Lesen, Schreiben, Grammatik, Wortschatz</div>
+
+            <!-- Quiz List View -->
+            <div id="quizListView">
+              <div class="qz-filters">
+                <span class="qz-filter-label">Niveau:</span>
+                <button class="qz-lvl-chip active" data-qlvl="all" onclick="setQuizLevel('all')">Alle</button>
+                <button class="qz-lvl-chip" data-qlvl="A1" onclick="setQuizLevel('A1')">A1</button>
+                <button class="qz-lvl-chip" data-qlvl="A2" onclick="setQuizLevel('A2')">A2</button>
+                <span class="qz-filter-label" style="margin-left:12px">Bereich:</span>
+                <button class="qz-sec-chip active" data-qsec="all" onclick="setQuizSection('all')">Alle</button>
+                <button class="qz-sec-chip" data-qsec="Lesen" onclick="setQuizSection('Lesen')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Lesen</button>
+                <button class="qz-sec-chip" data-qsec="Schreiben" onclick="setQuizSection('Schreiben')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">edit</span> Schreiben</button>
+                <button class="qz-sec-chip" data-qsec="Strukturen" onclick="setQuizSection('Strukturen')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">build</span> Strukturen</button>
+                <button class="qz-sec-chip" data-qsec="Wortschatz" onclick="setQuizSection('Wortschatz')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu_book</span> Wortschatz</button>
+                <button class="qz-sec-chip" data-qsec="Hören" onclick="setQuizSection('Hören')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">headphones</span> Hören</button>
+              </div>
+              <div id="quizListContent"></div>
+            </div>
+
+            <!-- Quiz Play View -->
+            <div id="quizPlayView" style="display:none">
+              <div id="quizPlayContent"></div>
+            </div>
+
+            <!-- Quiz Result View -->
+            <div id="quizResultView" style="display:none">
+              <div id="quizResultContent"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- content -->
+    </div><!-- main -->
+  </div><!-- app -->
+
+  <div class="notif" id="notif"></div>
+
+  <!-- SHORTCUTS MODAL -->
+  <div class="modal" id="shortcutsModal">
+    <div class="modal-box">
+      <div class="modal-title"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span> Keyboard Shortcuts</div>
+      <div class="shortcut-row"><span>Flip card</span><span><span class="kbd">Space</span> or <span
+            class="kbd">Enter</span></span></div>
+      <div class="shortcut-row"><span>Rate: Again</span><span class="kbd">1</span></div>
+      <div class="shortcut-row"><span>Rate: Hard</span><span class="kbd">2</span></div>
+      <div class="shortcut-row"><span>Rate: Got it</span><span class="kbd">3</span></div>
+      <div class="shortcut-row"><span>Check / Next (typing)</span><span class="kbd">Enter</span></div>
+      <div class="shortcut-row"><span>Show shortcuts</span><span class="kbd">Shift + ?</span></div>
+      <div class="shortcut-row"><span>Close modal</span><span class="kbd">Esc</span></div>
+      <div style="margin-top:16px"><button class="btn bo" onclick="closeModal()">Close</button></div>
+    </div>
+  </div>
+
+  <!-- GERMAN VIRTUAL KEYBOARD -->
+  <div id="germanKeyboard" style="position:fixed; bottom:24px; right:24px; display:none; z-index:9999; background:var(--surf1); padding:8px; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.15); border:1px solid var(--border); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); opacity:0; transform:translateY(10px)">
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <div style="display:flex; gap:6px;">
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ä')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ä</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ö')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ö</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ü')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ü</button>
+        <div style="width:36px;height:36px;"></div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ä')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ä</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ö')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ö</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ü')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ü</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ß')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ß</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let activeGermanInput = null;
+    
+    document.addEventListener('focusin', (e) => {
+      if(e.target.tagName === 'INPUT' && (e.target.type === 'text' || e.target.type === 'search')) {
+        activeGermanInput = e.target;
+        const kb = document.getElementById('germanKeyboard');
+        kb.style.display = 'block';
+        // Small delay for CSS transition
+        setTimeout(() => { kb.style.opacity = '1'; kb.style.transform = 'translateY(0)'; }, 10);
+      }
+    });
+
+    document.addEventListener('focusout', (e) => {
+      setTimeout(() => {
+        if(!document.activeElement || document.activeElement.tagName !== 'INPUT') {
+          const kb = document.getElementById('germanKeyboard');
+          kb.style.opacity = '0';
+          kb.style.transform = 'translateY(10px)';
+          setTimeout(() => { if(kb.style.opacity === '0') kb.style.display = 'none'; }, 200);
+        }
+      }, 150);
+    });
+
+    function insertGermanChar(e, char) {
+      e.preventDefault(); // CRITICAL: prevents button from stealing focus from the input field!
+      if(!activeGermanInput) return;
+      
+      const start = activeGermanInput.selectionStart;
+      const end = activeGermanInput.selectionEnd;
+      const val = activeGermanInput.value;
+      
+      activeGermanInput.value = val.substring(0, start) + char + val.substring(end);
+      
+      // Notify underlying JS systems that the input changed automatically
+      activeGermanInput.dispatchEvent(new Event('input', { bubbles: true }));
+      
+      // Restore precise cursor position
+      activeGermanInput.selectionStart = activeGermanInput.selectionEnd = start + 1;
+    }
+  </script>
+
+  <!-- IMPORT MODAL -->
+  <div class="modal" id="importModal">
+    <div class="modal-box">
+      <div class="modal-title"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">upload</span> Import Progress</div>
+      <p style="color:var(--tx2);margin-bottom:16px">Select a previously exported JSON file to restore your progress.
+      </p>
+      <input type="file" accept=".json" onchange="importProgress(event)" style="margin-bottom:16px">
+      <div><button class="btn bo" onclick="closeModal()">Cancel</button></div>
+    </div>
+  </div>
+
+  <!-- DB IMPORT MODAL -->
+  <div class="modal" id="dbImportModal">
+    <div class="modal-box">
+      <div class="modal-title"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">database</span> Import Database</div>
+      <p style="color:var(--tx2);margin-bottom:16px">
+        Select a DeutscheDeck database JSON backup (<code>{ vocab, tenses, quiz }</code>). This will replace the built-in datasets on this device.
+      </p>
+      <input type="file" accept=".json" onchange="importDatabase(event)" style="margin-bottom:16px">
+      <div><button class="btn bo" onclick="closeModal()">Cancel</button></div>
+    </div>
+  </div>
+
+  <script src="quiz-data.js?v=1.0.3"></script>
+  <script src="app.js?v=1.0.3"></script>
+  <script src="quiz-engine.js?v=1.0.3"></script>
+</body>
+
+</html>
