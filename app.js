@@ -620,23 +620,7 @@
   window.ans = function (rating) {
     processAnswer(rating);
     ST.session.idx++;
-    
-    const scene = document.getElementById('scene');
-    if (scene && ST.session.mode === 'flash') {
-        scene.classList.add('card-exit');
-        setTimeout(() => {
-            renderCard();
-            scene.classList.remove('card-exit');
-            scene.classList.add('card-enter');
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    scene.classList.remove('card-enter');
-                });
-            });
-        }, 250);
-    } else {
-        renderCard();
-    }
+    renderCard();
   };
 
   window.processAnswer = function(rating) {
