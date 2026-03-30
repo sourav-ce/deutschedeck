@@ -3949,4 +3949,1111 @@ window.VOCAB_DB = [
         id: 1187, de: "nächste", en: "next", level: "A2", type: "adjective", tags: ["numbers"],
         examples: [{ de: "Der nächste Bahnhof ist Stuttgart.", en: "The next station is Stuttgart." }]
     }
+,
+
+    // ── AI BATCH 1: A2 EXPANSION ────────────────────────────────────────────────
+    {
+        id: 1188, de: "der Wunsch", en: "the wish", level: "A2", type: "noun", article: "der", plural: "die Wünsche", tags: ["feelings"], examples: [{ de: "Das ist mein größter Wunsch.", en: "That is my greatest wish." }, { de: "Er hat einen Wunsch frei.", en: "He has one wish." }]
+    },
+    {
+        id: 1189, de: "das Zentrum", en: "the center", level: "A2", type: "noun", article: "das", plural: "die Zentren", tags: ["places"], examples: [{ de: "Das Rathaus ist im Zentrum.", en: "The town hall is in the center." }, { de: "Wir wohnen im Zentrum der Stadt.", en: "We live in the city center." }]
+    },
+    {
+        id: 1190, de: "der Zettel", en: "the piece of paper", level: "A2", type: "noun", article: "der", plural: "die Zettel", tags: ["objects"], examples: [{ de: "Schreib es auf einen Zettel.", en: "Write it on a piece of paper." }, { de: "Wo ist mein Zettel?", en: "Where is my piece of paper?" }]
+    },
+    {
+        id: 1191, de: "das Zeugnis", en: "the certificate", level: "A2", type: "noun", article: "das", plural: "die Zeugnisse", tags: ["education"], examples: [{ de: "Sie hat ein gutes Zeugnis.", en: "She has a good certificate." }, { de: "Ich brauche das Zeugnis für die Bewerbung.", en: "I need the certificate for the application." }]
+    },
+    {
+        id: 1192, de: "die Zigarette", en: "the cigarette", level: "A2", type: "noun", article: "die", plural: "die Zigaretten", tags: ["objects"], examples: [{ de: "Rauchen Sie eine Zigarette?", en: "Do you smoke a cigarette?" }, { de: "Zigaretten sind teuer.", en: "Cigarettes are expensive." }]
+    },
+    {
+        id: 1193, de: "anziehen", en: "to put on", level: "A2", type: "verb", tags: ["actions","clothing"], examples: [{ de: "Zieh dir eine Jacke an.", en: "Put on a jacket." }, { de: "Er zieht seine Schuhe an.", en: "He puts his shoes on." }]
+    },
+    {
+        id: 1194, de: "ausziehen", en: "to take off / move out", level: "A2", type: "verb", tags: ["actions","clothing"], examples: [{ de: "Zieh die nassen Schuhe aus.", en: "Take off the wet shoes." }, { de: "Sie zieht aus der Wohnung aus.", en: "She is moving out of the apartment." }]
+    },
+    {
+        id: 1195, de: "umziehen", en: "to move (house)", level: "A2", type: "verb", tags: ["home","actions"], examples: [{ de: "Wir ziehen nächsten Monat um.", en: "We are moving next month." }, { de: "Der Umzug ist anstrengend.", en: "Moving is exhausting." }]
+    },
+    {
+        id: 1196, de: "bieten", en: "to offer", level: "A2", type: "verb", tags: ["work","actions"], examples: [{ de: "Er bietet mir einen Kaffee an.", en: "He offers me a coffee." }, { de: "Was bietet das Hotel?", en: "What does the hotel offer?" }]
+    },
+    {
+        id: 1197, de: "bitten", en: "to ask / request", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Darf ich Sie um einen Gefallen bitten?", en: "May I ask you a favor?" }, { de: "Bitte ihn um Hilfe.", en: "Ask him for help." }]
+    },
+    {
+        id: 1198, de: "danken", en: "to thank", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Ich danke dir für die Hilfe.", en: "I thank you for the help." }, { de: "Wir danken für Ihr Verständnis.", en: "We thank you for your understanding." }]
+    },
+    {
+        id: 1199, de: "denken", en: "to think", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Was denkst du darüber?", en: "What do you think about it?" }, { de: "Ich denke oft an dich.", en: "I often think of you." }]
+    },
+    {
+        id: 1200, de: "diskutieren", en: "to discuss", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Wir diskutieren das Problem.", en: "We discuss the problem." }, { de: "Darüber kann man diskutieren.", en: "One can discuss that." }]
+    },
+    {
+        id: 1201, de: "duschen", en: "to shower", level: "A2", type: "verb", tags: ["body","home"], examples: [{ de: "Ich dusche jeden Morgen.", en: "I shower every morning." }, { de: "Geh dich duschen.", en: "Go take a shower." }]
+    },
+    {
+        id: 1202, de: "einladen", en: "to invite", level: "A2", type: "verb", tags: ["social"], examples: [{ de: "Ich lade dich zu meiner Party ein.", en: "I invite you to my party." }, { de: "Er ist zum Essen eingeladen.", en: "He is invited to dinner." }]
+    },
+    {
+        id: 1203, de: "empfehlen", en: "to recommend", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Können Sie ein Restaurant empfehlen?", en: "Can you recommend a restaurant?" }, { de: "Ich empfehle diesen Film.", en: "I recommend this film." }]
+    },
+    {
+        id: 1204, de: "entschuldigen", en: "to excuse / apologize", level: "A2", type: "verb", tags: ["social"], examples: [{ de: "Bitte entschuldigen Sie die Verspätung.", en: "Please excuse the delay." }, { de: "Ich möchte mich entschuldigen.", en: "I would like to apologize." }]
+    },
+    {
+        id: 1205, de: "erinnern", en: "to remember / remind", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Ich erinnere mich nicht.", en: "I don't remember." }, { de: "Kannst du mich daran erinnern?", en: "Can you remind me of that?" }]
+    },
+    {
+        id: 1206, de: "erlauben", en: "to allow", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Rauchen ist hier nicht erlaubt.", en: "Smoking is not allowed here." }, { de: "Meine Eltern erlauben das nicht.", en: "My parents don't allow that." }]
+    },
+    {
+        id: 1207, de: "erzählen", en: "to tell / narrate", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Erzähl mir eine Geschichte.", en: "Tell me a story." }, { de: "Er erzählt gern Witze.", en: "He likes telling jokes." }]
+    },
+    {
+        id: 1208, de: "feiern", en: "to celebrate", level: "A2", type: "verb", tags: ["social"], examples: [{ de: "Wir feiern heute Geburtstag.", en: "We are celebrating a birthday today." }, { de: "Wie feiert ihr Weihnachten?", en: "How do you celebrate Christmas?" }]
+    },
+    {
+        id: 1209, de: "freuen", en: "to be happy / look forward", level: "A2", type: "verb", tags: ["feelings"], examples: [{ de: "Ich freue mich auf den Urlaub.", en: "I look forward to the vacation." }, { de: "Es freut mich, Sie kennenzulernen.", en: "I am pleased to meet you." }]
+    },
+    {
+        id: 1210, de: "fühlen", en: "to feel", level: "A2", type: "verb", tags: ["feelings","body"], examples: [{ de: "Ich fühle mich heute nicht gut.", en: "I don't feel well today." }, { de: "Wie fühlst du dich?", en: "How do you feel?" }]
+    },
+    {
+        id: 1211, de: "gefallen", en: "to please / be liked", level: "A2", type: "verb", tags: ["feelings"], examples: [{ de: "Das Buch gefällt mir.", en: "I like the book. (The book pleases me.)" }, { de: "Wie gefällt dir Berlin?", en: "How do you like Berlin?" }]
+    },
+    {
+        id: 1212, de: "gehören", en: "to belong to", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Wem gehört das Auto?", en: "Who does the car belong to?" }, { de: "Das Buch gehört mir.", en: "The book belongs to me." }]
+    },
+    {
+        id: 1213, de: "genießen", en: "to enjoy", level: "A2", type: "verb", tags: ["feelings"], examples: [{ de: "Wir genießen das schöne Wetter.", en: "We are enjoying the beautiful weather." }, { de: "Genieß dein Essen!", en: "Enjoy your food!" }]
+    },
+    {
+        id: 1214, de: "glauben", en: "to believe / think", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Ich glaube dir nicht.", en: "I don't believe you." }, { de: "Er glaubt, dass es regnet.", en: "He thinks that it is raining." }]
+    },
+    {
+        id: 1215, de: "gratulieren", en: "to congratulate", level: "A2", type: "verb", tags: ["social"], examples: [{ de: "Ich gratuliere dir zum Geburtstag.", en: "I congratulate you on your birthday." }, { de: "Wir gratulieren zur Prüfung.", en: "We congratulate on the exam." }]
+    },
+    {
+        id: 1216, de: "heiraten", en: "to marry", level: "A2", type: "verb", tags: ["family","social"], examples: [{ de: "Sie wollen nächstes Jahr heiraten.", en: "They want to marry next year." }, { de: "Er war schon einmal verheiratet.", en: "He was already married once." }]
+    },
+    {
+        id: 1217, de: "hoffen", en: "to hope", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Ich hoffe, dass alles gut geht.", en: "I hope that everything goes well." }, { de: "Wir hoffen auf besseres Wetter.", en: "We hope for better weather." }]
+    },
+    {
+        id: 1218, de: "holen", en: "to fetch / get", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Ich hole ein Glas Wasser.", en: "I fetch a glass of water." }, { de: "Hol mich bitte vom Bahnhof ab.", en: "Please pick me up from the station." }]
+    },
+    {
+        id: 1219, de: "interessieren", en: "to interest", level: "A2", type: "verb", tags: ["abstract","feelings"], examples: [{ de: "Das interessiert mich nicht.", en: "That doesn't interest me." }, { de: "Ich interessiere mich für Kunst.", en: "I am interested in art." }]
+    },
+    {
+        id: 1220, de: "kämpfen", en: "to fight", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Wir kämpfen für unsere Rechte.", en: "We fight for our rights." }, { de: "Er kämpft um sein Leben.", en: "He fights for his life." }]
+    },
+    {
+        id: 1221, de: "kaufen", en: "to buy", level: "A2", type: "verb", tags: ["shopping"], examples: [{ de: "Ich kaufe frisches Brot.", en: "I am buying fresh bread." }, { de: "Wo hast du das gekauft?", en: "Where did you buy that?" }]
+    },
+    {
+        id: 1222, de: "kennenlernen", en: "to get to know", level: "A2", type: "verb", tags: ["social"], examples: [{ de: "Ich möchte ihn kennenlernen.", en: "I want to get to know him." }, { de: "Wir haben uns gestern kennengelernt.", en: "We met yesterday." }]
+    },
+    {
+        id: 1223, de: "kontrollieren", en: "to check / control", level: "A2", type: "verb", tags: ["work"], examples: [{ de: "Der Lehrer kontrolliert die Hausaufgaben.", en: "The teacher checks the homework." }, { de: "Bitte kontrollieren Sie Ihre Angaben.", en: "Please check your details." }]
+    },
+    {
+        id: 1224, de: "korrigieren", en: "to correct", level: "A2", type: "verb", tags: ["education"], examples: [{ de: "Kannst du meinen Text korrigieren?", en: "Can you correct my text?" }, { de: "Er korrigiert seine Fehler.", en: "He corrects his mistakes." }]
+    },
+    {
+        id: 1225, de: "kosten", en: "to cost", level: "A2", type: "verb", tags: ["shopping"], examples: [{ de: "Was kostet das Buch?", en: "What does the book cost?" }, { de: "Das kostet 20 Euro.", en: "That costs 20 euros." }]
+    },
+    {
+        id: 1226, de: "kümmern", en: "to take care of", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Ich kümmere mich um den Hund.", en: "I take care of the dog." }, { de: "Wer kümmert sich um die Getränke?", en: "Who is taking care of the drinks?" }]
+    },
+    {
+        id: 1227, de: "lachen", en: "to laugh", level: "A2", type: "verb", tags: ["feelings"], examples: [{ de: "Warum lachst du?", en: "Why are you laughing?" }, { de: "Sie hat laut gelacht.", en: "She laughed out loud." }]
+    },
+    {
+        id: 1228, de: "leben", en: "to live", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Meine Eltern leben in Spanien.", en: "My parents live in Spain." }, { de: "Ich lebe gern hier.", en: "I like living here." }]
+    },
+    {
+        id: 1229, de: "legen", en: "to lay / put", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Leg das Buch auf den Tisch.", en: "Put the book on the table." }, { de: "Ich lege mich ins Bett.", en: "I am lying down in bed." }]
+    },
+    {
+        id: 1230, de: "lieben", en: "to love", level: "A2", type: "verb", tags: ["feelings"], examples: [{ de: "Ich liebe dich.", en: "I love you." }, { de: "Er liebt Schokolade.", en: "He loves chocolate." }]
+    },
+    {
+        id: 1231, de: "lösen", en: "to solve / loosen", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Wir müssen das Problem lösen.", en: "We must solve the problem." }, { de: "Er hat die Aufgabe schnell gelöst.", en: "He solved the task quickly." }]
+    },
+    {
+        id: 1232, de: "meinen", en: "to mean / think", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Was meinst du?", en: "What do you mean / think?" }, { de: "Das meine ich nicht.", en: "I don't mean that." }]
+    },
+    {
+        id: 1233, de: "merken", en: "to notice / remember", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Hast du etwas gemerkt?", en: "Did you notice something?" }, { de: "Ich kann mir keine Zahlen merken.", en: "I can't remember numbers." }]
+    },
+    {
+        id: 1234, de: "nutzen", en: "to use", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Darf ich dein Telefon nutzen?", en: "May I use your phone?" }, { de: "Er nutzt jede Chance.", en: "He uses every chance." }]
+    },
+    {
+        id: 1235, de: "packen", en: "to pack", level: "A2", type: "verb", tags: ["travel","actions"], examples: [{ de: "Ich packe meinen Koffer.", en: "I pack my suitcase." }, { de: "Hast du alles gepackt?", en: "Have you packed everything?" }]
+    },
+    {
+        id: 1236, de: "passen", en: "to fit / suit", level: "A2", type: "verb", tags: ["clothing"], examples: [{ de: "Die Hose passt mir nicht.", en: "The trousers don't fit me." }, { de: "Passt dir der Termin um 10 Uhr?", en: "Does the 10 o'clock appointment suit you?" }]
+    },
+    {
+        id: 1237, de: "passieren", en: "to happen", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Was ist passiert?", en: "What happened?" }, { de: "Das kann schnell passieren.", en: "That can happen quickly." }]
+    },
+    {
+        id: 1238, de: "raten", en: "to guess / advise", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Rate mal, wer hier ist!", en: "Guess who is here!" }, { de: "Der Arzt rät ihm zu mehr Sport.", en: "The doctor advises him to do more sports." }]
+    },
+    {
+        id: 1239, de: "reisen", en: "to travel", level: "A2", type: "verb", tags: ["travel"], examples: [{ de: "Ich reise sehr gern.", en: "I like traveling very much." }, { de: "Wir reisen nächsten Monat nach Italien.", en: "We travel to Italy next month." }]
+    },
+    {
+        id: 1240, de: "reparieren", en: "to repair", level: "A2", type: "verb", tags: ["work","home"], examples: [{ de: "Kannst du das reparieren?", en: "Can you repair this?" }, { de: "Das Auto muss repariert werden.", en: "The car needs to be repaired." }]
+    },
+    {
+        id: 1241, de: "schlafen", en: "to sleep", level: "A2", type: "verb", tags: ["body"], examples: [{ de: "Ich habe gut geschlafen.", en: "I slept well." }, { de: "Die Kinder schlafen schon.", en: "The children are already sleeping." }]
+    },
+    {
+        id: 1242, de: "schließen", en: "to close", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Bitte schließen Sie die Tür.", en: "Please close the door." }, { de: "Der Laden schließt um 20 Uhr.", en: "The shop closes at 8 pm." }]
+    },
+    {
+        id: 1243, de: "schmecken", en: "to taste", level: "A2", type: "verb", tags: ["food"], examples: [{ de: "Das Essen schmeckt sehr gut.", en: "The food tastes very good." }, { de: "Schmeckt dir der Kaffee?", en: "Do you like the coffee?" }]
+    },
+    {
+        id: 1244, de: "sitzen", en: "to sit", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Er sitzt auf dem Stuhl.", en: "He sits on the chair." }, { de: "Wir sitzen im Garten.", en: "We are sitting in the garden." }]
+    },
+    {
+        id: 1245, de: "stehen", en: "to stand", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Der Baum steht vor dem Haus.", en: "The tree stands in front of the house." }, { de: "Warum stehst du da?", en: "Why are you standing there?" }]
+    },
+    {
+        id: 1246, de: "stellen", en: "to place / put", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Stell die Flasche auf den Tisch.", en: "Put the bottle on the table." }, { de: "Ich habe eine Frage gestellt.", en: "I asked a question." }]
+    },
+    {
+        id: 1247, de: "sterben", en: "to die", level: "A2", type: "verb", tags: ["body"], examples: [{ de: "Sein Großvater ist letztes Jahr gestorben.", en: "His grandfather died last year." }, { de: "Pflanzen sterben ohne Wasser.", en: "Plants die without water." }]
+    },
+    {
+        id: 1248, de: "stimmen", en: "to be correct", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Das stimmt.", en: "That is correct." }, { de: "Stimmt das?", en: "Is that right?" }]
+    },
+    {
+        id: 1249, de: "stören", en: "to bother / disturb", level: "A2", type: "verb", tags: ["social"], examples: [{ de: "Störe ich?", en: "Am I disturbing you?" }, { de: "Der Lärm stört mich sehr.", en: "The noise bothers me a lot." }]
+    },
+    {
+        id: 1250, de: "studieren", en: "to study (university)", level: "A2", type: "verb", tags: ["education"], examples: [{ de: "Mein Bruder studiert Medizin.", en: "My brother is studying medicine." }, { de: "Ich habe in Berlin studiert.", en: "I studied in Berlin." }]
+    },
+    {
+        id: 1251, de: "suchen", en: "to search / look for", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Ich suche meine Schlüssel.", en: "I am looking for my keys." }, { de: "Sie sucht eine neue Arbeit.", en: "She is looking for a new job." }]
+    },
+    {
+        id: 1252, de: "tanzen", en: "to dance", level: "A2", type: "verb", tags: ["leisure"], examples: [{ de: "Tanzt du gern?", en: "Do you like dancing?" }, { de: "Sie tanzen auf der Party.", en: "They are dancing at the party." }]
+    },
+    {
+        id: 1253, de: "teilen", en: "to share / divide", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Wir teilen uns das Essen.", en: "We share the food." }, { de: "Den Kuchen in vier Stücke teilen.", en: "Divide the cake into four pieces." }]
+    },
+    {
+        id: 1254, de: "teilnehmen", en: "to participate", level: "A2", type: "verb", tags: ["social"], examples: [{ de: "Ich nehme an dem Kurs teil.", en: "I participate in the course." }, { de: "Wer nimmt an der Sitzung teil?", en: "Who is participating in the meeting?" }]
+    },
+    {
+        id: 1255, de: "treffen", en: "to meet", level: "A2", type: "verb", tags: ["social"], examples: [{ de: "Wir treffen uns um 18 Uhr.", en: "We are meeting at 6 pm." }, { de: "Ich habe einen alten Freund getroffen.", en: "I met an old friend." }]
+    },
+    {
+        id: 1256, de: "trinken", en: "to drink", level: "A2", type: "verb", tags: ["drinks"], examples: [{ de: "Ich trinke gern Kaffee.", en: "I like drinking coffee." }, { de: "Was möchtest du trinken?", en: "What would you like to drink?" }]
+    },
+    {
+        id: 1257, de: "üben", en: "to practice", level: "A2", type: "verb", tags: ["education"], examples: [{ de: "Du musst mehr üben.", en: "You have to practice more." }, { de: "Ich übe das Klavierspielen.", en: "I am practicing playing the piano." }]
+    },
+    {
+        id: 1258, de: "übernachten", en: "to stay overnight", level: "A2", type: "verb", tags: ["travel"], examples: [{ de: "Wir übernachten in einem Hotel.", en: "We are staying overnight in a hotel." }, { de: "Kann ich bei dir übernachten?", en: "Can I stay overnight at your place?" }]
+    },
+    {
+        id: 1259, de: "übersetzen", en: "to translate", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Kannst du diesen Text übersetzen?", en: "Can you translate this text?" }, { de: "Das Wort ist schwer zu übersetzen.", en: "The word is hard to translate." }]
+    },
+    {
+        id: 1260, de: "verdienen", en: "to earn", level: "A2", type: "verb", tags: ["work","money"], examples: [{ de: "Er verdient sehr gutes Geld.", en: "He earns very good money." }, { de: "Sie hat diesen Erfolg verdient.", en: "She deserved this success." }]
+    },
+    {
+        id: 1261, de: "verkaufen", en: "to sell", level: "A2", type: "verb", tags: ["shopping"], examples: [{ de: "Ich verkaufe mein altes Auto.", en: "I am selling my old car." }, { de: "Diese Schuhe werden gut verkauft.", en: "These shoes sell well." }]
+    },
+    {
+        id: 1262, de: "versprechen", en: "to promise", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Ich verspreche es dir.", en: "I promise you." }, { de: "Das hat er fest versprochen.", en: "He firmly promised that." }]
+    },
+    {
+        id: 1263, de: "versuchen", en: "to try", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Ich versuche es noch einmal.", en: "I will try it once more." }, { de: "Bitte versuche pünktlich zu sein.", en: "Please try to be on time." }]
+    },
+    {
+        id: 1264, de: "wählen", en: "to choose / vote", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Sie müssen eine Option wählen.", en: "You have to choose an option." }, { de: "Wir wählen einen neuen Präsidenten.", en: "We are electing a new president." }]
+    },
+    {
+        id: 1265, de: "waschen", en: "to wash", level: "A2", type: "verb", tags: ["home"], examples: [{ de: "Ich muss meine Kleidung waschen.", en: "I have to wash my clothes." }, { de: "Hast du dir die Hände gewaschen?", en: "Did you wash your hands?" }]
+    },
+    {
+        id: 1266, de: "wechseln", en: "to change / exchange", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Ich möchte Geld wechseln.", en: "I want to exchange money." }, { de: "Wir wechseln das Thema.", en: "We change the subject." }]
+    },
+    {
+        id: 1267, de: "weinen", en: "to cry", level: "A2", type: "verb", tags: ["feelings"], examples: [{ de: "Das Baby weint laut.", en: "The baby cries loudly." }, { de: "Warum weinst du?", en: "Why are you crying?" }]
+    },
+    {
+        id: 1268, de: "wissen", en: "to know (a fact)", level: "A2", type: "verb", tags: ["abstract"], examples: [{ de: "Ich weiß das nicht.", en: "I don't know that." }, { de: "Weißt du die Antwort?", en: "Do you know the answer?" }]
+    },
+    {
+        id: 1269, de: "wünschen", en: "to wish", level: "A2", type: "verb", tags: ["feelings"], examples: [{ de: "Ich wünsche dir viel Glück.", en: "I wish you lots of luck." }, { de: "Was wünschst du dir zum Geburtstag?", en: "What do you wish for your birthday?" }]
+    },
+    {
+        id: 1270, de: "zahlen", en: "to pay", level: "A2", type: "verb", tags: ["money","shopping"], examples: [{ de: "Ich möchte bitte zahlen.", en: "I would like to pay, please." }, { de: "Er hat bar gezahlt.", en: "He paid in cash." }]
+    },
+    {
+        id: 1271, de: "zeigen", en: "to show", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Können Sie mir den Weg zeigen?", en: "Can you show me the way?" }, { de: "Zeig mal her!", en: "Show me!" }]
+    },
+    {
+        id: 1272, de: "ziehen", en: "to pull", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Du musst an der Tür ziehen.", en: "You have to pull the door." }, { de: "Der Koffer ist schwer zu ziehen.", en: "The suitcase is heavy to pull." }]
+    },
+    {
+        id: 1273, de: "die Angst", en: "the fear", level: "A2", type: "noun", article: "die", plural: "die Ängste", tags: ["feelings"], examples: [{ de: "Ich habe keine Angst.", en: "I have no fear." }, { de: "Er hat Angst vor Hunden.", en: "He is afraid of dogs." }]
+    },
+    {
+        id: 1274, de: "der Ärger", en: "the anger / trouble", level: "A2", type: "noun", article: "der", tags: ["feelings","abstract"], examples: [{ de: "Mit dem Nachbarn gibt es oft Ärger.", en: "There is often trouble with the neighbor." }, { de: "Mach dir keinen Ärger.", en: "Don't make yourself trouble." }]
+    },
+    {
+        id: 1275, de: "der Spaß", en: "the fun", level: "A2", type: "noun", article: "der", tags: ["feelings","leisure"], examples: [{ de: "Das macht viel Spaß!", en: "That is a lot of fun!" }, { de: "Viel Spaß im Urlaub!", en: "Have fun on vacation!" }]
+    },
+    {
+        id: 1276, de: "das Glück", en: "the luck / happiness", level: "A2", type: "noun", article: "das", tags: ["feelings"], examples: [{ de: "Viel Glück bei der Prüfung!", en: "Good luck with the exam!" }, { de: "Zum Glück ist nichts passiert.", en: "Luckily nothing happened." }]
+    },
+    {
+        id: 1277, de: "die Hoffnung", en: "the hope", level: "A2", type: "noun", article: "die", plural: "die Hoffnungen", tags: ["feelings"], examples: [{ de: "Es gibt keine Hoffnung mehr.", en: "There is no hope left." }, { de: "Die Hoffnung stirbt zuletzt.", en: "Hope dies last." }]
+    },
+    {
+        id: 1278, de: "das Interesse", en: "the interest", level: "A2", type: "noun", article: "das", plural: "die Interessen", tags: ["abstract","feelings"], examples: [{ de: "Ich habe großes Interesse daran.", en: "I have a great interest in it." }, { de: "Welche Interessen hast du?", en: "What are your interests?" }]
+    },
+    {
+        id: 1279, de: "die Liebe", en: "the love", level: "A2", type: "noun", article: "die", tags: ["feelings"], examples: [{ de: "Sie haben aus Liebe geheiratet.", en: "They married out of love." }, { de: "Meine Liebe zur Musik ist groß.", en: "My love for music is great." }]
+    },
+    {
+        id: 1280, de: "die Lust", en: "the desire / mood", level: "A2", type: "noun", article: "die", tags: ["feelings"], examples: [{ de: "Ich habe keine Lust auf Kino.", en: "I have no desire for the cinema." }, { de: "Hast du Lust, mitzukommen?", en: "Do you feel like coming along?" }]
+    },
+    {
+        id: 1281, de: "die Sorge", en: "the worry", level: "A2", type: "noun", article: "die", plural: "die Sorgen", tags: ["feelings"], examples: [{ de: "Mach dir keine Sorgen!", en: "Don't worry!" }, { de: "Er hat finanzielle Sorgen.", en: "He has financial worries." }]
+    },
+    {
+        id: 1282, de: "der Stress", en: "the stress", level: "A2", type: "noun", article: "der", tags: ["feelings","work"], examples: [{ de: "Ich habe momentan viel Stress.", en: "I have a lot of stress at the moment." }, { de: "Der Stress macht ihn krank.", en: "The stress makes him sick." }]
+    },
+    {
+        id: 1283, de: "die Überraschung", en: "the surprise", level: "A2", type: "noun", article: "die", plural: "die Überraschungen", tags: ["feelings"], examples: [{ de: "Das ist eine große Überraschung.", en: "That is a big surprise." }, { de: "Ich mag Überraschungen.", en: "I like surprises." }]
+    },
+    {
+        id: 1284, de: "das Pech", en: "the bad luck", level: "A2", type: "noun", article: "das", tags: ["abstract","feelings"], examples: [{ de: "So ein Pech!", en: "Such bad luck!" }, { de: "Er hat oft Pech im Spiel.", en: "He often has bad luck in games." }]
+    },
+    {
+        id: 1285, de: "die Freude", en: "the joy", level: "A2", type: "noun", article: "die", plural: "die Freuden", tags: ["feelings"], examples: [{ de: "Es ist mir eine große Freude.", en: "It is a great joy to me." }, { de: "Sie tanzte vor Freude.", en: "She danced with joy." }]
+    },
+    {
+        id: 1286, de: "das Papier", en: "the paper", level: "A2", type: "noun", article: "das", plural: "die Papiere", tags: ["objects"], examples: [{ de: "Haben Sie ein Stück Papier?", en: "Do you have a piece of paper?" }, { de: "Ich schreibe es auf Papier.", en: "I write it on paper." }]
+    },
+    {
+        id: 1287, de: "das Paket", en: "the parcel / package", level: "A2", type: "noun", article: "das", plural: "die Pakete", tags: ["objects"], examples: [{ de: "Das Paket ist angekommen.", en: "The parcel has arrived." }, { de: "Ich muss ein Paket zur Post bringen.", en: "I have to bring a package to the post office." }]
+    },
+    {
+        id: 1288, de: "der Bildschirm", en: "the screen / monitor", level: "A2", type: "noun", article: "der", plural: "die Bildschirme", tags: ["technology"], examples: [{ de: "Mein Bildschirm ist kaputt.", en: "My screen is broken." }, { de: "Er schaut auf den Bildschirm.", en: "He looks at the screen." }]
+    },
+    {
+        id: 1289, de: "die Tastatur", en: "the keyboard", level: "A2", type: "noun", article: "die", plural: "die Tastaturen", tags: ["technology"], examples: [{ de: "Diese Tastatur ist sehr laut.", en: "This keyboard is very loud." }, { de: "Bitte reinige die Tastatur.", en: "Please clean the keyboard." }]
+    },
+    {
+        id: 1290, de: "die Maus", en: "the mouse (animal/computer)", level: "A2", type: "noun", article: "die", plural: "die Mäuse", tags: ["animals","technology"], examples: [{ de: "Meine Computer-Maus ist neu.", en: "My computer mouse is new." }, { de: "Eine kleine Maus unter dem Sofa.", en: "A small mouse under the sofa." }]
+    },
+    {
+        id: 1291, de: "der Drucker", en: "the printer", level: "A2", type: "noun", article: "der", plural: "die Drucker", tags: ["technology"], examples: [{ de: "Der Drucker hat kein Papier mehr.", en: "The printer has no more paper." }, { de: "Können wir den Drucker benutzen?", en: "Can we use the printer?" }]
+    },
+    {
+        id: 1292, de: "die Datei", en: "the file", level: "A2", type: "noun", article: "die", plural: "die Dateien", tags: ["technology"], examples: [{ de: "Wo ist die Datei gespeichert?", en: "Where is the file saved?" }, { de: "Ich schicke die Datei per E-Mail.", en: "I send the file by email." }]
+    },
+    {
+        id: 1293, de: "das Passwort", en: "the password", level: "A2", type: "noun", article: "das", plural: "die Passwörter", tags: ["technology"], examples: [{ de: "Du musst dein Passwort ändern.", en: "You must change your password." }, { de: "Ich habe das Passwort vergessen.", en: "I forgot the password." }]
+    },
+    {
+        id: 1294, de: "der Klick", en: "the click", level: "A2", type: "noun", article: "der", plural: "die Klicks", tags: ["technology"], examples: [{ de: "Ein Klick genügt.", en: "One click is enough." }, { de: "Mit einem Klick öffnen.", en: "Open with one click." }]
+    },
+    {
+        id: 1295, de: "die App", en: "the app", level: "A2", type: "noun", article: "die", plural: "die Apps", tags: ["technology"], examples: [{ de: "Lade diese neue App herunter.", en: "Download this new app." }, { de: "Die App funktioniert nicht.", en: "The app is not working." }]
+    },
+    {
+        id: 1296, de: "die Batterie", en: "the battery", level: "A2", type: "noun", article: "die", plural: "die Batterien", tags: ["objects"], examples: [{ de: "Die Batterie ist leer.", en: "The battery is empty." }, { de: "Wir brauchen neue Batterien für das Radio.", en: "We need new batteries for the radio." }]
+    },
+    {
+        id: 1297, de: "das Programm", en: "the program / software", level: "A2", type: "noun", article: "das", plural: "die Programme", tags: ["technology"], examples: [{ de: "Das Programm ist sehr teuer.", en: "The program is very expensive." }, { de: "Welches Programm läuft im Fernsehen?", en: "What program is on TV?" }]
+    },
+    {
+        id: 1298, de: "der Sender", en: "the channel / station", level: "A2", type: "noun", article: "der", plural: "die Sender", tags: ["media"], examples: [{ de: "Mein Lieblingssender spielt Popmusik.", en: "My favorite station plays pop music." }, { de: "Welchen Sender suchen Sie?", en: "Which channel are you looking for?" }]
+    },
+    {
+        id: 1299, de: "die Zeitung", en: "the newspaper", level: "A2", type: "noun", article: "die", plural: "die Zeitungen", tags: ["media"], examples: [{ de: "Liest du jeden Tag die Zeitung?", en: "Do you read the newspaper every day?" }, { de: "Die Zeitung von heute liegt auf dem Tisch.", en: "Today's newspaper is on the table." }]
+    },
+    {
+        id: 1300, de: "die Zeitschrift", en: "the magazine", level: "A2", type: "noun", article: "die", plural: "die Zeitschriften", tags: ["media"], examples: [{ de: "Sie liest gern Zeitschriften.", en: "She likes reading magazines." }, { de: "Ich habe eine neue Zeitschrift abonniert.", en: "I subscribed to a new magazine." }]
+    },
+    {
+        id: 1301, de: "der Artikel", en: "the article", level: "A2", type: "noun", article: "der", plural: "die Artikel", tags: ["media"], examples: [{ de: "Hast du diesen Artikel gelesen?", en: "Did you read this article?" }, { de: "Ein sehr interessanter Artikel!", en: "A very interesting article!" }]
+    },
+    {
+        id: 1302, de: "die Anzeige", en: "the advertisement", level: "A2", type: "noun", article: "die", plural: "die Anzeigen", tags: ["media"], examples: [{ de: "Ich habe deine Anzeige in der Zeitung gesehen.", en: "I saw your ad in the newspaper." }, { de: "Wir suchen eine Wohnung durch eine Anzeige.", en: "We are looking for an apartment through an ad." }]
+    },
+    {
+        id: 1303, de: "das Ding", en: "the thing", level: "A2", type: "noun", article: "das", plural: "die Dinge", tags: ["abstract"], examples: [{ de: "Das ist ein schönes Ding.", en: "That is a beautiful thing." }, { de: "Ich muss noch einige Dinge erledigen.", en: "I still have to take care of some things." }]
+    },
+    {
+        id: 1304, de: "die Sache", en: "the matter / thing", level: "A2", type: "noun", article: "die", plural: "die Sachen", tags: ["abstract"], examples: [{ de: "Nimm deine Sachen und geh.", en: "Take your things and go." }, { de: "Das ist eine andere Sache.", en: "That is another matter." }]
+    },
+    {
+        id: 1305, de: "der Teil", en: "the part", level: "A2", type: "noun", article: "der", plural: "die Teile", tags: ["abstract"], examples: [{ de: "Dieses Buch hat zwei Teile.", en: "This book has two parts." }, { de: "Ich nehme nur einen Teil davon.", en: "I only take a part of it." }]
+    },
+    {
+        id: 1306, de: "die Information", en: "the information", level: "A2", type: "noun", article: "die", plural: "die Informationen", tags: ["abstract"], examples: [{ de: "Ich brauche mehr Information.", en: "I need more information." }, { de: "Vielen Dank für die Informationen.", en: "Thank you for the information." }]
+    },
+    {
+        id: 1307, de: "die Wahrheit", en: "the truth", level: "A2", type: "noun", article: "die", plural: "die Wahrheiten", tags: ["abstract"], examples: [{ de: "Sag mir bitte die Wahrheit.", en: "Please tell me the truth." }, { de: "Die Wahrheit tut manchmal weh.", en: "The truth sometimes hurts." }]
+    },
+    {
+        id: 1308, de: "das Geheimnis", en: "the secret", level: "A2", type: "noun", article: "das", plural: "die Geheimnisse", tags: ["abstract"], examples: [{ de: "Kannst du ein Geheimnis bewahren?", en: "Can you keep a secret?" }, { de: "Das bleibt unser Geheimnis.", en: "That remains our secret." }]
+    },
+    {
+        id: 1309, de: "die Lösung", en: "the solution", level: "A2", type: "noun", article: "die", plural: "die Lösungen", tags: ["abstract"], examples: [{ de: "Wir müssen eine Lösung finden.", en: "We must find a solution." }, { de: "Was ist die Lösung der Aufgabe?", en: "What is the solution to the task?" }]
+    },
+    {
+        id: 1310, de: "der Erfolg", en: "the success", level: "A2", type: "noun", article: "der", plural: "die Erfolge", tags: ["abstract","work"], examples: [{ de: "Viel Erfolg bei der Prüfung!", en: "Much success with the exam!" }, { de: "Das Projekt war ein großer Erfolg.", en: "The project was a big success." }]
+    },
+    {
+        id: 1311, de: "die Bestellung", en: "the order", level: "A2", type: "noun", article: "die", plural: "die Bestellungen", tags: ["shopping"], examples: [{ de: "Ich möchte meine Bestellung stornieren.", en: "I would like to cancel my order." }, { de: "Die Bestellung wird bald geliefert.", en: "The order will be delivered soon." }]
+    },
+    {
+        id: 1312, de: "das Wechselgeld", en: "the change (money)", level: "A2", type: "noun", article: "das", plural: "die Wechselgelder", tags: ["money","shopping"], examples: [{ de: "Bitte sehr, Ihr Wechselgeld.", en: "Here you go, your change." }, { de: "Haben Sie Wechselgeld?", en: "Do you have change?" }]
+    },
+    {
+        id: 1313, de: "das Konto", en: "the bank account", level: "A2", type: "noun", article: "das", plural: "die Konten", tags: ["money"], examples: [{ de: "Mein Konto ist leer.", en: "My bank account is empty." }, { de: "Ich muss Geld auf mein Konto einzahlen.", en: "I have to deposit money into my account." }]
+    },
+    {
+        id: 1314, de: "die Karte", en: "the card / ticket", level: "A2", type: "noun", article: "die", plural: "die Karten", tags: ["money","travel"], examples: [{ de: "Kann ich mit Karte zahlen?", en: "Can I pay by card?" }, { de: "Ich kaufe eine Fahrkarte für den Zug.", en: "I am buying a ticket for the train." }]
+    },
+    {
+        id: 1315, de: "überweisen", en: "to transfer (money)", level: "A2", type: "verb", tags: ["money"], examples: [{ de: "Ich überweise das Geld morgen.", en: "I will transfer the money tomorrow." }, { de: "Bitte überweisen Sie den Betrag auf unser Konto.", en: "Please transfer the amount to our account." }]
+    },
+    {
+        id: 1316, de: "abheben", en: "to withdraw (money)", level: "A2", type: "verb", tags: ["money"], examples: [{ de: "Ich muss Geld abheben.", en: "I need to withdraw money." }, { de: "Wo kann ich hier Geld abheben?", en: "Where can I withdraw money here?" }]
+    },
+    {
+        id: 1317, de: "verdienen", en: "to earn (money)", level: "A2", type: "verb", tags: ["money","work"], examples: [{ de: "Er verdient nicht viel Geld.", en: "He doesn't earn much money." }, { de: "Wie viel verdienst du in deinem Job?", en: "How much do you earn in your job?" }]
+    },
+    {
+        id: 1318, de: "sparen", en: "to save (money)", level: "A2", type: "verb", tags: ["money"], examples: [{ de: "Ich spare auf ein neues Auto.", en: "I am saving for a new car." }, { de: "Wir müssen Geld sparen.", en: "We have to save money." }]
+    },
+    {
+        id: 1319, de: "ausgeben", en: "to spend (money)", level: "A2", type: "verb", tags: ["money"], examples: [{ de: "Er gibt zu viel Geld aus.", en: "He spends too much money." }, { de: "Ich habe mein ganzes Taschengeld ausgegeben.", en: "I spent all my pocket money." }]
+    },
+    {
+        id: 1320, de: "bewerben", en: "to apply for a job", level: "A2", type: "verb", tags: ["work"], examples: [{ de: "Ich bewerbe mich um die Stelle.", en: "I am applying for the position." }, { de: "Sie hat sich bei mehreren Firmen beworben.", en: "She applied to several companies." }]
+    },
+    {
+        id: 1321, de: "stattfinden", en: "to take place", level: "A2", type: "verb", tags: ["abstract","time"], examples: [{ de: "Die Besprechung findet am Montag statt.", en: "The meeting takes place on Monday." }, { de: "Wann findet das Fest statt?", en: "When does the festival take place?" }]
+    },
+    {
+        id: 1322, de: "wiederholen", en: "to repeat", level: "A2", type: "verb", tags: ["education"], examples: [{ de: "Können Sie das bitte wiederholen?", en: "Can you please repeat that?" }, { de: "Wir müssen Vokabeln wiederholen.", en: "We have to repeat vocabulary." }]
+    },
+    {
+        id: 1323, de: "einschalten", en: "to switch on", level: "A2", type: "verb", tags: ["technology","actions"], examples: [{ de: "Schalten Sie bitte den Fernseher ein.", en: "Please switch on the TV." }, { de: "Ich habe den Computer eingeschaltet.", en: "I switched on the computer." }]
+    },
+    {
+        id: 1324, de: "ausschalten", en: "to switch off", level: "A2", type: "verb", tags: ["technology","actions"], examples: [{ de: "Vergiss nicht, das Licht auszuschalten.", en: "Don't forget to switch off the light." }, { de: "Er hat das Handy ausgeschaltet.", en: "He switched off the mobile phone." }]
+    },
+    {
+        id: 1325, de: "aufstehen", en: "to get up / stand up", level: "A2", type: "verb", tags: ["actions","time"], examples: [{ de: "Ich stehe jeden Morgen um sechs auf.", en: "I get up at six every morning." }, { de: "Bitte bleiben Sie sitzen, Sie müssen nicht aufstehen.", en: "Please stay seated, you don't have to stand up." }]
+    },
+    {
+        id: 1326, de: "einkaufen", en: "to shop", level: "A2", type: "verb", tags: ["shopping"], examples: [{ de: "Wir müssen heute Abend noch einkaufen gehen.", en: "We still have to go shopping tonight." }, { de: "Er kauft im Supermarkt ein.", en: "He shops at the supermarket." }]
+    },
+    {
+        id: 1327, de: "mitmachen", en: "to join in / participate", level: "A2", type: "verb", tags: ["social","leisure"], examples: [{ de: "Macht ihr bei dem Spiel mit?", en: "Are you joining in the game?" }, { de: "Ich möchte bei diesem Kurs mitmachen.", en: "I want to participate in this course." }]
+    },
+    {
+        id: 1328, de: "losgehen", en: "to start / set off", level: "A2", type: "verb", tags: ["movement","time"], examples: [{ de: "Wir müssen bald losgehen.", en: "We have to set off soon." }, { de: "Der Film geht gleich los.", en: "The film is starting right away." }]
+    },
+    {
+        id: 1329, de: "mitkommen", en: "to come along", level: "A2", type: "verb", tags: ["social","movement"], examples: [{ de: "Ich gehe ins Kino. Kommst du mit?", en: "I'm going to the cinema. Are you coming along?" }, { de: "Sie kann heute leider nicht mitkommen.", en: "Unfortunately she can't come along today." }]
+    },
+    {
+        id: 1330, de: "anrufen", en: "to call (by phone)", level: "A2", type: "verb", tags: ["communication"], examples: [{ de: "Ruf mich bitte heute Abend an.", en: "Please call me tonight." }, { de: "Ich werde ihn morgen anrufen.", en: "I will call him tomorrow." }]
+    },
+    {
+        id: 1331, de: "aufpassen", en: "to pay attention / watch out", level: "A2", type: "verb", tags: ["actions"], examples: [{ de: "Du musst im Unterricht besser aufpassen.", en: "You must pay better attention in class." }, { de: "Pass auf das Auto auf!", en: "Watch out for the car!" }]
+    },
+    {
+        id: 1332, de: "abfahren", en: "to depart", level: "A2", type: "verb", tags: ["travel"], examples: [{ de: "Der Zug fährt um 10 Uhr ab.", en: "The train departs at 10 o'clock." }, { de: "Wann fahrt ihr morgen ab?", en: "When are you departing tomorrow?" }]
+    },
+    {
+        id: 1333, de: "ankommen", en: "to arrive", level: "A2", type: "verb", tags: ["travel"], examples: [{ de: "Wir kommen um 15 Uhr in Berlin an.", en: "We arrive in Berlin at 3 pm." }, { de: "Ist der Flug schon angekommen?", en: "Has the flight arrived yet?" }]
+    },
+    {
+        id: 1334, de: "einsteigen", en: "to get on / board", level: "A2", type: "verb", tags: ["travel"], examples: [{ de: "Bitte steigen Sie hinten ein.", en: "Please get on at the back." }, { de: "Alle einsteigen, der Zug fährt gleich los!", en: "All board, the train is leaving right away!" }]
+    },
+    {
+        id: 1335, de: "aussteigen", en: "to get off", level: "A2", type: "verb", tags: ["travel"], examples: [{ de: "Wir müssen am nächsten Bahnhof aussteigen.", en: "We have to get off at the next station." }, { de: "Wo müssen wir aussteigen?", en: "Where do we have to get off?" }]
+    },
+    {
+        id: 1336, de: "umsteigen", en: "to transfer (transport)", level: "A2", type: "verb", tags: ["travel"], examples: [{ de: "Sie müssen in München umsteigen.", en: "You have to transfer in Munich." }, { de: "Wie oft müssen wir umsteigen?", en: "How often do we have to transfer?" }]
+    },
+    {
+        id: 1337, de: "statt", en: "instead of", level: "A2", type: "preposition", tags: ["grammar"], examples: [{ de: "Ich trinke Tee statt Kaffee.", en: "I drink tea instead of coffee." }, { de: "Wir gehen spazieren statt fernzusehen.", en: "We go for a walk instead of watching TV." }]
+    },
+    {
+        id: 1338, de: "trotz", en: "despite", level: "A2", type: "preposition", tags: ["grammar"], examples: [{ de: "Trotz des Regens gehen wir spazieren.", en: "Despite the rain we go for a walk." }, { de: "Trotz der Probleme sind wir glücklich.", en: "Despite the problems we are happy." }]
+    },
+    {
+        id: 1339, de: "wegen", en: "because of", level: "A2", type: "preposition", tags: ["grammar"], examples: [{ de: "Wegen des schlechten Wetters bleiben wir zu Hause.", en: "Because of the bad weather we stay at home." }, { de: "Er ist wegen der Verletzung nicht gekommen.", en: "He didn't come because of the injury." }]
+    },
+    {
+        id: 1340, de: "während", en: "during / while", level: "A2", type: "preposition", tags: ["grammar","time"], examples: [{ de: "Während des Studiums habe ich viel gearbeitet.", en: "During my studies I worked a lot." }, { de: "Während ich lese, hört er Musik.", en: "While I read, he listens to music." }]
+    },
+    {
+        id: 1341, de: "innerhalb", en: "within", level: "A2", type: "preposition", tags: ["grammar","time"], examples: [{ de: "Bitte bezahlen Sie innerhalb von 14 Tagen.", en: "Please pay within 14 days." }, { de: "Das Dorf liegt innerhalb der Grenze.", en: "The village lies within the border." }]
+    },
+    {
+        id: 1342, de: "außerhalb", en: "outside of", level: "A2", type: "preposition", tags: ["grammar","places"], examples: [{ de: "Wir wohnen außerhalb der Stadt.", en: "We live outside the city." }, { de: "Außerhalb der Geschäftszeiten.", en: "Outside business hours." }]
+    },
+    {
+        id: 1343, de: "jemand", en: "someone / somebody", level: "A2", type: "pronoun", tags: ["abstract"], examples: [{ de: "Ist jemand hier?", en: "Is anybody here?" }, { de: "Ich suche jemanden.", en: "I am looking for somebody." }]
+    },
+    {
+        id: 1344, de: "niemand", en: "no one / nobody", level: "A2", type: "pronoun", tags: ["abstract"], examples: [{ de: "Es ist niemand da.", en: "There is no one there." }, { de: "Niemand hat mir geholfen.", en: "Nobody helped me." }]
+    },
+    {
+        id: 1345, de: "etwas", en: "something / somewhat", level: "A2", type: "pronoun", tags: ["abstract"], examples: [{ de: "Möchtest du etwas essen?", en: "Would you like something to eat?" }, { de: "Das ist etwas schwierig.", en: "That is somewhat difficult." }]
+    },
+    {
+        id: 1346, de: "nichts", en: "nothing", level: "A2", type: "pronoun", tags: ["abstract"], examples: [{ de: "Ich habe nichts gesehen.", en: "I saw nothing." }, { de: "Hier gibt es nichts zu tun.", en: "There is nothing to do here." }]
+    },
+    {
+        id: 1347, de: "jeder", en: "everyone / every", level: "A2", type: "pronoun", tags: ["abstract"], examples: [{ de: "Jeder Mensch ist anders.", en: "Every person is different." }, { de: "Das weiß doch jeder!", en: "Everyone knows that!" }]
+    },
+    {
+        id: 1348, de: "alle", en: "all / everyone", level: "A2", type: "pronoun", tags: ["abstract"], examples: [{ de: "Alle sind herzlich willkommen.", en: "Everyone is very welcome." }, { de: "Sind alle bereit?", en: "Is everyone ready?" }]
+    },
+    {
+        id: 1349, de: "manche", en: "some (people)", level: "A2", type: "pronoun", tags: ["abstract"], examples: [{ de: "Manche Leute arbeiten sehr viel.", en: "Some people work a lot." }, { de: "Ich habe nur manche verstanden.", en: "I only understood some." }]
+    },
+    {
+        id: 1350, de: "selbst", en: "self / even", level: "A2", type: "pronoun", tags: ["abstract"], examples: [{ de: "Er hat das Auto selbst repariert.", en: "He repaired the car himself." }, { de: "Selbst ein Kind versteht das!", en: "Even a child understands that!" }]
+    }
+,
+
+    // ── AI BATCH 2: A2 EXPANSION ────────────────────────────────────────────────
+    {
+        id: 1351, de: "die Ausbildung", en: "the training / apprenticeship", level: "A2", type: "noun", article: "die", plural: "die Ausbildungen", tags: ["education","work"], examples: [{ de: "Sie macht eine Ausbildung zur Bäckerin.", en: "She is doing an apprenticeship as a baker." }, { de: "Die Ausbildung dauert drei Jahre.", en: "The training takes three years." }]
+    },
+    {
+        id: 1352, de: "die Stelle", en: "the job / position", level: "A2", type: "noun", article: "die", plural: "die Stellen", tags: ["work"], examples: [{ de: "Ich suche eine neue Stelle.", en: "I am looking for a new job." }, { de: "Die Stelle ist gut bezahlt.", en: "The position is well paid." }]
+    },
+    {
+        id: 1353, de: "die Firma", en: "the company", level: "A2", type: "noun", article: "die", plural: "die Firmen", tags: ["work"], examples: [{ de: "Ich arbeite in einer großen Firma.", en: "I work in a large company." }, { de: "Die Firma stellt Autos her.", en: "The company manufactures cars." }]
+    },
+    {
+        id: 1354, de: "die Kollegin", en: "the colleague (female)", level: "A2", type: "noun", article: "die", plural: "die Kolleginnen", tags: ["work","social"], examples: [{ de: "Meine Kollegin hilft mir oft.", en: "My colleague often helps me." }, { de: "Wir essen mit den Kolleginnen zu Mittag.", en: "We have lunch with the female colleagues." }]
+    },
+    {
+        id: 1355, de: "der Feierabend", en: "the end of the working day", level: "A2", type: "noun", article: "der", plural: "die Feierabende", tags: ["work","time"], examples: [{ de: "Um 17 Uhr habe ich Feierabend.", en: "I finish work at 5 PM." }, { de: "Schönen Feierabend!", en: "Have a nice evening (after work)!" }]
+    },
+    {
+        id: 1356, de: "das Gleis", en: "the track / platform", level: "A2", type: "noun", article: "das", plural: "die Gleise", tags: ["travel"], examples: [{ de: "Der Zug fährt auf Gleis 4 ab.", en: "The train departs from track 4." }, { de: "Bitte gehen Sie zu Gleis 2.", en: "Please go to track 2." }]
+    },
+    {
+        id: 1357, de: "der Flug", en: "the flight", level: "A2", type: "noun", article: "der", plural: "die Flüge", tags: ["travel"], examples: [{ de: "Der Flug war sehr entspannt.", en: "The flight was very relaxed." }, { de: "Wann geht dein Flug?", en: "When does your flight depart?" }]
+    },
+    {
+        id: 1358, de: "die Grenze", en: "the border", level: "A2", type: "noun", article: "die", plural: "die Grenzen", tags: ["travel","places"], examples: [{ de: "Wir sind an der Grenze.", en: "We are at the border." }, { de: "Das Dorf liegt nahe der Grenze.", en: "The village is located near the border." }]
+    },
+    {
+        id: 1359, de: "das Ausland", en: "the foreign country / abroad", level: "A2", type: "noun", article: "das", tags: ["travel"], examples: [{ de: "Sie studiert im Ausland.", en: "She is studying abroad." }, { de: "Fahrt ihr dieses Jahr ins Ausland?", en: "Are you traveling abroad this year?" }]
+    },
+    {
+        id: 1360, de: "der Ausflug", en: "the excursion / trip", level: "A2", type: "noun", article: "der", plural: "die Ausflüge", tags: ["travel","leisure"], examples: [{ de: "Wir machen am Wochenende einen Ausflug.", en: "We are taking a trip this weekend." }, { de: "Der Ausflug hat uns sehr gefallen.", en: "We really liked the excursion." }]
+    },
+    {
+        id: 1361, de: "die Touristeninformation", en: "the tourist information", level: "A2", type: "noun", article: "die", plural: "die Touristeninformationen", tags: ["travel","places"], examples: [{ de: "Wo ist die Touristeninformation?", en: "Where is the tourist information?" }, { de: "Die Touristeninformation gibt Stadtpläne aus.", en: "The tourist information hands out city maps." }]
+    },
+    {
+        id: 1362, de: "der Hafen", en: "the harbor / port", level: "A2", type: "noun", article: "der", plural: "die Häfen", tags: ["travel","places"], examples: [{ de: "Wir gehen im Hafen spazieren.", en: "We go for a walk in the harbor." }, { de: "Das Schiff liegt im Hafen.", en: "The ship is in the port." }]
+    },
+    {
+        id: 1363, de: "das Dorf", en: "the village", level: "A2", type: "noun", article: "das", plural: "die Dörfer", tags: ["places"], examples: [{ de: "Er kommt aus einem kleinen Dorf.", en: "He comes from a small village." }, { de: "Leben im Dorf ist ruhig.", en: "Living in a village is quiet." }]
+    },
+    {
+        id: 1364, de: "die Großstadt", en: "the big city", level: "A2", type: "noun", article: "die", plural: "die Großstädte", tags: ["places"], examples: [{ de: "Ich wohne in einer Großstadt.", en: "I live in a big city." }, { de: "Das Leben in der Großstadt ist teuer.", en: "Life in the big city is expensive." }]
+    },
+    {
+        id: 1365, de: "die Brücke", en: "the bridge", level: "A2", type: "noun", article: "die", plural: "die Brücken", tags: ["places"], examples: [{ de: "Wir gehen über die Brücke.", en: "We are walking over the bridge." }, { de: "Die Brücke ist alt.", en: "The bridge is old." }]
+    },
+    {
+        id: 1366, de: "der Verkehr", en: "the traffic", level: "A2", type: "noun", article: "der", tags: ["travel","places"], examples: [{ de: "Morgens gibt es hier viel Verkehr.", en: "In the mornings there is a lot of traffic here." }, { de: "Achten Sie auf den Verkehr!", en: "Pay attention to the traffic!" }]
+    },
+    {
+        id: 1367, de: "der Unfall", en: "the accident", level: "A2", type: "noun", article: "der", plural: "die Unfälle", tags: ["travel"], examples: [{ de: "Es gab einen Unfall auf der Autobahn.", en: "There was an accident on the highway." }, { de: "Zum Glück ist es kein schwerer Unfall.", en: "Fortunately, it is not a severe accident." }]
+    },
+    {
+        id: 1368, de: "die Gefahr", en: "the danger", level: "A2", type: "noun", article: "die", plural: "die Gefahren", tags: ["abstract"], examples: [{ de: "Das ist eine große Gefahr.", en: "That is a great danger." }, { de: "Achtung, Gefahr!", en: "Attention, danger!" }]
+    },
+    {
+        id: 1369, de: "vorsichtig", en: "careful / cautiously", level: "A2", type: "adjective", tags: ["abstract"], examples: [{ de: "Sei bitte vorsichtig!", en: "Please be careful!" }, { de: "Er fährt sehr vorsichtig.", en: "He drives very cautiously." }]
+    },
+    {
+        id: 1370, de: "sicher", en: "safe / sure", level: "A2", type: "adjective", tags: ["abstract"], examples: [{ de: "Bist du sicher?", en: "Are you sure?" }, { de: "Das ist ein sicherer Ort.", en: "This is a safe place." }]
+    },
+    {
+        id: 1371, de: "gefährlich", en: "dangerous", level: "A2", type: "adjective", tags: ["abstract"], examples: [{ de: "Das Meer ist hier gefährlich.", en: "The sea is dangerous here." }, { de: "Es ist gefährlich, hier nachts allein spazieren zu gehen.", en: "It is dangerous to walk alone here at night." }]
+    },
+    {
+        id: 1372, de: "genau", en: "exact / accurate", level: "A2", type: "adjective", tags: ["abstract"], examples: [{ de: "Das ist genau mein Stil.", en: "That is exactly my style." }, { de: "Wissen Sie genau, wann der Zug abfährt?", en: "Do you know exactly when the train leaves?" }]
+    },
+    {
+        id: 1373, de: "fertig", en: "ready / finished", level: "A2", type: "adjective", tags: ["abstract"], examples: [{ de: "Bist du fertig?", en: "Are you finished/ready?" }, { de: "Das Essen ist fertig!", en: "The food is ready!" }]
+    },
+    {
+        id: 1374, de: "kühl", en: "cool", level: "A2", type: "adjective", tags: ["description","weather"], examples: [{ de: "Heute Morgen war es sehr kühl.", en: "This morning it was very cool." }, { de: "Stell die Getränke an einen kühlen Ort.", en: "Put the drinks in a cool place." }]
+    },
+    {
+        id: 1375, de: "die Wolke", en: "the cloud", level: "A2", type: "noun", article: "die", plural: "die Wolken", tags: ["weather"], examples: [{ de: "Es gibt heute keine einzige Wolke am Himmel.", en: "There is not a single cloud in the sky today." }, { de: "Die dunklen Wolken bringen Regen.", en: "The dark clouds bring rain." }]
+    },
+    {
+        id: 1376, de: "das Gewitter", en: "the thunderstorm", level: "A2", type: "noun", article: "das", plural: "die Gewitter", tags: ["weather"], examples: [{ de: "Morgen Nachmittag gibt es vielleicht ein Gewitter.", en: "There might be a thunderstorm tomorrow afternoon." }, { de: "Der Hund hat Angst vor Gewittern.", en: "The dog is afraid of thunderstorms." }]
+    },
+    {
+        id: 1377, de: "der Grad", en: "the degree", level: "A2", type: "noun", article: "der", plural: "die Grade", tags: ["weather"], examples: [{ de: "Heute haben wir 25 Grad.", en: "Today we have 25 degrees." }, { de: "Bei null Grad gefriert Wasser.", en: "At zero degrees water freezes." }]
+    },
+    {
+        id: 1378, de: "die Natur", en: "the nature", level: "A2", type: "noun", article: "die", tags: ["nature"], examples: [{ de: "Wir verbringen viel Zeit in der Natur.", en: "We spend a lot of time in nature." }, { de: "Man muss die Natur schützen.", en: "One must protect nature." }]
+    },
+    {
+        id: 1379, de: "der Baum", en: "the tree", level: "A2", type: "noun", article: "der", plural: "die Bäume", tags: ["nature"], examples: [{ de: "Die Bäume haben im Herbst bunte Blätter.", en: "The trees have colorful leaves in autumn." }, { de: "Vor dem Haus steht ein großer Baum.", en: "There is a large tree in front of the house." }]
+    },
+    {
+        id: 1380, de: "die Blume", en: "the flower", level: "A2", type: "noun", article: "die", plural: "die Blumen", tags: ["nature"], examples: [{ de: "Diese Blume duftet wunderbar.", en: "This flower smells wonderful." }, { de: "Ich habe meiner Mutter Blumen geschenkt.", en: "I gave my mother flowers." }]
+    },
+    {
+        id: 1381, de: "das Gras", en: "the grass", level: "A2", type: "noun", article: "das", plural: "die Gräser", tags: ["nature"], examples: [{ de: "Bitte das Gras nicht betreten.", en: "Please do not walk on the grass." }, { de: "Wir liegen im grünen Gras.", en: "We are lying in the green grass." }]
+    },
+    {
+        id: 1382, de: "der Berg", en: "the mountain", level: "A2", type: "noun", article: "der", plural: "die Berge", tags: ["nature","travel"], examples: [{ de: "Wir wandern gern in den Bergen.", en: "We like hiking in the mountains." }, { de: "Der Berg ist über 3000 Meter hoch.", en: "The mountain is over 3000 meters high." }]
+    },
+    {
+        id: 1383, de: "das Tal", en: "the valley", level: "A2", type: "noun", article: "das", plural: "die Täler", tags: ["nature","travel"], examples: [{ de: "Das Dorf liegt in einem tiefen Tal.", en: "The village lies in a deep valley." }, { de: "Nebeltäler sehen oft mystisch aus.", en: "Fog valleys often look mystical." }]
+    },
+    {
+        id: 1384, de: "der Wald", en: "the forest", level: "A2", type: "noun", article: "der", plural: "die Wälder", tags: ["nature","travel"], examples: [{ de: "Ein Spaziergang durch den Wald ist erholsam.", en: "A walk through the forest is relaxing." }, { de: "In diesem Wald gibt es Bären.", en: "There are bears in this forest." }]
+    },
+    {
+        id: 1385, de: "das Meer", en: "the sea / ocean", level: "A2", type: "noun", article: "das", plural: "die Meere", tags: ["nature","travel"], examples: [{ de: "Mein Traum ist ein Haus am Meer.", en: "My dream is a house by the sea." }, { de: "Das Meerwasser ist salzig.", en: "The sea water is salty." }]
+    },
+    {
+        id: 1386, de: "die Insel", en: "the island", level: "A2", type: "noun", article: "die", plural: "die Inseln", tags: ["travel","places"], examples: [{ de: "Rügen ist die größte deutsche Insel.", en: "Rügen is the largest German island." }, { de: "Wir verbringen unseren Urlaub auf einer Insel.", en: "We are spending our vacation on an island." }]
+    },
+    {
+        id: 1387, de: "die Gesundheit", en: "the health", level: "A2", type: "noun", article: "die", tags: ["health"], examples: [{ de: "Gesundheit ist das Wichtigste im Leben.", en: "Health is the most important thing in life." }, { de: "Achten Sie auf Ihre Gesundheit!", en: "Pay attention to your health!" }]
+    },
+    {
+        id: 1388, de: "die Krankheit", en: "the illness / disease", level: "A2", type: "noun", article: "die", plural: "die Krankheiten", tags: ["health"], examples: [{ de: "Er leidet an einer schweren Krankheit.", en: "He suffers from a serious illness." }, { de: "Es gibt seltene Krankheiten.", en: "There are rare diseases." }]
+    },
+    {
+        id: 1389, de: "die Grippe", en: "the flu", level: "A2", type: "noun", article: "die", plural: "die Grippen", tags: ["health"], examples: [{ de: "Viele Leute haben im Winter die Grippe.", en: "Many people have the flu in winter." }, { de: "Gegen die Grippe kann man sich impfen lassen.", en: "You can get vaccinated against the flu." }]
+    },
+    {
+        id: 1390, de: "der Husten", en: "the cough", level: "A2", type: "noun", article: "der", tags: ["health"], examples: [{ de: "Hast du Husten?", en: "Do you have a cough?" }, { de: "Nehmen Sie diesen Saft gegen den Husten.", en: "Take this syrup for the cough." }]
+    },
+    {
+        id: 1391, de: "der Schmerz", en: "the pain", level: "A2", type: "noun", article: "der", plural: "die Schmerzen", tags: ["health"], examples: [{ de: "Der Schmerz ist unerträglich.", en: "The pain is unbearable." }, { de: "Haben Sie Schmerzen?", en: "Are you in pain?" }]
+    },
+    {
+        id: 1392, de: "die Tablette", en: "the pill / tablet", level: "A2", type: "noun", article: "die", plural: "die Tabletten", tags: ["health"], examples: [{ de: "Nimm eine Tablette gegen Kopfschmerzen.", en: "Take a pill for the headache." }, { de: "Wie oft soll ich diese Tabletten nehmen?", en: "How often should I take these pills?" }]
+    },
+    {
+        id: 1393, de: "das Rezept", en: "the recipe / medical prescription", level: "A2", type: "noun", article: "das", plural: "die Rezepte", tags: ["food","health"], examples: [{ de: "Das Rezept für diesen Kuchen ist einfach.", en: "The recipe for this cake is simple." }, { de: "Sie brauchen ein Rezept für dies Medikament.", en: "You need a prescription for this medicine." }]
+    },
+    {
+        id: 1394, de: "die Krankenversicherung", en: "the health insurance", level: "A2", type: "noun", article: "die", plural: "die Krankenversicherungen", tags: ["health","documents"], examples: [{ de: "Haben Sie Ihre Karte der Krankenversicherung dabei?", en: "Do you have your health insurance card with you?" }, { de: "Die Krankenversicherung zahlt die Behandlung.", en: "Health insurance pays for the treatment." }]
+    },
+    {
+        id: 1395, de: "der Arzt", en: "the doctor (male)", level: "A2", type: "noun", article: "der", plural: "die Ärzte", tags: ["work","health"], examples: [{ de: "Der Arzt wird gleich bei Ihnen sein.", en: "The doctor will be with you shortly." }, { de: "Sie müssen dringend zum Arzt gehen.", en: "You urgently need to go to the doctor." }]
+    },
+    {
+        id: 1396, de: "die Ärztin", en: "the doctor (female)", level: "A2", type: "noun", article: "die", plural: "die Ärztinnen", tags: ["work","health"], examples: [{ de: "Die Ärztin hat heute Nachmittag keine Sprechstunde.", en: "The doctor has no office hours this afternoon." }, { de: "Ihre Ärztin hat ihr Ruhe verordnet.", en: "Her doctor ordered her to rest." }]
+    },
+    {
+        id: 1397, de: "der Termin", en: "the appointment", level: "A2", type: "noun", article: "der", plural: "die Termine", tags: ["time","work"], examples: [{ de: "Termine sind wichtig im Geschäftsleben.", en: "Appointments are important in business life." }, { de: "Können wir einen neuen Termin vereinbaren?", en: "Can we arrange a new appointment?" }]
+    },
+    {
+        id: 1398, de: "die Sekunde", en: "the second", level: "A2", type: "noun", article: "die", plural: "die Sekunden", tags: ["time"], examples: [{ de: "Der Weltrekord wurde um wenige Sekunden verbessert.", en: "The world record was improved by a few seconds." }, { de: "Gib mir nur eine Sekunde!", en: "Give me just a second!" }]
+    },
+    {
+        id: 1399, de: "der Tag", en: "the day", level: "A2", type: "noun", article: "der", plural: "die Tage", tags: ["time"], examples: [{ de: "Welcher Tag ist heute?", en: "What day is today?" }, { de: "Wir haben den ganzen Tag am Strand verbracht.", en: "We spent the whole day at the beach." }]
+    },
+    {
+        id: 1400, de: "der Morgen", en: "the morning", level: "A2", type: "noun", article: "der", plural: "die Morgen", tags: ["time"], examples: [{ de: "Guten Morgen!", en: "Good morning!" }, { de: "Am Morgen trinke ich immer Kaffee.", en: "In the morning I always drink coffee." }]
+    },
+    {
+        id: 1401, de: "der Vormittag", en: "the morning (before noon)", level: "A2", type: "noun", article: "der", plural: "die Vormittage", tags: ["time"], examples: [{ de: "Können wir uns am Vormittag treffen?", en: "Can we meet in the morning?" }, { de: "Den ganzen Vormittag hat es geregnet.", en: "It rained the entire morning." }]
+    },
+    {
+        id: 1402, de: "der Mittag", en: "the noon / midday", level: "A2", type: "noun", article: "der", plural: "die Mittage", tags: ["time"], examples: [{ de: "Wir machen am Mittag eine Pause.", en: "We take a break at noon." }, { de: "Punkt Mittag läuten die Glocken.", en: "At exactly noon the bells ring." }]
+    },
+    {
+        id: 1403, de: "der Nachmittag", en: "the afternoon", level: "A2", type: "noun", article: "der", plural: "die Nachmittage", tags: ["time"], examples: [{ de: "Guten Nachmittag!", en: "Good afternoon!" }, { de: "Am Sonntagnachmittag backe ich gern Kuchen.", en: "On Sunday afternoon I like to bake cakes." }]
+    },
+    {
+        id: 1404, de: "der Abend", en: "the evening", level: "A2", type: "noun", article: "der", plural: "die Abende", tags: ["time"], examples: [{ de: "Heute Abend gehen wir ins Theater.", en: "Tonight we are going to the theater." }, { de: "Der Abend war sehr gemütlich.", en: "The evening was very cozy." }]
+    },
+    {
+        id: 1405, de: "die Nacht", en: "the night", level: "A2", type: "noun", article: "die", plural: "die Nächte", tags: ["time"], examples: [{ de: "Gute Nacht!", en: "Good night!" }, { de: "Nachts fahre ich nicht gern Auto.", en: "I don't like driving at night." }]
+    },
+    {
+        id: 1406, de: "vorgestern", en: "the day before yesterday", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Vorgestern habe ich einen Brief bekommen.", en: "The day before yesterday I received a letter." }, { de: "Der Brief wurde vorgestern abgeschickt.", en: "The letter was mailed the day before yesterday." }]
+    },
+    {
+        id: 1407, de: "übermorgen", en: "the day after tomorrow", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Ich reise übermorgen ab.", en: "I'm leaving the day after tomorrow." }, { de: "Unser Termin ist übermorgen.", en: "Our appointment is the day after tomorrow." }]
+    },
+    {
+        id: 1408, de: "schon", en: "already", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Bist du schon fertig?", en: "Are you already finished?" }, { de: "Ich habe schon gegessen.", en: "I have already eaten." }]
+    },
+    {
+        id: 1409, de: "noch", en: "still / yet", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Ich brauche noch Zeit.", en: "I still need time." }, { de: "Sind wir noch nicht da?", en: "Are we not there yet?" }]
+    },
+    {
+        id: 1410, de: "endlich", en: "finally / at last", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Endlich Wochenende!", en: "Finally weekend!" }, { de: "Endlich habe ich die Prüfung bestanden.", en: "At last I passed the exam." }]
+    },
+    {
+        id: 1411, de: "plötzlich", en: "suddenly", level: "A2", type: "adverb", tags: ["time","abstract"], examples: [{ de: "Plötzlich fing es an zu regnen.", en: "Suddenly it started to rain." }, { de: "Die Tür ging plötzlich auf.", en: "The door opened suddenly." }]
+    },
+    {
+        id: 1412, de: "gerade", en: "just / exactly", level: "A2", type: "adverb", tags: ["time","description"], examples: [{ de: "Ich habe gerade gegessen.", en: "I just ate." }, { de: "Das Brett ist nicht ganz gerade.", en: "The board is not completely straight." }]
+    },
+    {
+        id: 1413, de: "jederzeit", en: "anytime", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Du kannst mich jederzeit anrufen.", en: "You can call me anytime." }, { de: "Die Öffnungszeiten gelten nicht jederzeit.", en: "The opening hours are not valid anytime." }]
+    },
+    {
+        id: 1414, de: "irgendwann", en: "sometime", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Irgendwann werde ich Gitarre spielen lernen.", en: "Sometime I will learn to play the guitar." }, { de: "Wir müssen das irgendwann besprechen.", en: "We have to discuss that sometime." }]
+    },
+    {
+        id: 1415, de: "damals", en: "back then / at that time", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Damals war alles viel billiger.", en: "Back then everything was much cheaper." }, { de: "Erinnerst du dich noch an damals?", en: "Do you still remember back then?" }]
+    },
+    {
+        id: 1416, de: "nachdem", en: "after (conjunction)", level: "A2", type: "conjunction", tags: ["grammar"], examples: [{ de: "Nachdem er gegessen hatte, ging er ins Bett.", en: "After he had eaten, he went to bed." }, { de: "Ich rufe an, nachdem ich angekommen bin.", en: "I will call after I have arrived." }]
+    },
+    {
+        id: 1417, de: "bevor", en: "before (conjunction)", level: "A2", type: "conjunction", tags: ["grammar"], examples: [{ de: "Bevor ich ins Bett gehe, putze ich mir die Zähne.", en: "Before I go to bed, I brush my teeth." }, { de: "Wir müssen das klären, bevor wir entscheiden.", en: "We have to clarify that before we decide." }]
+    },
+    {
+        id: 1418, de: "obwohl", en: "although", level: "A2", type: "conjunction", tags: ["grammar"], examples: [{ de: "Er ging arbeiten, obwohl er krank war.", en: "He went to work although he was sick." }, { de: "Obwohl es schneit, ist es nicht sehr kalt.", en: "Although it's snowing, it is not very cold." }]
+    },
+    {
+        id: 1419, de: "wenn", en: "if / when", level: "A2", type: "conjunction", tags: ["grammar"], examples: [{ de: "Wenn es regnet, bleiben wir drinnen.", en: "If it rains, we stay inside." }, { de: "Wenn er kommt, sag mir Bescheid.", en: "When he comes, let me know." }]
+    },
+    {
+        id: 1420, de: "als", en: "when (past) / than", level: "A2", type: "conjunction", tags: ["grammar"], examples: [{ de: "Als ich ein Kind war, spielte ich oft draußen.", en: "When I was a child, I often played outside." }, { de: "Du bist größer als ich.", en: "You are taller than me." }]
+    },
+    {
+        id: 1421, de: "deshalb", en: "therefore", level: "A2", type: "adverb", tags: ["grammar"], examples: [{ de: "Ich war müde, deshalb bin ich zu Hause geblieben.", en: "I was tired, therefore I stayed home." }, { de: "Es war teuer, deshalb habe ich es nicht gekauft.", en: "It was expensive, therefore I didn't buy it." }]
+    },
+    {
+        id: 1422, de: "trotzdem", en: "nevertheless", level: "A2", type: "adverb", tags: ["grammar"], examples: [{ de: "Es regnete, trotzdem gingen wir spazieren.", en: "It was raining, nevertheless we went for a walk." }, { de: "Es ist spät, ich muss trotzdem los.", en: "It's late, I have to go nevertheless." }]
+    },
+    {
+        id: 1423, de: "denn", en: "because (coordinating)", level: "A2", type: "conjunction", tags: ["grammar"], examples: [{ de: "Ich nehme einen Schirm, denn es regnet.", en: "I take an umbrella, because it is raining." }, { de: "Er isst viel Fleisch, denn er ist kein Vegetarier.", en: "He eats a lot of meat, because he is not a vegetarian." }]
+    }
+,
+
+    // ── AI BATCH 3: A2 EXPANSION ────────────────────────────────────────────────
+    {
+        id: 1424, de: "der Einwohner", en: "the inhabitant / resident", level: "A2", type: "noun", article: "der", plural: "die Einwohner", tags: ["people","places"], examples: [{ de: "Berlin hat über drei Millionen Einwohner.", en: "Berlin has over three million inhabitants." }, { de: "Die Einwohner sind sehr freundlich.", en: "The residents are very friendly." }]
+    },
+    {
+        id: 1425, de: "die Haut", en: "the skin", level: "A2", type: "noun", article: "die", plural: "die Häute", tags: ["body"], examples: [{ de: "Sie hat sehr empfindliche Haut.", en: "She has very sensitive skin." }, { de: "Die Creme ist gut für die Haut.", en: "The cream is good for the skin." }]
+    },
+    {
+        id: 1426, de: "das Herz", en: "the heart", level: "A2", type: "noun", article: "das", plural: "die Herzen", tags: ["body"], examples: [{ de: "Mein Herz schlägt schnell.", en: "My heart is beating fast." }, { de: "Er hat ein gutes Herz.", en: "He has a good heart." }]
+    },
+    {
+        id: 1427, de: "das Blut", en: "the blood", level: "A2", type: "noun", article: "das", tags: ["body","health"], examples: [{ de: "Das Herz pumpt das Blut.", en: "The heart pumps the blood." }, { de: "Er hat viel Blut verloren.", en: "He lost a lot of blood." }]
+    },
+    {
+        id: 1428, de: "der Magen", en: "the stomach", level: "A2", type: "noun", article: "der", plural: "die Mägen", tags: ["body","health"], examples: [{ de: "Mein Magen tut weh.", en: "My stomach hurts." }, { de: "Das Essen liegt schwer im Magen.", en: "The food lies heavy in the stomach." }]
+    },
+    {
+        id: 1429, de: "die Luft", en: "the air", level: "A2", type: "noun", article: "die", tags: ["nature"], examples: [{ de: "Wir brauchen frische Luft.", en: "We need fresh air." }, { de: "Die Luft ist heute sehr klar.", en: "The air is very clear today." }]
+    },
+    {
+        id: 1430, de: "die Erde", en: "the earth / soil", level: "A2", type: "noun", article: "die", tags: ["nature"], examples: [{ de: "Die Erde ist rund.", en: "The earth is round." }, { de: "Wir pflanzen die Blumen in die Erde.", en: "We plant the flowers in the soil." }]
+    },
+    {
+        id: 1431, de: "das Feuer", en: "the fire", level: "A2", type: "noun", article: "das", plural: "die Feuer", tags: ["nature"], examples: [{ de: "Wir machen ein Feuer im Garten.", en: "We make a fire in the garden." }, { de: "Das Feuer wärmt uns.", en: "The fire warms us." }]
+    },
+    {
+        id: 1432, de: "das Holz", en: "the wood", level: "A2", type: "noun", article: "das", plural: "die Hölzer", tags: ["materials"], examples: [{ de: "Der Tisch ist aus Holz.", en: "The table is made of wood." }, { de: "Wir brauchen Holz für das Feuer.", en: "We need wood for the fire." }]
+    },
+    {
+        id: 1433, de: "das Metall", en: "the metal", level: "A2", type: "noun", article: "das", plural: "die Metalle", tags: ["materials"], examples: [{ de: "Dieser Ring ist aus Metall.", en: "This ring is made of metal." }, { de: "Metall ist sehr hart.", en: "Metal is very hard." }]
+    },
+    {
+        id: 1434, de: "das Plastik", en: "the plastic", level: "A2", type: "noun", article: "das", tags: ["materials"], examples: [{ de: "Die Flasche ist aus Plastik.", en: "The bottle is made of plastic." }, { de: "Wir sollten weniger Plastik verwenden.", en: "We should use less plastic." }]
+    },
+    {
+        id: 1435, de: "das Glas", en: "the glass", level: "A2", type: "noun", article: "das", plural: "die Gläser", tags: ["materials","objects"], examples: [{ de: "Das Fenster ist aus Glas.", en: "The window is made of glass." }, { de: "Ein Glas Wasser, bitte.", en: "A glass of water, please." }]
+    },
+    {
+        id: 1436, de: "das Öl", en: "the oil", level: "A2", type: "noun", article: "das", plural: "die Öle", tags: ["materials","food"], examples: [{ de: "Ich brate das Fleisch in Öl.", en: "I fry the meat in oil." }, { de: "Wir brauchen neues Öl für das Auto.", en: "We need new oil for the car." }]
+    },
+    {
+        id: 1437, de: "der Strom", en: "the electricity", level: "A2", type: "noun", article: "der", tags: ["technology"], examples: [{ de: "Der Strom ist ausgefallen.", en: "The electricity went out." }, { de: "Strom ist teuer geworden.", en: "Electricity has become expensive." }]
+    },
+    {
+        id: 1438, de: "das Licht", en: "the light", level: "A2", type: "noun", article: "das", plural: "die Lichter", tags: ["technology","objects"], examples: [{ de: "Mach bitte das Licht an.", en: "Please turn on the light." }, { de: "Das Licht blendet mich.", en: "The light blinds me." }]
+    },
+    {
+        id: 1439, de: "die Heizung", en: "the heating", level: "A2", type: "noun", article: "die", plural: "die Heizungen", tags: ["home","technology"], examples: [{ de: "Im Winter schalten wir die Heizung ein.", en: "In winter we turn on the heating." }, { de: "Die Heizung ist kaputt.", en: "The heating is broken." }]
+    },
+    {
+        id: 1440, de: "die Maschine", en: "the machine", level: "A2", type: "noun", article: "die", plural: "die Maschinen", tags: ["technology","work"], examples: [{ de: "Diese Maschine ist sehr laut.", en: "This machine is very loud." }, { de: "Wie funktioniert die Maschine?", en: "How does the machine work?" }]
+    },
+    {
+        id: 1441, de: "das Werkzeug", en: "the tool", level: "A2", type: "noun", article: "das", plural: "die Werkzeuge", tags: ["objects","work"], examples: [{ de: "Hol bitte das Werkzeug aus dem Keller.", en: "Please fetch the tools from the basement." }, { de: "Er hat das richtige Werkzeug dafür.", en: "He has the right tool for it." }]
+    },
+    {
+        id: 1442, de: "der Schlüssel", en: "the key", level: "A2", type: "noun", article: "der", plural: "die Schlüssel", tags: ["objects","home"], examples: [{ de: "Wo habe ich meinen Schlüssel hingelegt?", en: "Where did I put my key?" }, { de: "Ich habe den Schlüssel verloren.", en: "I lost the key." }]
+    },
+    {
+        id: 1443, de: "das Schloss", en: "the lock / castle", level: "A2", type: "noun", article: "das", plural: "die Schlösser", tags: ["objects","places"], examples: [{ de: "Dieses alte Schloss ist berühmt.", en: "This old castle is famous." }, { de: "Das Schloss an der Tür ist kaputt.", en: "The lock on the door is broken." }]
+    },
+    {
+        id: 1444, de: "die Wand", en: "the wall", level: "A2", type: "noun", article: "die", plural: "die Wände", tags: ["home"], examples: [{ de: "Wir streichen die Wand rot.", en: "We are painting the wall red." }, { de: "Das Bild hängt an der Wand.", en: "The picture hangs on the wall." }]
+    },
+    {
+        id: 1445, de: "der Boden", en: "the floor / ground", level: "A2", type: "noun", article: "der", plural: "die Böden", tags: ["home","nature"], examples: [{ de: "Der Stift fiel auf den Boden.", en: "The pen fell on the floor." }, { de: "Der Boden ist nass.", en: "The floor is wet." }]
+    },
+    {
+        id: 1446, de: "das Dach", en: "the roof", level: "A2", type: "noun", article: "das", plural: "die Dächer", tags: ["home"], examples: [{ de: "Der Vogel sitzt auf dem Dach.", en: "The bird sits on the roof." }, { de: "Es regnet durch das Dach.", en: "It's raining through the roof." }]
+    },
+    {
+        id: 1447, de: "der Eingang", en: "the entrance", level: "A2", type: "noun", article: "der", plural: "die Eingänge", tags: ["places"], examples: [{ de: "Wo ist der Eingang?", en: "Where is the entrance?" }, { de: "Der Eingang ist auf der Rückseite.", en: "The entrance is at the back." }]
+    },
+    {
+        id: 1448, de: "der Ausgang", en: "the exit", level: "A2", type: "noun", article: "der", plural: "die Ausgänge", tags: ["places"], examples: [{ de: "Bitte benutzen Sie den Ausgang.", en: "Please use the exit." }, { de: "Der Ausgang ist markiert.", en: "The exit is marked." }]
+    },
+    {
+        id: 1449, de: "die Polizei", en: "the police", level: "A2", type: "noun", article: "die", tags: ["society","work"], examples: [{ de: "Ruf die Polizei!", en: "Call the police!" }, { de: "Die Polizei hat ihn festgenommen.", en: "The police arrested him." }]
+    },
+    {
+        id: 1450, de: "der Staat", en: "the state", level: "A2", type: "noun", article: "der", plural: "die Staaten", tags: ["society"], examples: [{ de: "Das ist Aufgabe des Staates.", en: "That is the task of the state." }, { de: "Er arbeitet für den Staat.", en: "He works for the state." }]
+    },
+    {
+        id: 1451, de: "das Gesetz", en: "the law", level: "A2", type: "noun", article: "das", plural: "die Gesetze", tags: ["society"], examples: [{ de: "Das neue Gesetz tritt in Kraft.", en: "The new law comes into force." }, { de: "Wir müssen das Gesetz beachten.", en: "We must observe the law." }]
+    },
+    {
+        id: 1452, de: "der Krieg", en: "the war", level: "A2", type: "noun", article: "der", plural: "die Kriege", tags: ["society"], examples: [{ de: "Der Krieg dauerte lange.", en: "The war lasted a long time." }, { de: "Niemand will Krieg.", en: "Nobody wants war." }]
+    },
+    {
+        id: 1453, de: "der Frieden", en: "the peace", level: "A2", type: "noun", article: "der", tags: ["society"], examples: [{ de: "Wir hoffen auf Frieden.", en: "We hope for peace." }, { de: "Frieden auf der Welt ist wichtig.", en: "Peace in the world is important." }]
+    },
+    {
+        id: 1454, de: "der Streit", en: "the argument / dispute", level: "A2", type: "noun", article: "der", plural: "die Streite", tags: ["society","communication"], examples: [{ de: "Sie hatten einen großen Streit.", en: "They had a big argument." }, { de: "Ich mag keinen Streit.", en: "I don't like arguments." }]
+    },
+    {
+        id: 1455, de: "das Thema", en: "the topic / theme", level: "A2", type: "noun", article: "das", plural: "die Themen", tags: ["abstract"], examples: [{ de: "Das ist ein interessantes Thema.", en: "That is an interesting topic." }, { de: "Können wir das Thema wechseln?", en: "Can we change the topic?" }]
+    },
+    {
+        id: 1456, de: "der Sinn", en: "the sense / meaning", level: "A2", type: "noun", article: "der", plural: "die Sinne", tags: ["abstract"], examples: [{ de: "Das macht keinen Sinn.", en: "That makes no sense." }, { de: "Was ist der Sinn des Lebens?", en: "What is the meaning of life?" }]
+    },
+    {
+        id: 1457, de: "das Ziel", en: "the goal / destination", level: "A2", type: "noun", article: "das", plural: "die Ziele", tags: ["abstract","travel"], examples: [{ de: "Wir haben unser Ziel erreicht.", en: "We have reached our destination." }, { de: "Was sind deine Ziele im Leben?", en: "What are your goals in life?" }]
+    },
+    {
+        id: 1458, de: "der Fehler", en: "the mistake / error", level: "A2", type: "noun", article: "der", plural: "die Fehler", tags: ["abstract"], examples: [{ de: "Jeder macht mal Fehler.", en: "Everyone makes mistakes sometimes." }, { de: "Das war ein großer Fehler.", en: "That was a big mistake." }]
+    },
+    {
+        id: 1459, de: "die Regel", en: "the rule", level: "A2", type: "noun", article: "die", plural: "die Regeln", tags: ["abstract"], examples: [{ de: "Du musst die Regeln befolgen.", en: "You must follow the rules." }, { de: "In der Regel arbeite ich bis 17 Uhr.", en: "As a rule, I work until 5 PM." }]
+    },
+    {
+        id: 1460, de: "die Ausnahme", en: "the exception", level: "A2", type: "noun", article: "die", plural: "die Ausnahmen", tags: ["abstract"], examples: [{ de: "Das ist eine Ausnahme.", en: "That is an exception." }, { de: "Keine Regel ohne Ausnahme.", en: "No rule without exception." }]
+    },
+    {
+        id: 1461, de: "der Anfang", en: "the beginning", level: "A2", type: "noun", article: "der", plural: "die Anfänge", tags: ["time","abstract"], examples: [{ de: "Aller Anfang ist schwer.", en: "Every beginning is difficult." }, { de: "Am Anfang war alles gut.", en: "In the beginning everything was fine." }]
+    },
+    {
+        id: 1462, de: "das Ende", en: "the end", level: "A2", type: "noun", article: "das", plural: "die Enden", tags: ["time","abstract"], examples: [{ de: "Das Ende des Films war traurig.", en: "The end of the film was sad." }, { de: "Ich bleibe bis zum Ende.", en: "I am staying until the end." }]
+    },
+    {
+        id: 1463, de: "der Vorteil", en: "the advantage", level: "A2", type: "noun", article: "der", plural: "die Vorteile", tags: ["abstract"], examples: [{ de: "Was ist der Vorteil von dieser Methode?", en: "What is the advantage of this method?" }, { de: "Er hat viele Vorteile.", en: "He has many advantages." }]
+    },
+    {
+        id: 1464, de: "der Nachteil", en: "the disadvantage", level: "A2", type: "noun", article: "der", plural: "die Nachteile", tags: ["abstract"], examples: [{ de: "Der Nachteil ist der hohe Preis.", en: "The disadvantage is the high price." }, { de: "Hat das Online-Lernen Nachteile?", en: "Does online learning have disadvantages?" }]
+    },
+    {
+        id: 1465, de: "der Mut", en: "the courage", level: "A2", type: "noun", article: "der", tags: ["feelings","abstract"], examples: [{ de: "Man braucht viel Mut dafür.", en: "One needs a lot of courage for that." }, { de: "Er hat keinen Mut.", en: "He has no courage." }]
+    },
+    {
+        id: 1466, de: "der Witz", en: "the joke", level: "A2", type: "noun", article: "der", plural: "die Witze", tags: ["communication"], examples: [{ de: "Erzähl mal einen Witz!", en: "Tell a joke!" }, { de: "Das war nur ein Witz.", en: "That was just a joke." }]
+    },
+    {
+        id: 1467, de: "der Respekt", en: "the respect", level: "A2", type: "noun", article: "der", tags: ["abstract","feelings"], examples: [{ de: "Man sollte Respekt vor dem Alter haben.", en: "One should have respect for old age." }, { de: "Zeig etwas Respekt!", en: "Show some respect!" }]
+    },
+    {
+        id: 1468, de: "weiblich", en: "female", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Die Patientin ist weiblich.", en: "The patient is female." }, { de: "Das ist ein weiblicher Vorname.", en: "That is a female first name." }]
+    },
+    {
+        id: 1469, de: "männlich", en: "male", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Der Hund ist männlich.", en: "The dog is male." }, { de: "Er hat eine männliche Stimme.", en: "He has a male voice." }]
+    },
+    {
+        id: 1470, de: "stolz", en: "proud", level: "A2", type: "adjective", tags: ["feelings"], examples: [{ de: "Ich bin sehr stolz auf dich.", en: "I am very proud of you." }, { de: "Sie präsentierte stolz ihr neues Auto.", en: "She proudly presented her new car." }]
+    },
+    {
+        id: 1471, de: "enttäuscht", en: "disappointed", level: "A2", type: "adjective", tags: ["feelings"], examples: [{ de: "Ich war vom Film enttäuscht.", en: "I was disappointed by the movie." }, { de: "Er sah sehr enttäuscht aus.", en: "He looked very disappointed." }]
+    },
+    {
+        id: 1472, de: "einzig", en: "only / single", level: "A2", type: "adjective", tags: ["abstract"], examples: [{ de: "Das ist der einzige Weg.", en: "That is the only way." }, { de: "Er war das einzige Kind.", en: "He was the only child." }]
+    },
+    {
+        id: 1473, de: "gemeinsam", en: "together / common", level: "A2", type: "adjective", tags: ["abstract","social"], examples: [{ de: "Wir haben gemeinsame Freunde.", en: "We have common friends." }, { de: "Lasst uns das gemeinsam machen.", en: "Let's do that together." }]
+    },
+    {
+        id: 1474, de: "verheiratet", en: "married", level: "A2", type: "adjective", tags: ["social","family"], examples: [{ de: "Sind Sie verheiratet oder ledig?", en: "Are you married or single?" }, { de: "Sie sind seit 10 Jahren verheiratet.", en: "They have been married for 10 years." }]
+    },
+    {
+        id: 1475, de: "ledig", en: "single / unmarried", level: "A2", type: "adjective", tags: ["social","family"], examples: [{ de: "Er ist 30 Jahre alt und ledig.", en: "He is 30 years old and unmarried." }, { de: "Bitte kreuzen Sie 'ledig' an.", en: "Please check 'single'." }]
+    },
+    {
+        id: 1476, de: "schwanger", en: "pregnant", level: "A2", type: "adjective", tags: ["body","family"], examples: [{ de: "Meine Schwester ist im sechsten Monat schwanger.", en: "My sister is six months pregnant." }, { de: "Trink keinen Alkohol, wenn du schwanger bist.", en: "Don't drink alcohol if you are pregnant." }]
+    },
+    {
+        id: 1477, de: "tot", en: "dead", level: "A2", type: "adjective", tags: ["body","abstract"], examples: [{ de: "Der Vogel ist leider tot.", en: "The bird is unfortunately dead." }, { de: "Ist die Batterie tot?", en: "Is the battery dead?" }]
+    },
+    {
+        id: 1478, de: "weich", en: "soft", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Das Kissen ist sehr weich.", en: "The pillow is very soft." }, { de: "Ich mag mein Ei weich gekocht.", en: "I like my egg soft boiled." }]
+    },
+    {
+        id: 1479, de: "hart", en: "hard", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Das Holz ist extrem hart.", en: "The wood is extremely hard." }, { de: "Das ist ein hartes Stück Arbeit.", en: "That is a hard piece of work." }]
+    },
+    {
+        id: 1480, de: "süß", en: "sweet / cute", level: "A2", type: "adjective", tags: ["food","description"], examples: [{ de: "Der Kuchen ist mir zu süß.", en: "The cake is too sweet for me." }, { de: "Die kleine Katze ist sehr süß.", en: "The little cat is very cute." }]
+    },
+    {
+        id: 1481, de: "sauer", en: "sour / angry", level: "A2", type: "adjective", tags: ["food","feelings"], examples: [{ de: "Diese Zitrone ist sehr sauer.", en: "This lemon is very sour." }, { de: "Bist du noch sauer auf mich?", en: "Are you still angry at me?" }]
+    },
+    {
+        id: 1482, de: "salzig", en: "salty", level: "A2", type: "adjective", tags: ["food"], examples: [{ de: "Die Suppe ist leider zu salzig.", en: "The soup is unfortunately too salty." }, { de: "Ich esse gern salziges Popcorn.", en: "I like eating salty popcorn." }]
+    },
+    {
+        id: 1483, de: "scharf", en: "spicy / sharp", level: "A2", type: "adjective", tags: ["food","description"], examples: [{ de: "Das Messer ist sehr scharf.", en: "The knife is very sharp." }, { de: "Isst du gern scharf?", en: "Do you like eating spicy food?" }]
+    },
+    {
+        id: 1484, de: "nass", en: "wet", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Der Boden ist nass aus dem Regen.", en: "The ground is wet from the rain." }, { de: "Seine Kleidung war klitschnass.", en: "His clothes were soaking wet." }]
+    },
+    {
+        id: 1485, de: "trocken", en: "dry", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Die Wäsche ist noch nicht ganz trocken.", en: "The laundry is not entirely dry yet." }, { de: "Im Sommer ist das Gras oft trocken.", en: "In summer the grass is often dry." }]
+    },
+    {
+        id: 1486, de: "tief", en: "deep", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Das Wasser hier ist sehr tief.", en: "The water here is very deep." }, { de: "Wir müssen einen tiefen Graben ziehen.", en: "We have to dig a deep trench." }]
+    },
+    {
+        id: 1487, de: "flach", en: "flat / shallow", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "In den Niederlanden ist das Land sehr flach.", en: "In the Netherlands the land is very flat." }, { de: "Der Teller ist zu flach für Suppe.", en: "The plate is too shallow for soup." }]
+    },
+    {
+        id: 1488, de: "offen", en: "open", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Das Fenster ist noch offen.", en: "The window is still open." }, { de: "Er ist ein sehr offener Mensch.", en: "He is a very open person." }]
+    },
+    {
+        id: 1489, de: "geschlossen", en: "closed", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Der Laden ist sonntags geschlossen.", en: "The shop is closed on Sundays." }, { de: "Die Tür bleibt geschlossen.", en: "The door stays closed." }]
+    },
+    {
+        id: 1490, de: "fremd", en: "foreign / strange", level: "A2", type: "adjective", tags: ["abstract","people"], examples: [{ de: "Ich bin hier fremd.", en: "I am a stranger here." }, { de: "Die Buchstaben sehen fremd aus.", en: "The letters look strange." }]
+    },
+    {
+        id: 1491, de: "bekannt", en: "known / famous", level: "A2", type: "adjective", tags: ["abstract","people"], examples: [{ de: "Er ist ein bekannter Schauspieler.", en: "He is a famous actor." }, { de: "Dieser Ort ist mir bekannt.", en: "This place is familiar to me." }]
+    },
+    {
+        id: 1492, de: "frei", en: "free / unoccupied", level: "A2", type: "adjective", tags: ["time","abstract"], examples: [{ de: "Ist dieser Platz noch frei?", en: "Is this seat still free?" }, { de: "Am Wochenende habe ich endlich frei.", en: "On the weekend I am finally free." }]
+    },
+    {
+        id: 1493, de: "besetzt", en: "occupied / taken", level: "A2", type: "adjective", tags: ["time","abstract"], examples: [{ de: "Die Toilette ist besetzt.", en: "The toilet is occupied." }, { de: "Diese Telefonnummer ist immer besetzt.", en: "This phone number is always busy." }]
+    },
+    {
+        id: 1494, de: "reich", en: "rich", level: "A2", type: "adjective", tags: ["money","abstract"], examples: [{ de: "Mein Onkel ist ein reicher Mann.", en: "My uncle is a rich man." }, { de: "Obst ist reich an Vitaminen.", en: "Fruit is rich in vitamins." }]
+    },
+    {
+        id: 1495, de: "wach", en: "awake", level: "A2", type: "adjective", tags: ["body"], examples: [{ de: "Ich bin schon seit 5 Uhr wach.", en: "I have been awake since 5 o'clock." }, { de: "Der Kaffee hält mich wach.", en: "The coffee keeps me awake." }]
+    },
+    {
+        id: 1496, de: "bequem", en: "comfortable", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Dieser Sessel ist irre bequem.", en: "This armchair is incredibly comfortable." }, { de: "Zieh dir etwas Bequemes an.", en: "Put on something comfortable." }]
+    },
+    {
+        id: 1497, de: "unbequem", en: "uncomfortable", level: "A2", type: "adjective", tags: ["description"], examples: [{ de: "Das Bett im Hotel war sehr unbequem.", en: "The bed in the hotel was very uncomfortable." }, { de: "Diese Schuhe sind unbequem.", en: "These shoes are uncomfortable." }]
+    }
+,
+
+    // ── AI BATCH 4: A2 EXPANSION ────────────────────────────────────────────────
+    {
+        id: 1498, de: "die Kunst", en: "the art", level: "A2", type: "noun", article: "die", plural: "die Künste", tags: ["abstract"], examples: [{ de: "Sie interessiert sich für moderne Kunst.", en: "She is interested in modern art." }, { de: "Der Maler präsentiert seine Kunst.", en: "The painter presents his art." }]
+    },
+    {
+        id: 1499, de: "der Künstler", en: "the artist", level: "A2", type: "noun", article: "der", plural: "die Künstler", tags: ["people","work"], examples: [{ de: "Dieser Künstler malt oft am Strand.", en: "This artist often paints at the beach." }, { de: "Er ist ein bekannter Künstler.", en: "He is a well-known artist." }]
+    },
+    {
+        id: 1500, de: "das Bild", en: "the picture / image", level: "A2", type: "noun", article: "das", plural: "die Bilder", tags: ["objects"], examples: [{ de: "Wir haben viele Bilder aus dem Urlaub.", en: "We have many pictures from our holiday." }, { de: "Häng das Bild an die Wand.", en: "Hang the picture on the wall." }]
+    },
+    {
+        id: 1501, de: "das Foto", en: "the photo", level: "A2", type: "noun", article: "das", plural: "die Fotos", tags: ["objects"], examples: [{ de: "Darf ich ein Foto machen?", en: "May I take a photo?" }, { de: "Das Foto ist sehr schön geworden.", en: "The photo turned out very beautiful." }]
+    },
+    {
+        id: 1502, de: "die Kamera", en: "the camera", level: "A2", type: "noun", article: "die", plural: "die Kameras", tags: ["technology"], examples: [{ de: "Meine neue Kamera ist kaputt.", en: "My new camera is broken." }, { de: "Er hat immer eine Kamera dabei.", en: "He always has a camera with him." }]
+    },
+    {
+        id: 1503, de: "der Film", en: "the film / movie", level: "A2", type: "noun", article: "der", plural: "die Filme", tags: ["media","leisure"], examples: [{ de: "Wir haben gestern einen spannenden Film gesehen.", en: "We saw an exciting movie yesterday." }, { de: "Der Film dauert zwei Stunden.", en: "The movie lasts two hours." }]
+    },
+    {
+        id: 1504, de: "die Musik", en: "the music", level: "A2", type: "noun", article: "die", tags: ["leisure"], examples: [{ de: "Ich höre gern klassische Musik.", en: "I like listening to classical music." }, { de: "Die Musik ist viel zu laut.", en: "The music is way too loud." }]
+    },
+    {
+        id: 1505, de: "das Lied", en: "the song", level: "A2", type: "noun", article: "das", plural: "die Lieder", tags: ["leisure"], examples: [{ de: "Wir singen ein schönes Lied.", en: "We are singing a beautiful song." }, { de: "Kennst du dieses Lied?", en: "Do you know this song?" }]
+    },
+    {
+        id: 1506, de: "die Band", en: "the band", level: "A2", type: "noun", article: "die", plural: "die Bands", tags: ["leisure","people"], examples: [{ de: "Meine Lieblingsband spielt heute Abend.", en: "My favorite band is playing tonight." }, { de: "Die Band schreibt gute Lieder.", en: "The band writes good songs." }]
+    },
+    {
+        id: 1507, de: "das Konzert", en: "the concert", level: "A2", type: "noun", article: "das", plural: "die Konzerte", tags: ["leisure","places"], examples: [{ de: "Gehen wir morgen zum Konzert?", en: "Are we going to the concert tomorrow?" }, { de: "Das Konzert war ausverkauft.", en: "The concert was sold out." }]
+    },
+    {
+        id: 1508, de: "das Ticket", en: "the ticket (event/travel)", level: "A2", type: "noun", article: "das", plural: "die Tickets", tags: ["travel","leisure"], examples: [{ de: "Ich habe zwei Tickets für das Spiel.", en: "I have two tickets for the game." }, { de: "Wir müssen die Tickets noch kaufen.", en: "We still need to buy the tickets." }]
+    },
+    {
+        id: 1509, de: "der Zuschauer", en: "the spectator / viewer", level: "A2", type: "noun", article: "der", plural: "die Zuschauer", tags: ["people","leisure"], examples: [{ de: "Tausende Zuschauer sahen das Spiel.", en: "Thousands of spectators watched the game." }, { de: "Der Zuschauer jubelt.", en: "The spectator cheers." }]
+    },
+    {
+        id: 1510, de: "das Theater", en: "the theater", level: "A2", type: "noun", article: "das", plural: "die Theater", tags: ["places","leisure"], examples: [{ de: "Wir treffen uns vor dem Theater.", en: "We meet in front of the theater." }, { de: "Gehst du gern ins Theater?", en: "Do you like going to the theater?" }]
+    },
+    {
+        id: 1511, de: "das Spiel", en: "the game / match", level: "A2", type: "noun", article: "das", plural: "die Spiele", tags: ["leisure"], examples: [{ de: "Das war ein faires Spiel.", en: "That was a fair game." }, { de: "Wer hat das Spiel gewonnen?", en: "Who won the match?" }]
+    },
+    {
+        id: 1512, de: "der Spieler", en: "the player", level: "A2", type: "noun", article: "der", plural: "die Spieler", tags: ["people","leisure"], examples: [{ de: "Der Spieler ist verletzt.", en: "The player is injured." }, { de: "Er ist der beste Spieler der Mannschaft.", en: "He is the best player on the team." }]
+    },
+    {
+        id: 1513, de: "die Mannschaft", en: "the team", level: "A2", type: "noun", article: "die", plural: "die Mannschaften", tags: ["people","leisure"], examples: [{ de: "Unsere Mannschaft hat gewonnen!", en: "Our team won!" }, { de: "Er spielt in einer guten Mannschaft.", en: "He plays in a good team." }]
+    },
+    {
+        id: 1514, de: "der Verein", en: "the club / association", level: "A2", type: "noun", article: "der", plural: "die Vereine", tags: ["society","leisure"], examples: [{ de: "Ich bin in einem Sportverein.", en: "I am in a sports club." }, { de: "Der Verein sucht neue Mitglieder.", en: "The club is looking for new members." }]
+    },
+    {
+        id: 1515, de: "das Mitglied", en: "the member", level: "A2", type: "noun", article: "das", plural: "die Mitglieder", tags: ["people"], examples: [{ de: "Sie ist Mitglied in unsrem Verein.", en: "She is a member of our club." }, { de: "Wir haben über 100 Mitglieder.", en: "We have over 100 members." }]
+    },
+    {
+        id: 1516, de: "der Sport", en: "the sport", level: "A2", type: "noun", article: "der", tags: ["leisure"], examples: [{ de: "Machst du viel Sport?", en: "Do you do a lot of sport?" }, { de: "Sport ist gut für die Gesundheit.", en: "Sport is good for health." }]
+    },
+    {
+        id: 1517, de: "das Hobby", en: "the hobby", level: "A2", type: "noun", article: "das", plural: "die Hobbys", tags: ["leisure"], examples: [{ de: "Was sind deine Hobbys?", en: "What are your hobbies?" }, { de: "Mein Hobby ist Lesen.", en: "My hobby is reading." }]
+    },
+    {
+        id: 1518, de: "die Freizeit", en: "the free time / leisure", level: "A2", type: "noun", article: "die", tags: ["time","leisure"], examples: [{ de: "In meiner Freizeit lese ich viel.", en: "In my free time I read a lot." }, { de: "Was machst du in deiner Freizeit?", en: "What do you do in your free time?" }]
+    },
+    {
+        id: 1519, de: "der Passagier", en: "the passenger", level: "A2", type: "noun", article: "der", plural: "die Passagiere", tags: ["people","travel"], examples: [{ de: "Der Passagier steigt in das Flugzeug ein.", en: "The passenger boards the airplane." }, { de: "Die Fahrkarte gilt für einen Passagier.", en: "The ticket is valid for one passenger." }]
+    },
+    {
+        id: 1520, de: "das Flugticket", en: "the flight ticket", level: "A2", type: "noun", article: "das", plural: "die Flugtickets", tags: ["travel","documents"], examples: [{ de: "Haben Sie Ihr Flugticket dabei?", en: "Do you have your flight ticket with you?" }, { de: "Ich habe das Flugticket online gekauft.", en: "I bought the flight ticket online." }]
+    },
+    {
+        id: 1521, de: "der Ausweis", en: "the ID card", level: "A2", type: "noun", article: "der", plural: "die Ausweise", tags: ["documents"], examples: [{ de: "Zeigen Sie bitte Ihren Ausweis.", en: "Please show your ID card." }, { de: "Mein Ausweis ist noch gültig.", en: "My ID card is still valid." }]
+    },
+    {
+        id: 1522, de: "das Visum", en: "the visa", level: "A2", type: "noun", article: "das", plural: "die Visa", tags: ["documents","travel"], examples: [{ de: "Brauchen wir ein Visum für Russland?", en: "Do we need a visa for Russia?" }, { de: "Er hat sein Visum beantragt.", en: "He applied for his visa." }]
+    },
+    {
+        id: 1523, de: "die Kontrolle", en: "the control / check", level: "A2", type: "noun", article: "die", plural: "die Kontrollen", tags: ["travel","abstract"], examples: [{ de: "Am Flughafen gibt es eine strenge Kontrolle.", en: "There is a strict check at the airport." }, { de: "Bitte halten Sie Ihre Tasche für die Kontrolle bereit.", en: "Please have your bag ready for the check." }]
+    },
+    {
+        id: 1524, de: "der Zoll", en: "the customs", level: "A2", type: "noun", article: "der", plural: "die Zölle", tags: ["travel"], examples: [{ de: "Wir müssen durch den Zoll gehen.", en: "We have to go through customs." }, { de: "Haben Sie etwas für den Zoll anzumelden?", en: "Do you have anything to declare to customs?" }]
+    },
+    {
+        id: 1525, de: "die Richtung", en: "the direction", level: "A2", type: "noun", article: "die", plural: "die Richtungen", tags: ["directions"], examples: [{ de: "In welche Richtung müssen wir fahren?", en: "In which direction do we have to drive?" }, { de: "Aus dieser Richtung kommt der Wind.", en: "The wind comes from this direction." }]
+    },
+    {
+        id: 1526, de: "das Zeichen", en: "the sign / symbol", level: "A2", type: "noun", article: "das", plural: "die Zeichen", tags: ["abstract"], examples: [{ de: "Was bedeutet dieses Zeichen?", en: "What does this sign mean?" }, { de: "Gib mir ein Zeichen!", en: "Give me a sign!" }]
+    },
+    {
+        id: 1527, de: "die Ampel", en: "the traffic light", level: "A2", type: "noun", article: "die", plural: "die Ampeln", tags: ["travel","places"], examples: [{ de: "Die Ampel ist rot.", en: "The traffic light is red." }, { de: "Halten Sie an der Ampel an.", en: "Stop at the traffic light." }]
+    },
+    {
+        id: 1528, de: "die Ecke", en: "the corner", level: "A2", type: "noun", article: "die", plural: "die Ecken", tags: ["places"], examples: [{ de: "Der Supermarkt ist gleich um die Ecke.", en: "The supermarket is just around the corner." }, { de: "Stell den Besen in die Ecke.", en: "Put the broom in the corner." }]
+    },
+    {
+        id: 1529, de: "die Mitte", en: "the middle", level: "A2", type: "noun", article: "die", plural: "die Mitten", tags: ["places","directions"], examples: [{ de: "Der Tisch steht in der Mitte des Zimmers.", en: "The table is in the middle of the room." }, { de: "Treffen wir uns in der Mitte.", en: "Let's meet in the middle." }]
+    },
+    {
+        id: 1530, de: "der Rand", en: "the edge", level: "A2", type: "noun", article: "der", plural: "die Ränder", tags: ["places"], examples: [{ de: "Wir sitzen am Rand des Pools.", en: "We are sitting at the edge of the pool." }, { de: "Das Heft hat einen weißen Rand.", en: "The notebook has a white margin." }]
+    },
+    {
+        id: 1531, de: "vorwärts", en: "forwards", level: "A2", type: "adverb", tags: ["directions"], examples: [{ de: "Gehen Sie einen Schritt vorwärts.", en: "Take a step forwards." }, { de: "Das Auto rollt vorwärts.", en: "The car rolls forwards." }]
+    },
+    {
+        id: 1532, de: "rückwärts", en: "backwards", level: "A2", type: "adverb", tags: ["directions"], examples: [{ de: "Du musst langsam rückwärts fahren.", en: "You have to drive backwards slowly." }, { de: "Er kann das Alphabet rückwärts aufsagen.", en: "He can recite the alphabet backwards." }]
+    },
+    {
+        id: 1533, de: "nirgends", en: "nowhere", level: "A2", type: "adverb", tags: ["places"], examples: [{ de: "Ich kann meine Brille nirgends finden.", en: "I can't find my glasses anywhere (nowhere)." }, { de: "Er ist nirgends zu sehen.", en: "He is nowhere to be seen." }]
+    },
+    {
+        id: 1534, de: "jemals", en: "ever", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Bist du jemals in Paris gewesen?", en: "Have you ever been to Paris?" }, { de: "Hat er jemals davon gesprochen?", en: "Has he ever spoken about it?" }]
+    },
+    {
+        id: 1535, de: "niemals", en: "never", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Das würde ich niemals tun!", en: "I would never do that!" }, { de: "Wir dürfen niemals aufgeben.", en: "We must never give up." }]
+    },
+    {
+        id: 1536, de: "bisher", en: "so far / up to now", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Bisher lief alles gut.", en: "So far everything went well." }, { de: "Was hast du bisher gemacht?", en: "What have you done so far?" }]
+    },
+    {
+        id: 1537, de: "vorhin", en: "earlier (today)", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Ich habe ihn vorhin gesehen.", en: "I saw him earlier." }, { de: "Das habe ich dir doch vorhin erklärt!", en: "I explained that to you earlier!" }]
+    },
+    {
+        id: 1538, de: "neulich", en: "recently", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Ich habe ihn neulich in der Stadt getroffen.", en: "I met him in the city recently." }, { de: "Wir waren neulich dort essen.", en: "We ate there recently." }]
+    },
+    {
+        id: 1539, de: "demnächst", en: "soon / in the near future", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Wir werden demnächst umziehen.", en: "We will move soon." }, { de: "Der Film kommt demnächst ins Kino.", en: "The film is coming to the cinema soon." }]
+    },
+    {
+        id: 1540, de: "meistens", en: "mostly", level: "A2", type: "adverb", tags: ["time"], examples: [{ de: "Meistens trinke ich Tee, keinen Kaffee.", en: "Mostly I drink tea, not coffee." }, { de: "Am Wochenende bin ich meistens zuhause.", en: "On the weekend I am mostly at home." }]
+    },
+    {
+        id: 1541, de: "ziemlich", en: "quite / fairly", level: "A2", type: "adverb", tags: ["abstract"], examples: [{ de: "Das ist ziemlich teuer.", en: "That is quite expensive." }, { de: "Mir ist ziemlich kalt.", en: "I am quite cold." }]
+    },
+    {
+        id: 1542, de: "besonders", en: "especially", level: "A2", type: "adverb", tags: ["abstract"], examples: [{ de: "Dieser Wein ist besonders gut.", en: "This wine is especially good." }, { de: "Ich mag besonders die grüne Farbe.", en: "I especially like the green color." }]
+    },
+    {
+        id: 1543, de: "wirklich", en: "really", level: "A2", type: "adverb", tags: ["abstract"], examples: [{ de: "Ist das wirklich wahr?", en: "Is that really true?" }, { de: "Das war eine wirklich gute Idee.", en: "That was a really good idea." }]
+    },
+    {
+        id: 1544, de: "vielleicht", en: "maybe / perhaps", level: "A2", type: "adverb", tags: ["abstract"], examples: [{ de: "Vielleicht komme ich morgen.", en: "Maybe I'll come tomorrow." }, { de: "Kannst du mir vielleicht helfen?", en: "Can you perhaps help me?" }]
+    },
+    {
+        id: 1545, de: "leider", en: "unfortunately", level: "A2", type: "adverb", tags: ["abstract"], examples: [{ de: "Leider habe ich keine Zeit.", en: "Unfortunately I have no time." }, { de: "Das Geschäft ist leider schon geschlossen.", en: "The shop is unfortunately already closed." }]
+    },
+    {
+        id: 1546, de: "gern", en: "gladly", level: "A2", type: "adverb", tags: ["abstract","feelings"], examples: [{ de: "Ich trinke gern Kaffee.", en: "I like drinking coffee. (I gladly drink coffee.)" }, { de: "Er hilft sehr gern.", en: "He helps very gladly." }]
+    },
+    {
+        id: 1547, de: "hoffentlich", en: "hopefully", level: "A2", type: "adverb", tags: ["abstract","feelings"], examples: [{ de: "Hoffentlich regnet es morgen nicht.", en: "Hopefully it doesn't rain tomorrow." }, { de: "Hoffentlich geht es dir besser.", en: "Hopefully you are feeling better." }]
+    },
+    {
+        id: 1548, de: "natürlich", en: "naturally / of course", level: "A2", type: "adverb", tags: ["abstract"], examples: [{ de: "Natürlich helfe ich dir!", en: "Of course I'll help you!" }, { de: "Das ist doch natürlich.", en: "That is natural." }]
+    },
+    {
+        id: 1549, de: "überhaupt", en: "at all / generally", level: "A2", type: "adverb", tags: ["abstract"], examples: [{ de: "Ich habe überhaupt kein Geld.", en: "I have no money at all." }, { de: "Magst du überhaupt Gemüse?", en: "Do you like vegetables at all?" }]
+    },
+    {
+        id: 1550, de: "sonst", en: "otherwise / normally", level: "A2", type: "adverb", tags: ["abstract"], examples: [{ de: "Komm schnell, sonst verpassen wir den Bus.", en: "Come quickly, otherwise we miss the bus." }, { de: "Was machst du sonst so?", en: "What else do you normally do?" }]
+    },
+    {
+        id: 1551, de: "außerdem", en: "besides / in addition", level: "A2", type: "adverb", tags: ["grammar"], examples: [{ de: "Der Pullover ist schön, außerdem ist er günstig.", en: "The sweater is nice, in addition it is cheap." }, { de: "Außerdem möchte ich noch sagen...", en: "Besides, I would also like to say..." }]
+    },
+    {
+        id: 1552, de: "stattdessen", en: "instead of that", level: "A2", type: "adverb", tags: ["grammar"], examples: [{ de: "Er ging nicht zur Party, stattdessen blieb er zuhause.", en: "He didn't go to the party, instead he stayed home." }, { de: "Iss keine Schokolade, nimm stattdessen einen Apfel.", en: "Don't eat chocolate, take an apple instead." }]
+    }
 ];

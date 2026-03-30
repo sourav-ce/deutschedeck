@@ -8,66 +8,66 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="description"
     content="DeutscheDeck — Interactive German vocabulary and grammar learning app for Netzwerk A1/A2 with flashcards, typing quizzes, spaced repetition and verb conjugation tables.">
-  
-  
+
+
   <script src="vocab.js?v=1.0.3"></script>
   <script src="vocab_extra.js?v=1.0.3"></script>
   <script src="tenses.js?v=1.0.3"></script>
   <style>
-        :root {
-      --bau-red:    #b71a49;
-      --bau-black:  #000000;
-      --bau-white:  #ffffff;
-      --bau-blue:   #1a3a6b;
+    :root {
+      --bau-red: #b71a49;
+      --bau-black: #000000;
+      --bau-white: #ffffff;
+      --bau-blue: #1a3a6b;
       --bau-yellow: #d4960a;
 
-      --bg:    #ffffff;
-      --surf:  #ffffff;
+      --bg: #ffffff;
+      --surf: #ffffff;
       --surf2: #f4f4f4;
-      --border:#e0e0e0;
-      --tx:    #000000;
-      --tx2:   #444444;
-      --tx3:   #777777;
-      --accent:  #b71a49;
+      --border: #e0e0e0;
+      --tx: #000000;
+      --tx2: #444444;
+      --tx3: #777777;
+      --accent: #b71a49;
       --accent2: #8a1336;
-      --al:      #fdf1f4;
-      
-      --green:   #008b45;
-      --gl:      #e6f4ea;
-      --red:     #b71a49;
-      --rl:      #fdf1f4;
-      --amber:   #d4960a;
-      --aml:     #fcf5e6;
-      --purple:  #000000;
-      --pl:      #f2f2f2;
-      
-      --r:  0px;
+      --al: #fdf1f4;
+
+      --green: #008b45;
+      --gl: #e6f4ea;
+      --red: #b71a49;
+      --rl: #fdf1f4;
+      --amber: #d4960a;
+      --aml: #fcf5e6;
+      --purple: #000000;
+      --pl: #f2f2f2;
+
+      --r: 0px;
       --rs: 0px;
-      --sh:  none;
+      --sh: none;
       --shl: none;
       --transition: .1s ease
     }
 
-        body.dark {
-      --bg:    #000000;
-      --surf:  #000000;
+    body.dark {
+      --bg: #000000;
+      --surf: #000000;
       --surf2: #111111;
-      --border:#333333;
-      --tx:    #ffffff;
-      --tx2:   #cccccc;
-      --tx3:   #999999;
-      --accent:  #b71a49;
+      --border: #333333;
+      --tx: #ffffff;
+      --tx2: #cccccc;
+      --tx3: #999999;
+      --accent: #b71a49;
       --accent2: #ff4d85;
-      --al:      #330814;
-      --green:   #008b45;
-      --gl:      #002411;
-      --red:     #b71a49;
-      --rl:      #330814;
-      --amber:   #d4960a;
-      --aml:     #2a2000;
-      --purple:  #ffffff;
-      --pl:      #222222;
-      --sh:  none;
+      --al: #330814;
+      --green: #008b45;
+      --gl: #002411;
+      --red: #b71a49;
+      --rl: #330814;
+      --amber: #d4960a;
+      --aml: #2a2000;
+      --purple: #ffffff;
+      --pl: #222222;
+      --sh: none;
       --shl: none;
     }
 
@@ -405,13 +405,13 @@
       border-color: var(--bau-blue);
       color: var(--bau-blue);
       transform: translateY(-1px);
-      }
+    }
 
     .chip.active {
       background: var(--bau-blue);
       border-color: var(--bau-blue);
       color: #fff;
-      }
+    }
 
     .row {
       display: flex;
@@ -477,8 +477,6 @@
     }
 
     .scene {
-      border: 1px solid var(--border);
-
       perspective: 1200px;
       width: 100%;
       max-width: 640px;
@@ -486,38 +484,67 @@
       height: 50vh;
       max-height: 420px;
       cursor: pointer;
-      margin: 0 auto
+      margin: 0 auto;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    }
+
+    .scene:hover {
+      transform: translateY(-5px) scale(1.02);
     }
 
     .inner {
       width: 100%;
       height: 100%;
       position: relative;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
-      transition: transform .6s cubic-bezier(.4, 0, .2, 1)
+      border: 1px solid var(--border);
+      border-radius: 4px;
     }
 
     .inner.flipped {
-      transform: rotateX(180deg)
+      transform: rotateY(180deg);
     }
 
     .face {
       position: absolute;
       inset: 0;
       background: var(--surf);
-      border: 1px solid var(--border);
-      backface-visibility: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 40px;
       text-align: center;
-      transition: background var(--transition), border var(--transition)
+      backface-visibility: hidden;
+      transition: background var(--transition);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    body.dark .face {
+       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .front {
+      z-index: 2;
     }
 
     .back {
-      transform: rotateX(180deg)
+      transform: rotateY(180deg);
+      z-index: 1;
+    }
+
+    /* Transition animations */
+    .card-exit {
+       transform: translateX(-120px) rotate(-8deg) scale(0.9) !important;
+       opacity: 0 !important;
+       pointer-events: none;
+    }
+
+    .card-enter {
+       transform: translateX(120px) rotate(8deg) scale(0.9) !important;
+       opacity: 0 !important;
+       pointer-events: none;
     }
 
     .ctag {
@@ -666,7 +693,7 @@
     .aw:hover {
       background: var(--red);
       color: #fff;
-      }
+    }
 
     .ah {
       background: var(--aml);
@@ -677,7 +704,7 @@
     .ah:hover {
       background: var(--amber);
       color: #fff;
-      }
+    }
 
     .ac {
       background: var(--gl);
@@ -688,7 +715,7 @@
     .ac:hover {
       background: var(--green);
       color: #fff;
-      }
+    }
 
     .flipnote {
       font-size: 13px;
@@ -857,7 +884,8 @@
     table.cj td {
       padding: 8px 16px;
       font-size: 14px;
-      border-bottom: 1px dotted var(--bau-red)}
+      border-bottom: 1px dotted var(--bau-red)
+    }
 
     table.cj td:first-child {
       color: var(--tx3);
@@ -1014,11 +1042,25 @@
       transition: background var(--transition)
     }
 
-    .pcard:nth-child(1) { border-top: 1px solid var(--border)}
-    .pcard:nth-child(2) { border-top: 1px solid var(--border)}
-    .pcard:nth-child(3) { border-top: 1px solid var(--border)}
-    .pcard:nth-child(4) { border-top: 1px solid var(--border)}
-    .pcard:nth-child(5) { border-top: 1px solid var(--border)}
+    .pcard:nth-child(1) {
+      border-top: 1px solid var(--border)
+    }
+
+    .pcard:nth-child(2) {
+      border-top: 1px solid var(--border)
+    }
+
+    .pcard:nth-child(3) {
+      border-top: 1px solid var(--border)
+    }
+
+    .pcard:nth-child(4) {
+      border-top: 1px solid var(--border)
+    }
+
+    .pcard:nth-child(5) {
+      border-top: 1px solid var(--border)
+    }
 
     .pnum {
       font-size: 36px;
@@ -1189,15 +1231,50 @@
       cursor: pointer;
       transition: background .1s
     }
-    .word-row:hover { background: var(--surf2) }
-    .word-row:last-child { border-bottom: none }
-    .word-row .w-info { flex: 1 }
-    .word-row .de { font-weight: 600 }
-    .word-row .en { font-size: 13px; color: var(--tx2) }
-    .word-row .art-b { font-weight: 700 }
-    .word-row .w-meta { display: flex; gap: 8px; align-items: center; font-size: 12px }
-    .word-row .lvl { background: var(--surf2); padding: 2px 8px; font-size: 11px; font-weight: 600 }
-    .word-row .stars { color: var(--amber); letter-spacing: 1px }
+
+    .word-row:hover {
+      background: var(--surf2)
+    }
+
+    .word-row:last-child {
+      border-bottom: none
+    }
+
+    .word-row .w-info {
+      flex: 1
+    }
+
+    .word-row .de {
+      font-weight: 600
+    }
+
+    .word-row .en {
+      font-size: 13px;
+      color: var(--tx2)
+    }
+
+    .word-row .art-b {
+      font-weight: 700
+    }
+
+    .word-row .w-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px
+    }
+
+    .word-row .lvl {
+      background: var(--surf2);
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .word-row .stars {
+      color: var(--amber);
+      letter-spacing: 1px
+    }
 
     /* TENSES — dynamically rendered verbs */
     .v-chip {
@@ -1213,10 +1290,23 @@
       color: var(--tx);
       margin: 2px
     }
-    .v-chip:hover { border-color: var(--accent); color: var(--accent) }
-    .v-chip.active { background: var(--accent); border-color: var(--accent); color: #fff }
 
-    .v-card { border: 1px solid var(--border); margin-top: 16px }
+    .v-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .v-chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff
+    }
+
+    .v-card {
+      border: 1px solid var(--border);
+      margin-top: 16px
+    }
+
     .v-header {
       padding: 14px 20px;
       background: var(--bau-black);
@@ -1226,14 +1316,61 @@
       justify-content: space-between;
       align-items: center
     }
-    .v-title { font-family: 'Fira Sans', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase }
-    .v-meaning { font-weight: 400; font-size: 14px; color: var(--bau-yellow) }
-    .v-type { font-size: 11px; font-weight: 600; background: rgba(255,255,255,.15); padding: 3px 10px }
-    .v-tenses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0 }
-    .tense-col { padding: 14px 18px; border-right: 1px solid var(--border); border-bottom: 1px dotted var(--bau-red) }
-    .t-name { font-family: 'Fira Sans', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px }
-    .t-list { font-size: 14px; line-height: 1.8 }
-    .t-list .pron { color: var(--tx3); font-size: 12px; width: 65px; display: inline-block }
+
+    .v-title {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase
+    }
+
+    .v-meaning {
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--bau-yellow)
+    }
+
+    .v-type {
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, .15);
+      padding: 3px 10px
+    }
+
+    .v-tenses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0
+    }
+
+    .tense-col {
+      padding: 14px 18px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px dotted var(--bau-red)
+    }
+
+    .t-name {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px
+    }
+
+    .t-list {
+      font-size: 14px;
+      line-height: 1.8
+    }
+
+    .t-list .pron {
+      color: var(--tx3);
+      font-size: 12px;
+      width: 65px;
+      display: inline-block
+    }
 
     /* BROWSE */
     .btable {
@@ -1332,25 +1469,53 @@
     .sc::before {
       content: '';
       position: absolute;
-      top: 0; left: 0;
-      width: 0; height: 4px;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 4px;
       background: var(--bau-red);
       transition: width .2s ease
     }
 
-    .sc:nth-child(2)::before { background: var(--bau-blue) }
-    .sc:nth-child(3)::before { background: var(--bau-yellow) }
-    .sc:nth-child(4)::before { background: var(--bau-yellow) }
-    .sc:nth-child(5)::before { background: var(--bau-blue) }
-    .sc:nth-child(6)::before { background: var(--bau-red) }
-    .sc:nth-child(7)::before { background: var(--bau-red) }
-    .sc:nth-child(8)::before { background: var(--bau-yellow) }
-    .sc:nth-child(9)::before { background: var(--bau-blue) }
+    .sc:nth-child(2)::before {
+      background: var(--bau-blue)
+    }
+
+    .sc:nth-child(3)::before {
+      background: var(--bau-yellow)
+    }
+
+    .sc:nth-child(4)::before {
+      background: var(--bau-yellow)
+    }
+
+    .sc:nth-child(5)::before {
+      background: var(--bau-blue)
+    }
+
+    .sc:nth-child(6)::before {
+      background: var(--bau-red)
+    }
+
+    .sc:nth-child(7)::before {
+      background: var(--bau-red)
+    }
+
+    .sc:nth-child(8)::before {
+      background: var(--bau-yellow)
+    }
+
+    .sc:nth-child(9)::before {
+      background: var(--bau-blue)
+    }
 
     .sc:hover {
       background: var(--surf2)
     }
-    .sc:hover::before { width: 100% }
+
+    .sc:hover::before {
+      width: 100%
+    }
 
     .sc-ic {
       font-size: 22px;
@@ -1430,7 +1595,7 @@
 
     .streak-day.today .std-dot {
       border-color: var(--accent);
-      }
+    }
 
     .std-lbl {
       font-size: 10px;
@@ -1485,10 +1650,15 @@
       margin-bottom: 36px;
       border: 1px solid var(--border)
     }
-    .done-st > div {
+
+    .done-st>div {
       padding: 20px 40px;
-      border-right: 1px solid var(--border)}
-    .done-st > div:last-child { border-right: none }
+      border-right: 1px solid var(--border)
+    }
+
+    .done-st>div:last-child {
+      border-right: none
+    }
 
     .done-n {
       font-size: 48px;
@@ -1564,11 +1734,14 @@
       position: relative;
       display: inline-block
     }
+
     .stitle::after {
       content: '';
       position: absolute;
-      bottom: 4px; left: 0;
-      width: 40px; height: 4px;
+      bottom: 4px;
+      left: 0;
+      width: 40px;
+      height: 4px;
       background: var(--bau-red)
     }
 
@@ -1641,7 +1814,7 @@
       transform: translateY(10px);
       transition: all .3s;
       z-index: 999;
-      }
+    }
 
     .notif.show {
       opacity: 1;
@@ -1656,7 +1829,7 @@
       z-index: 500;
       align-items: center;
       justify-content: center;
-      background: rgba(17,17,17,.65)
+      background: rgba(17, 17, 17, .65)
     }
 
     .modal.active {
@@ -1671,7 +1844,7 @@
       width: 90%;
       max-height: 80vh;
       overflow-y: auto;
-      }
+    }
 
     .modal-title {
       font-family: 'Fira Sans', sans-serif;
@@ -1700,89 +1873,579 @@
     }
 
     /* ═══ QUIZ MODULE STYLES ═══ */
-    .qz-filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
-    .qz-filter-label{font-family: 'Fira Sans', sans-serif;font-size:14px;letter-spacing:2px;color:var(--bau-red);margin-right:4px}
-    .qz-lvl-chip,.qz-sec-chip{background:var(--surf);border: 1px solid var(--border);padding:5px 14px;font-size:11px;font-weight:700;font-family: 'Fira Sans', sans-serif;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--tx2);transition:all .15s}
-    .qz-lvl-chip:hover,.qz-sec-chip:hover{border-color:var(--bau-blue);color:var(--bau-blue);transform:translateY(-1px);}
-    .qz-lvl-chip.active,.qz-sec-chip.active{background:var(--bau-blue);border-color:var(--bau-blue);color:#fff;}
-    .qz-section-group{margin-bottom:32px}
-    .qz-section-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom: 1px dotted var(--bau-red)}
-    .qz-sec-icon{font-size:20px}
-    .qz-sec-title{font-family: 'Fira Sans', sans-serif;font-size:20px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
-    .qz-sec-count{font-size:11px;font-family: 'Fira Sans', sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-left:auto;background:var(--surf2);border: 1px solid var(--border);padding:3px 10px}
-    .qz-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0;border: 1px solid var(--border)}
-    .qz-card{background:var(--surf);border-right: 1px solid var(--border);border-bottom: 1px dotted var(--bau-red);padding:18px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
-    .qz-card::before{content:'';position:absolute;bottom:0;left:0;width:0;height:3px;background:var(--bau-red);transition:width .2s ease}
-    .qz-card:hover{background:var(--surf2)}
-    .qz-card:hover::before{width:100%}
-    .qz-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .qz-lvl-tag{font-size:10px;font-weight:700;font-family: 'Fira Sans', sans-serif;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border: 1px solid currentColor}
-    .qz-done-badge{font-size:10px;font-weight:700;font-family: 'Fira Sans', sans-serif;letter-spacing:1px;text-transform:uppercase;background:var(--bau-yellow);color:var(--bau-black);padding:3px 10px}
-    .qz-card-title{font-family: 'Fira Sans', sans-serif;font-size:17px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
-    .qz-card-part{font-size:12px;color:var(--tx3);margin-bottom:6px}
-    .qz-card-meta{font-size:11px;font-family: 'Fira Sans', sans-serif;letter-spacing:.8px;text-transform:uppercase;color:var(--tx3)}
-    .qz-history-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--bau-black);border: 1px solid var(--bau-black);padding:14px 18px;margin-top:20px;font-size:12px;color:rgba(255,255,255,.7);border-left: 1px solid var(--border)}
+    .qz-filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 18px
+    }
+
+    .qz-filter-label {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--bau-red);
+      margin-right: 4px
+    }
+
+    .qz-lvl-chip,
+    .qz-sec-chip {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--tx2);
+      transition: all .15s
+    }
+
+    .qz-lvl-chip:hover,
+    .qz-sec-chip:hover {
+      border-color: var(--bau-blue);
+      color: var(--bau-blue);
+      transform: translateY(-1px);
+    }
+
+    .qz-lvl-chip.active,
+    .qz-sec-chip.active {
+      background: var(--bau-blue);
+      border-color: var(--bau-blue);
+      color: #fff;
+    }
+
+    .qz-section-group {
+      margin-bottom: 32px
+    }
+
+    .qz-section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px dotted var(--bau-red)
+    }
+
+    .qz-sec-icon {
+      font-size: 20px
+    }
+
+    .qz-sec-title {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase
+    }
+
+    .qz-sec-count {
+      font-size: 11px;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--tx3);
+      margin-left: auto;
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      padding: 3px 10px
+    }
+
+    .qz-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0;
+      border: 1px solid var(--border)
+    }
+
+    .qz-card {
+      background: var(--surf);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px dotted var(--bau-red);
+      padding: 18px;
+      cursor: pointer;
+      transition: all .15s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .qz-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--bau-red);
+      transition: width .2s ease
+    }
+
+    .qz-card:hover {
+      background: var(--surf2)
+    }
+
+    .qz-card:hover::before {
+      width: 100%
+    }
+
+    .qz-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px
+    }
+
+    .qz-lvl-tag {
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border: 1px solid currentColor
+    }
+
+    .qz-done-badge {
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: var(--bau-yellow);
+      color: var(--bau-black);
+      padding: 3px 10px
+    }
+
+    .qz-card-title {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 4px
+    }
+
+    .qz-card-part {
+      font-size: 12px;
+      color: var(--tx3);
+      margin-bottom: 6px
+    }
+
+    .qz-card-meta {
+      font-size: 11px;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--tx3)
+    }
+
+    .qz-history-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: var(--bau-black);
+      border: 1px solid var(--bau-black);
+      padding: 14px 18px;
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .7);
+      border-left: 1px solid var(--border)
+    }
 
     /* Quiz Play */
-    .qz-play-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-    .qz-play-meta{display:flex;align-items:center;gap:10px}
-    .qz-text-block{background:var(--surf);border: 1px solid var(--border);border-left: 1px solid var(--border);padding:18px 20px;font-size:14px;line-height:1.7;margin-bottom:18px;white-space:pre-line;color:var(--tx)}
-    .qz-question{font-family: 'Fira Sans', sans-serif;font-size:30px;letter-spacing:1.5px;margin-bottom:16px;line-height:1.2}
-    .qz-options{display:flex;flex-direction:column;gap:6px;max-width:560px}
-    .qz-opt{text-align:left;padding:14px 18px;border: 1px solid var(--border);background:var(--surf);font-size:14px;font-family:inherit;cursor:pointer;transition:all .15s;color:var(--tx)}
-    .qz-opt:hover:not(:disabled){border-color:var(--bau-blue);background:var(--al);transform:translateX(4px);}
-    .qz-opt.qz-correct{border-color:var(--green);background:var(--gl);color:var(--green);font-weight:700;}
-    .qz-opt.qz-wrong{border-color:var(--red);background:var(--rl);color:var(--red)}
-    .qz-opt:disabled{cursor:default;opacity:.9}
+    .qz-play-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px
+    }
 
-    .qz-situation-box{background:var(--bau-black);color:#fff;border: 1px solid var(--bau-black);border-left: 1px solid var(--border);padding:20px;font-size:15px;line-height:1.6;margin-bottom:18px;font-style:italic}
+    .qz-play-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .qz-text-block {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      padding: 18px 20px;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      white-space: pre-line;
+      color: var(--tx)
+    }
+
+    .qz-question {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 30px;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+      line-height: 1.2
+    }
+
+    .qz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: 560px
+    }
+
+    .qz-opt {
+      text-align: left;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      background: var(--surf);
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .15s;
+      color: var(--tx)
+    }
+
+    .qz-opt:hover:not(:disabled) {
+      border-color: var(--bau-blue);
+      background: var(--al);
+      transform: translateX(4px);
+    }
+
+    .qz-opt.qz-correct {
+      border-color: var(--green);
+      background: var(--gl);
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .qz-opt.qz-wrong {
+      border-color: var(--red);
+      background: var(--rl);
+      color: var(--red)
+    }
+
+    .qz-opt:disabled {
+      cursor: default;
+      opacity: .9
+    }
+
+    .qz-situation-box {
+      background: var(--bau-black);
+      color: #fff;
+      border: 1px solid var(--bau-black);
+      border-left: 1px solid var(--border);
+      padding: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+      font-style: italic
+    }
 
     /* RF */
-    .qz-rf-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border: 1px solid var(--border);margin-bottom:6px;background:var(--surf);flex-wrap:wrap}
-    .qz-rf-text{flex:1;min-width:200px;font-size:14px}
-    .qz-rf-btns{display:flex;gap:6px}
-    .qz-rf-btn{padding:6px 18px;border: 1px solid var(--border);background:var(--surf2);font-size:12px;font-family: 'Fira Sans', sans-serif;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .15s}
-    .qz-rf-btn:hover:not(:disabled){border-color:var(--bau-blue);color:var(--bau-blue);}
-    .qz-rf-btn:disabled{opacity:.7;cursor:default}
-    .qz-rf-fb{font-size:18px;min-width:28px;text-align:center}
+    .qz-rf-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 6px;
+      background: var(--surf);
+      flex-wrap: wrap
+    }
+
+    .qz-rf-text {
+      flex: 1;
+      min-width: 200px;
+      font-size: 14px
+    }
+
+    .qz-rf-btns {
+      display: flex;
+      gap: 6px
+    }
+
+    .qz-rf-btn {
+      padding: 6px 18px;
+      border: 1px solid var(--border);
+      background: var(--surf2);
+      font-size: 12px;
+      font-family: 'Fira Sans', sans-serif;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .qz-rf-btn:hover:not(:disabled) {
+      border-color: var(--bau-blue);
+      color: var(--bau-blue);
+    }
+
+    .qz-rf-btn:disabled {
+      opacity: .7;
+      cursor: default
+    }
+
+    .qz-rf-fb {
+      font-size: 18px;
+      min-width: 28px;
+      text-align: center
+    }
 
     /* Cloze */
-    .qz-cloze-sentence{font-family: 'Fira Sans', sans-serif;font-size:32px;letter-spacing:2px;text-align:center;margin-bottom:10px;line-height:1.3}
-    .qz-blank{background:var(--bau-yellow);color:var(--bau-black);padding:2px 16px;border-bottom: 1px dotted var(--bau-red)}
-    .qz-cloze-hint{font-size:12px;font-family: 'Fira Sans', sans-serif;letter-spacing:.8px;text-transform:uppercase;color:var(--tx3);text-align:center;margin-bottom:16px}
-    .qz-cloze-input-wrap{display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-    .qz-cloze-fb{padding:12px 20px;border-left: 1px solid var(--border);font-size:15px;text-align:left;max-width:480px;margin:0 auto;font-weight:600}
-    .qz-fb-correct{background:var(--gl);color:var(--green)}
-    .qz-fb-wrong{background:var(--rl);color:var(--red)}
+    .qz-cloze-sentence {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 32px;
+      letter-spacing: 2px;
+      text-align: center;
+      margin-bottom: 10px;
+      line-height: 1.3
+    }
+
+    .qz-blank {
+      background: var(--bau-yellow);
+      color: var(--bau-black);
+      padding: 2px 16px;
+      border-bottom: 1px dotted var(--bau-red)
+    }
+
+    .qz-cloze-hint {
+      font-size: 12px;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--tx3);
+      text-align: center;
+      margin-bottom: 16px
+    }
+
+    .qz-cloze-input-wrap {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap
+    }
+
+    .qz-cloze-fb {
+      padding: 12px 20px;
+      border-left: 1px solid var(--border);
+      font-size: 15px;
+      text-align: left;
+      max-width: 480px;
+      margin: 0 auto;
+      font-weight: 600
+    }
+
+    .qz-fb-correct {
+      background: var(--gl);
+      color: var(--green)
+    }
+
+    .qz-fb-wrong {
+      background: var(--rl);
+      color: var(--red)
+    }
 
     /* Matching */
-    .qz-match-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .qz-match-sits{display:flex;flex-direction:column;gap:6px}
-    .qz-match-sit{background:var(--surf);border: 1px solid var(--border);border-left: 1px solid var(--border);padding:12px 14px;font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;transition:all .2s}
-    .qz-match-sit.qz-match-ok{border-color:var(--green);border-left-color:var(--green);background:var(--gl)}
-    .qz-match-sit.qz-match-err{border-color:var(--red);border-left-color:var(--red);background:var(--rl)}
-    .qz-match-num{font-family: 'Fira Sans', sans-serif;font-size:18px;letter-spacing:1px;color:var(--bau-blue);min-width:22px}
-    .qz-match-ads{display:flex;flex-direction:column;gap:6px}
-    .qz-match-ad{background:var(--surf2);border: 1px solid var(--border);border-left: 1px solid var(--border);padding:12px 14px;font-size:13px;line-height:1.5}
+    .qz-match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px
+    }
+
+    .qz-match-sits {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .qz-match-sit {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      padding: 12px 14px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      transition: all .2s
+    }
+
+    .qz-match-sit.qz-match-ok {
+      border-color: var(--green);
+      border-left-color: var(--green);
+      background: var(--gl)
+    }
+
+    .qz-match-sit.qz-match-err {
+      border-color: var(--red);
+      border-left-color: var(--red);
+      background: var(--rl)
+    }
+
+    .qz-match-num {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: var(--bau-blue);
+      min-width: 22px
+    }
+
+    .qz-match-ads {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .qz-match-ad {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.5
+    }
 
     /* Ordering */
-    .qz-order-bank{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
-    .qz-order-word{padding:8px 16px;border: 1px solid var(--border);background:var(--surf);font-size:14px;font-family: 'Fira Sans', sans-serif;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .15s;color:var(--tx)}
-    .qz-order-word:hover:not(:disabled){border-color:var(--bau-blue);background:var(--al);transform:translateY(-2px);}
-    .qz-order-result{min-height:60px;border:2px dashed var(--border);padding:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s}
-    .qz-order-result:hover{border-color:var(--bau-blue)}
-    .qz-order-placed{background:var(--bau-black);color:#fff;padding:6px 14px;font-size:14px;font-family: 'Fira Sans', sans-serif;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+    .qz-order-bank {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 18px
+    }
+
+    .qz-order-word {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: var(--surf);
+      font-size: 14px;
+      font-family: 'Fira Sans', sans-serif;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .15s;
+      color: var(--tx)
+    }
+
+    .qz-order-word:hover:not(:disabled) {
+      border-color: var(--bau-blue);
+      background: var(--al);
+      transform: translateY(-2px);
+    }
+
+    .qz-order-result {
+      min-height: 60px;
+      border: 2px dashed var(--border);
+      padding: 16px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color .2s
+    }
+
+    .qz-order-result:hover {
+      border-color: var(--bau-blue)
+    }
+
+    .qz-order-placed {
+      background: var(--bau-black);
+      color: #fff;
+      padding: 6px 14px;
+      font-size: 14px;
+      font-family: 'Fira Sans', sans-serif;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase
+    }
 
     /* Results */
-    .qz-result-card{text-align:center;padding:40px 20px}
-    .qz-result-emoji{font-size:64px;margin-bottom:12px}
-    .qz-result-title{font-family: 'Fira Sans', sans-serif;font-size:44px;letter-spacing:3px;margin-bottom:6px}
-    .qz-result-subtitle{font-family: 'Fira Sans', sans-serif;font-size:15px;letter-spacing:.8px;text-transform:uppercase;color:var(--tx2);margin-bottom:24px}
-    .qz-result-score-ring{width:140px;height:140px;background:conic-gradient(var(--bau-blue) calc(var(--qpct)*3.6deg),var(--surf2) 0deg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
-    .qz-result-score-inner{width:108px;height:108px;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .qz-result-pct{font-family: 'Fira Sans', sans-serif;font-size:36px;letter-spacing:2px;color:var(--bau-blue)}
-    .qz-result-label{font-size:11px;font-family: 'Fira Sans', sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--tx3)}
-    .qz-result-info{font-size:11px;font-family: 'Fira Sans', sans-serif;letter-spacing:.8px;color:var(--tx3);background:var(--surf2);border: 1px solid var(--border);border-left: 1px solid var(--border);padding:10px 16px;display:inline-block;margin-top:8px}
+    .qz-result-card {
+      text-align: center;
+      padding: 40px 20px
+    }
+
+    .qz-result-emoji {
+      font-size: 64px;
+      margin-bottom: 12px
+    }
+
+    .qz-result-title {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 44px;
+      letter-spacing: 3px;
+      margin-bottom: 6px
+    }
+
+    .qz-result-subtitle {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 15px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--tx2);
+      margin-bottom: 24px
+    }
+
+    .qz-result-score-ring {
+      width: 140px;
+      height: 140px;
+      background: conic-gradient(var(--bau-blue) calc(var(--qpct)*3.6deg), var(--surf2) 0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .qz-result-score-inner {
+      width: 108px;
+      height: 108px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center
+    }
+
+    .qz-result-pct {
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 36px;
+      letter-spacing: 2px;
+      color: var(--bau-blue)
+    }
+
+    .qz-result-label {
+      font-size: 11px;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--tx3)
+    }
+
+    .qz-result-info {
+      font-size: 11px;
+      font-family: 'Fira Sans', sans-serif;
+      letter-spacing: .8px;
+      color: var(--tx3);
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      padding: 10px 16px;
+      display: inline-block;
+      margin-top: 8px
+    }
 
     @media(max-width:768px) {
       .sidebar {
@@ -1792,7 +2455,7 @@
         z-index: 200;
         height: calc(100vh - 60px);
         transition: left .3s ease;
-        }
+      }
 
       body.menu-open .sidebar {
         left: 0
@@ -1826,12 +2489,22 @@
         padding: 20px
       }
 
-      .qz-match-grid{grid-template-columns:1fr}
-      .qz-cards-grid{grid-template-columns:1fr}
-      .qz-cloze-sentence{font-size:20px}
+      .qz-match-grid {
+        grid-template-columns: 1fr
+      }
+
+      .qz-cards-grid {
+        grid-template-columns: 1fr
+      }
+
+      .qz-cloze-sentence {
+        font-size: 20px
+      }
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;700&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,1,0&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;700&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,1,0&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
@@ -1840,7 +2513,8 @@
     <!-- TOPBAR -->
     <div class="topbar">
       <div style="display:flex;align-items:center;gap:12px">
-        <button class="icon-btn hamburger" onclick="toggleMobile()"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu</span></button>
+        <button class="icon-btn hamburger" onclick="toggleMobile()"><span class="material-symbols-sharp"
+            style="font-size:inherit;vertical-align:middle;">menu</span></button>
         <div class="logo">
           <img src="favicon.png" class="logo-mark" alt="Logo" style="padding:0; background:transparent;">
           <div class="logo-text">Deutsche<span>Deck</span></div>
@@ -1850,10 +2524,13 @@
         <div class="stats-bar">
           <div class="spill"><span class="dot dg"></span><span id="sC">0</span> correct</div>
           <div class="spill"><span class="dot dr"></span><span id="sW">0</span> wrong</div>
-          <div class="spill"><span class="dot da"></span><span id="sSt">0</span> <span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">local_fire_department</span></div>
+          <div class="spill"><span class="dot da"></span><span id="sSt">0</span> <span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">local_fire_department</span></div>
         </div>
-        <button class="icon-btn" onclick="toggleShortcuts()" title="Keyboard shortcuts"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span></button>
-        <button class="icon-btn" onclick="toggleDark()" title="Toggle dark mode"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">dark_mode</span></button>
+        <button class="icon-btn" onclick="toggleShortcuts()" title="Keyboard shortcuts"><span
+            class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span></button>
+        <button class="icon-btn" onclick="toggleDark()" title="Toggle dark mode"><span class="material-symbols-sharp"
+            style="font-size:inherit;vertical-align:middle;">dark_mode</span></button>
       </div>
     </div>
 
@@ -1863,22 +2540,31 @@
       <!-- SIDEBAR -->
       <div class="sidebar">
         <div class="sl">Study</div>
-        <button class="nb active" onclick="nav('home')" id="n-home"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">home</span></span>Home</button>
-        <button class="nb" onclick="nav('cards')" id="n-cards"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">style</span></span>Flashcards</button>
-        <button class="nb" onclick="nav('tenses')" id="n-tenses"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">architecture</span></span>Tenses &amp; Grammar</button>
-        <button class="nb" onclick="nav('browse')" id="n-browse"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu_book</span></span>Browse<span class="bdg"
+        <button class="nb active" onclick="nav('home')" id="n-home"><span class="ic"><span
+              class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">home</span></span>Home</button>
+        <button class="nb" onclick="nav('cards')" id="n-cards"><span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">style</span></span>Flashcards</button>
+        <button class="nb" onclick="nav('tenses')" id="n-tenses"><span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">architecture</span></span>Tenses &amp; Grammar</button>
+        <button class="nb" onclick="nav('browse')" id="n-browse"><span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">menu_book</span></span>Browse<span class="bdg"
             id="tb">0</span></button>
-        <button class="nb" onclick="nav('quiz')" id="n-quiz"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">school</span></span>Prüfungstrainer</button>
+        <button class="nb" onclick="nav('quiz')" id="n-quiz"><span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">school</span></span>Prüfungstrainer</button>
         <div class="div"></div>
         <div class="sl">Progress</div>
-        <button class="nb" onclick="nav('progress')" id="n-progress"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">bar_chart</span></span>My Progress</button>
+        <button class="nb" onclick="nav('progress')" id="n-progress"><span class="ic"><span
+              class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">bar_chart</span></span>My
+          Progress</button>
 
         <div class="div"></div>
         <div class="sl">Settings</div>
         <div class="slider-row" style="padding-top:8px; margin-bottom:4px">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
             Voice: <span title="Local voices work offline. Online voices require internet."
-              style="cursor:help; font-size:10px; background:var(--surf2); padding:2px 5px; border-radius:4px;"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">info</span></span>
+              style="cursor:help; font-size:10px; background:var(--surf2); padding:2px 5px; border-radius:4px;"><span
+                class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">info</span></span>
           </div>
           <div style="display:flex;gap:6px">
             <select id="voiceSelect" onchange="setVoice()"
@@ -1886,9 +2572,12 @@
               <option value="">Default (Auto)</option>
             </select>
             <button onclick="testVoice()" class="icon-btn" style="width:32px;height:32px;font-size:13px"
-              title="Test voice"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">volume_up</span></button>
+              title="Test voice"><span class="material-symbols-sharp"
+                style="font-size:inherit;vertical-align:middle;">volume_up</span></button>
           </div>
-          <div style="font-size:10px;color:var(--tx3);margin-top:4px"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">language</span> = online only &middot; <span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">wifi_off</span> = works
+          <div style="font-size:10px;color:var(--tx3);margin-top:4px"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">language</span> = online only &middot; <span
+              class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">wifi_off</span> = works
             offline<br>Fallback voice if Google TTS unavailable.</div>
         </div>
         <div class="tog-row">Shuffle cards <div class="tog" id="shuffleToggle" onclick="toggleShuffle()"></div>
@@ -1901,11 +2590,12 @@
             max="50" step="5" oninput="setGoal()"></div>
         <div class="div"></div>
         <div class="sl">Data</div>
-        <button class="nb" onclick="exportProgress()"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">download</span></span>Export Progress</button>
-        <button class="nb" onclick="showImportModal()"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">upload</span></span>Import Progress</button>
-        <button class="nb" onclick="exportDatabase()"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">database</span></span>Export Database</button>
-        <button class="nb" onclick="showDbImportModal()"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">cloud_upload</span></span>Import Database</button>
-        <button class="nb" onclick="resetProgress()" style="color:var(--red)"><span class="ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">delete</span></span>Reset
+        <button class="nb" onclick="exportProgress()"><span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">download</span></span>Export Progress</button>
+        <button class="nb" onclick="showImportModal()"><span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">upload</span></span>Import Progress</button>
+        <button class="nb" onclick="resetProgress()" style="color:var(--red)"><span class="ic"><span
+              class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">delete</span></span>Reset
           Progress</button>
       </div>
 
@@ -1916,8 +2606,9 @@
         <div class="screen active fade-in" id="sc-home">
           <div style="max-width:680px; margin: 0 auto">
             <div style="font-family: 'Fira Sans', sans-serif;font-size:38px;line-height:1.2;margin-bottom:8px">Guten
-              Tag! <span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">waving_hand</span><br>Ready to learn?</div>
-            <div style="color:var(--tx2);margin-bottom:16px">Netzwerk A1 &amp; A2 — <span id="homeCount">0</span> words
+              Tag! <span class="material-symbols-sharp"
+                style="font-size:inherit;vertical-align:middle;">waving_hand</span><br>Ready to learn?</div>
+            <div style="color:var(--tx2);margin-bottom:16px">Netzwerk A1 to C2 — <span id="homeCount">0</span> words
               · verb tables · grammar notes</div>
             <div class="goal-bar">
               <div class="goal-fill" id="goalFill" style="width:0%"></div>
@@ -1925,67 +2616,93 @@
             <div class="goal-text"><span id="goalText">0 / 10 words today</span> · <span class="due-badge"
                 id="dueBadge"></span></div>
             <div class="streak-row" id="streakBar"></div>
-            <div class="streak-num" style="margin-bottom:20px"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">local_fire_department</span> <strong id="streakNum">0</strong> day streak</div>
+            <div class="streak-num" style="margin-bottom:20px"><span class="material-symbols-sharp"
+                style="font-size:inherit;vertical-align:middle;">local_fire_department</span> <strong
+                id="streakNum">0</strong> day streak</div>
             <div class="sgrid">
-              <div class="sc" onclick="session('vocab')">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">edit_document</span></div>
+              <div class="sc" onclick="openSetup('flash', 'vocab')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">edit_document</span></div>
                 <div class="sc-ti">Vocabulary</div>
                 <div class="sc-de">Nouns, adjectives, adverbs</div>
               </div>
-              <div class="sc" onclick="session('verb')">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">sync</span></div>
+              <div class="sc" onclick="openSetup('flash', 'verb')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">sync</span></div>
                 <div class="sc-ti">Verb Cards</div>
                 <div class="sc-de">Infinitives and conjugations</div>
               </div>
-              <div class="sc" onclick="session('phrase')">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">chat</span></div>
+              <div class="sc" onclick="openSetup('flash', 'phrase')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">chat</span></div>
                 <div class="sc-ti">Phrases</div>
                 <div class="sc-de">Everyday expressions</div>
               </div>
-              <div class="sc" onclick="session('weak')">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">track_changes</span></div>
+              <div class="sc" onclick="openSetup('flash', 'weak')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">track_changes</span></div>
                 <div class="sc-ti">Weak Words</div>
                 <div class="sc-de">Cards you got wrong</div>
               </div>
-              <div class="sc" onclick="session('due')">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">schedule</span></div>
+              <div class="sc" onclick="openSetup('flash', 'due')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">schedule</span></div>
                 <div class="sc-ti">Due Today</div>
                 <div class="sc-de">Spaced repetition review</div>
               </div>
-              <div class="sc" onclick="sessionTyping('all')">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span></div>
+              <div class="sc" onclick="openSetup('typing', 'all')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">keyboard</span></div>
                 <div class="sc-ti">Typing Quiz</div>
                 <div class="sc-de">Type the German translation</div>
               </div>
-              <div class="sc" onclick="sessionListening('all')">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">headphones</span></div>
+              <div class="sc" onclick="openSetup('listening', 'all')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">headphones</span></div>
                 <div class="sc-ti">Listening Quiz</div>
                 <div class="sc-de">Hear it, type it</div>
               </div>
-              <div class="sc" onclick="sessionArticle()">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">palette</span></div>
+              <div class="sc" onclick="openSetup('article', 'all')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">palette</span></div>
                 <div class="sc-ti">der/die/das</div>
                 <div class="sc-de">Practice noun genders</div>
               </div>
-              <div class="sc" onclick="sessionConj()">
-                <div class="sc-ic"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">extension</span></div>
+              <div class="sc" onclick="openSetup('conj', 'all')">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">extension</span></div>
                 <div class="sc-ti">Conjugation</div>
                 <div class="sc-de">Type the correct verb form</div>
               </div>
             </div>
             <div class="btns">
-              <button class="btn bp" onclick="session('all')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">rocket_launch</span> Start All Cards</button>
-              <button class="btn bo" onclick="sessionTyping('all')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span> Typing Mode</button>
-              <button class="btn bo" onclick="sessionListening('all')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">headphones</span> Listening</button>
-              <button class="btn bo" onclick="nav('browse')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu_book</span> Browse</button>
-              <button class="btn bo" onclick="nav('tenses')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">architecture</span> Tenses</button>
+              <button class="btn bp" onclick="session('all')"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">rocket_launch</span> Start All Cards</button>
+              <button class="btn bo" onclick="sessionTyping('all')"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">keyboard</span> Typing Mode</button>
+              <button class="btn bo" onclick="sessionListening('all')"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">headphones</span> Listening</button>
+              <button class="btn bo" onclick="nav('browse')"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">menu_book</span> Browse</button>
+              <button class="btn bo" onclick="nav('tenses')"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">architecture</span> Tenses</button>
             </div>
 
             <div style="margin-top: 32px; padding-top: 24px; border-top: 1px dotted var(--border);">
-              <div style="font-family: 'Fira Sans', sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;color:var(--tx2);">Practice Specific Topics & Levels</div>
+              <div
+                style="font-family: 'Fira Sans', sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;color:var(--tx2);">
+                Practice Specific Topics & Levels</div>
               <div class="row" style="gap:8px;">
-                <button class="chip" onclick="session('A1')">Level A1</button>
-                <button class="chip" onclick="session('A2')">Level A2</button>
+                <select class="sty" id="homeLevelSelect"
+                  onchange="if(this.value) { openSetup('flash', this.value); this.value=''; }">
+                  <option value="">-- Level --</option>
+                  <option value="A1">A1</option>
+                  <option value="A2">A2</option>
+                  <option value="B1">B1</option>
+                  <option value="B2">B2</option>
+                  <option value="C1">C1</option>
+                  <option value="C2">C2</option>
+                </select>
                 <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
                 <button class="chip" onclick="session('greeting')">Greetings</button>
                 <button class="chip" onclick="session('numbers')">Numbers</button>
@@ -2004,11 +2721,57 @@
 
         <!-- FLASHCARDS -->
         <div class="screen" id="sc-cards">
+          <div id="fc-setup" style="display:none; max-width:500px; margin: 0 auto; padding: 40px 20px;">
+            <div class="stitle" id="setupTitle"><span class="material-symbols-sharp"
+                style="font-size:inherit;vertical-align:middle;">manage_accounts</span> Session Setup</div>
+            <p id="setupDesc" style="color:var(--tx2); font-size:14px; margin-bottom:24px;">Configure your custom study
+              session.</p>
+
+            <div style="margin-bottom:20px; text-align:left;">
+              <label
+                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">1.
+                Choose Level / Category</label>
+              <select class="sty" id="setupLevel" style="width:100%; padding:10px;"
+                onchange="if(typeof updateSetupLimit==='function') updateSetupLimit()">
+                <option value="all">All Words (Mixed)</option>
+                <option value="A1">A1 Level</option>
+                <option value="A2">A2 Level</option>
+                <option value="B1">B1 Level</option>
+                <option value="B2">B2 Level</option>
+                <option value="C1">C1 Level</option>
+                <option value="C2">C2 Level</option>
+                <option value="verb">Verb Core</option>
+                <option value="phrase">Useful Phrases</option>
+                <option value="weak">Weak Cards</option>
+                <option value="due">Due Today</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:30px; text-align:left;">
+              <label
+                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">2.
+                Starting Point: <span id="setupStartVal">0</span></label>
+              <input type="range" id="setupStart" min="0" max="20000" value="0" step="10"
+                oninput="document.getElementById('setupStartVal').innerText = this.value"
+                style="width:100%; cursor:pointer;">
+              <div style="font-size:11px; color:var(--tx3); margin-top:6px;"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">info</span> If shuffle is disabled in Settings, this
+                skips to a specific database index so you can resume where you left off.</div>
+            </div>
+
+            <button class="btn bp" id="startBtn" onclick="startCustomSession()"
+              style="width:100%; justify-content:center; font-size:16px; padding: 16px;"><span
+                class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">rocket_launch</span>
+              Start Session</button>
+          </div>
+
           <div id="fc-ui">
             <div class="fc-wrap">
               <div class="card-actions">
-                <button class="alink" onclick="showExamples()"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Examples</button>
-                <button class="alink" onclick="speakCurrent()"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">volume_up</span> Listen</button>
+                <button class="alink" onclick="showExamples()"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">book</span> Examples</button>
+                <button class="alink" onclick="speakCurrent()"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">volume_up</span> Listen</button>
                 <button class="alink" onclick="nav('home')">✕ End</button>
               </div>
               <div class="prog-bar">
@@ -2026,7 +2789,7 @@
                       <div class="art" id="fart"></div>
                       <div class="cword" id="fword">—</div>
                       <div class="csub" id="fsub"></div>
-                      <div class="chint">Click to reveal →</div>
+                      <div class="chint" id="fn">Click to reveal →</div>
                     </div>
                     <div class="face back">
                       <div class="ctag tv" id="btag">Vocabulary</div>
@@ -2095,15 +2858,32 @@
               </div>
 
               <div class="ans" id="ansBtns" style="display:none">
-                <button class="ab aw" onclick="ans('w')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">replay</span> Again</button>
-                <button class="ab ah" onclick="ans('h')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">help</span> Hard</button>
-                <button class="ab ac" onclick="ans('c')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">check_circle</span> Got it!</button>
+                <button class="ab aw" onclick="ans('w')"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">replay</span> Again</button>
+                <button class="ab ah" onclick="ans('h')"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">help</span> Hard</button>
+                <button class="ab ac" onclick="ans('c')"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">check_circle</span> Got it!</button>
               </div>
               <div class="flipnote" id="fn">Space/click to flip · 1/2/3 to rate</div>
 
+              <div id="quickNav"
+                style="display:none; justify-content:center; align-items:center; gap: 16px; margin: 20px 0;">
+                <button class="btn bo" onclick="quickJump(-1)" style="padding: 4px 8px;"><span
+                    class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">arrow_back</span></button>
+                <input type="range" id="quickNavSlider" min="1" max="100" value="1"
+                  oninput="quickSliderJump(this.value)" style="flex:1; max-width: 260px; cursor:pointer;"
+                  title="Jump to card">
+                <button class="btn bo" onclick="quickJump(1)" style="padding: 4px 8px;"><span
+                    class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">arrow_forward</span></button>
+              </div>
+
               <div class="exp" id="exPanel" style="display:none">
                 <div class="exp-h">
-                  <div class="exp-badge"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Details</div>
+                  <div class="exp-badge"><span class="material-symbols-sharp"
+                      style="font-size:inherit;vertical-align:middle;">book</span> Details</div>
                 </div>
                 <div id="exContent"></div>
               </div>
@@ -2111,7 +2891,8 @@
           </div>
           <div id="fc-done" style="display:none">
             <div class="done">
-              <div class="done-em"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">celebration</span></div>
+              <div class="done-em"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">celebration</span></div>
               <div class="done-ti">Session Complete!</div>
               <div class="done-su">Here's how you did:</div>
               <div class="done-st">
@@ -2129,9 +2910,12 @@
                 </div>
               </div>
               <div class="btns">
-                <button class="btn bp" onclick="session(lastST)"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">sync</span> Again</button>
-                <button class="btn bo" onclick="nav('home')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">home</span> Home</button>
-                <button class="btn bo" onclick="nav('progress')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">bar_chart</span> Progress</button>
+                <button class="btn bp" onclick="session(lastST)"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">sync</span> Again</button>
+                <button class="btn bo" onclick="nav('home')"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">home</span> Home</button>
+                <button class="btn bo" onclick="nav('progress')"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">bar_chart</span> Progress</button>
               </div>
             </div>
           </div>
@@ -2146,11 +2930,14 @@
               <div class="verb-grid" id="vgrid"></div>
             </div>
             <div id="tdisp"></div>
-            <div style="margin-top:28px"><button class="btn bo" onclick="showGrammarHelp()"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Explain this
+            <div style="margin-top:28px"><button class="btn bo" onclick="showGrammarHelp()"><span
+                  class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Explain
+                this
                 verb</button></div>
             <div class="exp" id="agp" style="display:none;margin-top:14px">
               <div class="exp-h">
-                <div class="exp-badge"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Grammar Help</div>
+                <div class="exp-badge"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">book</span> Grammar Help</div>
               </div>
               <div id="agc"></div>
             </div>
@@ -2172,6 +2959,10 @@
                   <option value="all">All Levels</option>
                   <option value="A1">A1</option>
                   <option value="A2">A2</option>
+                  <option value="B1">B1</option>
+                  <option value="B2">B2</option>
+                  <option value="C1">C1</option>
+                  <option value="C2">C2</option>
                 </select>
                 <select class="sty" id="bcat" onchange="renderBrowse()">
                   <option value="all">All Types</option>
@@ -2188,8 +2979,9 @@
               </div>
             </div>
             <div class="search-w">
-              <div class="sico"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">search</span></div><input class="search-i" id="sq" type="text"
-                placeholder="Search German or English…" oninput="renderBrowse()">
+              <div class="sico"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">search</span></div><input class="search-i" id="sq"
+                type="text" placeholder="Search German or English…" oninput="renderBrowse()">
             </div>
             <div id="browse"></div>
             <div id="browsePages"></div>
@@ -2254,23 +3046,41 @@
         <!-- QUIZ / PRÜFUNGSTRAINER -->
         <div class="screen" id="sc-quiz">
           <div style="max-width:860px; margin: 0 auto">
-            <div class="stitle"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">school</span> Prüfungstrainer</div>
-            <div style="color:var(--tx2);margin-bottom:18px;font-size:14px">Goethe-Zertifikat Stil — Lesen, Schreiben, Grammatik, Wortschatz</div>
+            <div class="stitle"><span class="material-symbols-sharp"
+                style="font-size:inherit;vertical-align:middle;">school</span> Prüfungstrainer</div>
+            <div style="color:var(--tx2);margin-bottom:18px;font-size:14px">Goethe-Zertifikat Stil — Lesen, Schreiben,
+              Grammatik, Wortschatz</div>
 
             <!-- Quiz List View -->
             <div id="quizListView">
               <div class="qz-filters">
                 <span class="qz-filter-label">Niveau:</span>
-                <button class="qz-lvl-chip active" data-qlvl="all" onclick="setQuizLevel('all')">Alle</button>
-                <button class="qz-lvl-chip" data-qlvl="A1" onclick="setQuizLevel('A1')">A1</button>
-                <button class="qz-lvl-chip" data-qlvl="A2" onclick="setQuizLevel('A2')">A2</button>
+                <select class="sty" id="quizLevelSelect" onchange="setQuizLevel(this.value)">
+                  <option value="all">Alle</option>
+                  <option value="A1">A1</option>
+                  <option value="A2">A2</option>
+                  <option value="B1">B1</option>
+                  <option value="B2">B2</option>
+                  <option value="C1">C1</option>
+                  <option value="C2">C2</option>
+                </select>
                 <span class="qz-filter-label" style="margin-left:12px">Bereich:</span>
                 <button class="qz-sec-chip active" data-qsec="all" onclick="setQuizSection('all')">Alle</button>
-                <button class="qz-sec-chip" data-qsec="Lesen" onclick="setQuizSection('Lesen')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span> Lesen</button>
-                <button class="qz-sec-chip" data-qsec="Schreiben" onclick="setQuizSection('Schreiben')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">edit</span> Schreiben</button>
-                <button class="qz-sec-chip" data-qsec="Strukturen" onclick="setQuizSection('Strukturen')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">build</span> Strukturen</button>
-                <button class="qz-sec-chip" data-qsec="Wortschatz" onclick="setQuizSection('Wortschatz')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu_book</span> Wortschatz</button>
-                <button class="qz-sec-chip" data-qsec="Hören" onclick="setQuizSection('Hören')"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">headphones</span> Hören</button>
+                <button class="qz-sec-chip" data-qsec="Lesen" onclick="setQuizSection('Lesen')"><span
+                    class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">book</span>
+                  Lesen</button>
+                <button class="qz-sec-chip" data-qsec="Schreiben" onclick="setQuizSection('Schreiben')"><span
+                    class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">edit</span>
+                  Schreiben</button>
+                <button class="qz-sec-chip" data-qsec="Strukturen" onclick="setQuizSection('Strukturen')"><span
+                    class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">build</span>
+                  Strukturen</button>
+                <button class="qz-sec-chip" data-qsec="Wortschatz" onclick="setQuizSection('Wortschatz')"><span
+                    class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">menu_book</span>
+                  Wortschatz</button>
+                <button class="qz-sec-chip" data-qsec="Hören" onclick="setQuizSection('Hören')"><span
+                    class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">headphones</span>
+                  Hören</button>
               </div>
               <div id="quizListContent"></div>
             </div>
@@ -2296,7 +3106,8 @@
   <!-- SHORTCUTS MODAL -->
   <div class="modal" id="shortcutsModal">
     <div class="modal-box">
-      <div class="modal-title"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">keyboard</span> Keyboard Shortcuts</div>
+      <div class="modal-title"><span class="material-symbols-sharp"
+          style="font-size:inherit;vertical-align:middle;">keyboard</span> Keyboard Shortcuts</div>
       <div class="shortcut-row"><span>Flip card</span><span><span class="kbd">Space</span> or <span
             class="kbd">Enter</span></span></div>
       <div class="shortcut-row"><span>Rate: Again</span><span class="kbd">1</span></div>
@@ -2310,28 +3121,36 @@
   </div>
 
   <!-- GERMAN VIRTUAL KEYBOARD -->
-  <div id="germanKeyboard" style="position:fixed; bottom:24px; right:24px; display:none; z-index:9999; background:var(--surf1); padding:8px; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.15); border:1px solid var(--border); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); opacity:0; transform:translateY(10px)">
+  <div id="germanKeyboard"
+    style="position:fixed; bottom:24px; right:24px; display:none; z-index:9999; background:var(--surf1); padding:8px; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.15); border:1px solid var(--border); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); opacity:0; transform:translateY(10px)">
     <div style="display:flex; flex-direction:column; gap:6px;">
       <div style="display:flex; gap:6px;">
-        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ä')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ä</button>
-        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ö')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ö</button>
-        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ü')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ü</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ä')"
+          style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ä</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ö')"
+          style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ö</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'Ü')"
+          style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">Ü</button>
         <div style="width:36px;height:36px;"></div>
       </div>
       <div style="display:flex; gap:6px;">
-        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ä')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ä</button>
-        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ö')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ö</button>
-        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ü')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ü</button>
-        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ß')" style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ß</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ä')"
+          style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ä</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ö')"
+          style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ö</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ü')"
+          style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ü</button>
+        <button class="btn bo" tabindex="-1" onmousedown="insertGermanChar(event, 'ß')"
+          style="width:36px;height:36px;padding:0;font-size:16px;font-weight:600;min-width:36px">ß</button>
       </div>
     </div>
   </div>
 
   <script>
     let activeGermanInput = null;
-    
+
     document.addEventListener('focusin', (e) => {
-      if(e.target.tagName === 'INPUT' && (e.target.type === 'text' || e.target.type === 'search')) {
+      if (e.target.tagName === 'INPUT' && (e.target.type === 'text' || e.target.type === 'search')) {
         activeGermanInput = e.target;
         const kb = document.getElementById('germanKeyboard');
         kb.style.display = 'block';
@@ -2342,28 +3161,28 @@
 
     document.addEventListener('focusout', (e) => {
       setTimeout(() => {
-        if(!document.activeElement || document.activeElement.tagName !== 'INPUT') {
+        if (!document.activeElement || document.activeElement.tagName !== 'INPUT') {
           const kb = document.getElementById('germanKeyboard');
           kb.style.opacity = '0';
           kb.style.transform = 'translateY(10px)';
-          setTimeout(() => { if(kb.style.opacity === '0') kb.style.display = 'none'; }, 200);
+          setTimeout(() => { if (kb.style.opacity === '0') kb.style.display = 'none'; }, 200);
         }
       }, 150);
     });
 
     function insertGermanChar(e, char) {
       e.preventDefault(); // CRITICAL: prevents button from stealing focus from the input field!
-      if(!activeGermanInput) return;
-      
+      if (!activeGermanInput) return;
+
       const start = activeGermanInput.selectionStart;
       const end = activeGermanInput.selectionEnd;
       const val = activeGermanInput.value;
-      
+
       activeGermanInput.value = val.substring(0, start) + char + val.substring(end);
-      
+
       // Notify underlying JS systems that the input changed automatically
       activeGermanInput.dispatchEvent(new Event('input', { bubbles: true }));
-      
+
       // Restore precise cursor position
       activeGermanInput.selectionStart = activeGermanInput.selectionEnd = start + 1;
     }
@@ -2372,7 +3191,8 @@
   <!-- IMPORT MODAL -->
   <div class="modal" id="importModal">
     <div class="modal-box">
-      <div class="modal-title"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">upload</span> Import Progress</div>
+      <div class="modal-title"><span class="material-symbols-sharp"
+          style="font-size:inherit;vertical-align:middle;">upload</span> Import Progress</div>
       <p style="color:var(--tx2);margin-bottom:16px">Select a previously exported JSON file to restore your progress.
       </p>
       <input type="file" accept=".json" onchange="importProgress(event)" style="margin-bottom:16px">
@@ -2383,9 +3203,11 @@
   <!-- DB IMPORT MODAL -->
   <div class="modal" id="dbImportModal">
     <div class="modal-box">
-      <div class="modal-title"><span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">database</span> Import Database</div>
+      <div class="modal-title"><span class="material-symbols-sharp"
+          style="font-size:inherit;vertical-align:middle;">database</span> Import Database</div>
       <p style="color:var(--tx2);margin-bottom:16px">
-        Select a DeutscheDeck database JSON backup (<code>{ vocab, tenses, quiz }</code>). This will replace the built-in datasets on this device.
+        Select a DeutscheDeck database JSON backup (<code>{ vocab, tenses, quiz }</code>). This will replace the
+        built-in datasets on this device.
       </p>
       <input type="file" accept=".json" onchange="importDatabase(event)" style="margin-bottom:16px">
       <div><button class="btn bo" onclick="closeModal()">Cancel</button></div>

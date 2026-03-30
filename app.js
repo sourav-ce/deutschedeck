@@ -210,29 +210,7 @@
     reader.readAsText(file);
   };
 
-  window.exportDatabase = async () => {
-    try {
-      const loaded = await loadDatasets();
-      const embeddedQuiz = (typeof QUIZ_BANK !== 'undefined') ? QUIZ_BANK : undefined;
-      const payload = {
-        vocab: loaded.vocab || (window.VOCAB_DB || []),
-        tenses: loaded.tenses || (window.VERB_DB || []),
-        quiz: loaded.quiz || window.QUIZ_BANK || embeddedQuiz || {}
-      };
-      const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `deutschedeck_database_${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      alert('Database export failed.');
-      console.error(e);
-    }
-  };
+
 
   function toast(msg) {
     const el = document.getElementById('notif');
@@ -315,10 +293,14 @@
         else if (id === 'progress') renderProgress();
         else if (id === 'home') renderHome();
         else if (id === 'cards') {
-            // Auto-start session if visiting cards page and none active
+            // Display setup screen if no active session
             if (!ST.session || !ST.session.queue || ST.session.queue.length === 0) {
-                window.session('all');
+                if(!ST.pendingMode) ST.pendingMode = 'flash';
+                if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'block';
+                if(document.getElementById('fc-ui')) document.getElementById('fc-ui').style.display = 'none';
+                if(document.getElementById('fc-done')) document.getElementById('fc-done').style.display = 'none';
             } else {
+                if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'none';
                 renderCard();
             }
         }
@@ -418,35 +400,82 @@
   // ── SESSIONS ────────────────────────────────────────────────────────────────
   window.lastST = 'all';
 
-  window.session = function (type) {
-    window.lastST = type;
-    setupSession(type, 'flash');
-    nav('cards');
-    if(typeof renderCard === 'function') renderCard();
-    else console.error('renderCard not found!');
+  window.openSetup = function(mode, defaultType) {
+      if(ST.session) ST.session = null; // Clear existing session
+      ST.pendingMode = mode;
+      
+      const titleEl = document.getElementById('setupTitle');
+      const descEl = document.getElementById('setupDesc');
+      if(titleEl && descEl) {
+          const modeLabels = {
+              'flash': 'Flashcard Session',
+              'typing': 'Typing Quiz',
+              'listening': 'Listening Quiz',
+              'article': 'der/die/das Quiz',
+              'conj': 'Conjugation Trainer'
+          };
+          const m = modeLabels[mode] || 'Study Session';
+          titleEl.innerHTML = `<span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">manage_accounts</span> ${m} Setup`;
+          descEl.innerText = `Configure your custom ${m.toLowerCase()} to master the database.`;
+      }
+
+      document.getElementById('setupLevel').value = defaultType || 'all';
+      if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'block';
+      if(document.getElementById('fc-ui')) document.getElementById('fc-ui').style.display = 'none';
+      if(document.getElementById('fc-done')) document.getElementById('fc-done').style.display = 'none';
+      
+      window.updateSetupLimit();
+      nav('cards');
   };
 
-  window.sessionTyping = function (type) {
-    window.lastST = type;
-    setupSession(type, 'typing');
-    nav('cards');
-    renderCard();
+  window.updateSetupLimit = function() {
+    const lvl = document.getElementById('setupLevel').value || 'all';
+    const mode = ST.pendingMode || 'flash';
+    
+    // Quick count calculation
+    let list = [...ST.vocab];
+    if (lvl !== 'all' && lvl !== 'vocab') {
+      if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(lvl)) list = list.filter(v => v.level === lvl);
+      else if (lvl === 'verb') list = list.filter(v => v.type === 'verb');
+      else if (lvl === 'phrase') list = list.filter(v => v.type === 'phrase');
+      else if (lvl === 'weak') {
+          const weakIds = Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id);
+          list = list.filter(v => weakIds.includes(v.id.toString()));
+      }
+      else if (lvl === 'due') {
+          const dueIds = Object.entries(ST.progress).filter(([id, p]) => isDue(p)).map(([id,p])=>id);
+          list = list.filter(v => dueIds.includes(v.id.toString()));
+      }
+    }
+    if (mode === 'article') list = list.filter(v => v.article);
+    
+    const slider = document.getElementById('setupStart');
+    const label = document.getElementById('setupStartVal');
+    if (slider) {
+      const maxVal = Math.max(0, list.length - 5);
+      slider.max = maxVal;
+      if (parseInt(slider.value) > maxVal) {
+          slider.value = 0;
+          if(label) label.innerText = '0';
+      }
+    }
   };
 
-  window.sessionListening = function (type) {
-    window.lastST = type;
-    setupSession(type, 'listening');
-    nav('cards');
-    renderCard();
+  window.startCustomSession = function() {
+      const lvl = document.getElementById('setupLevel').value || 'all';
+      const offsetInput = parseInt(document.getElementById('setupStart').value, 10);
+      const startOffset = isNaN(offsetInput) ? 0 : offsetInput;
+      window.lastST = lvl;
+      const mode = ST.pendingMode || 'flash';
+      setupSession(lvl, mode, startOffset);
+      if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'none';
+      if(typeof renderCard === 'function') renderCard();
   };
-  
-  window.sessionArticle = function() { setupSession('all', 'article'); nav('cards'); renderCard(); };
-  window.sessionConj = function() { setupSession('all', 'conj'); nav('cards'); renderCard(); };
 
-  function setupSession(type, mode) {
+  function setupSession(type, mode, startOffset = 0) {
     let list = [...ST.vocab];
     if (type !== 'all' && type !== 'vocab') {
-      if (type === 'A1' || type === 'A2') list = list.filter(v => v.level === type);
+      if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(type)) list = list.filter(v => v.level === type);
       else if (type === 'verb') list = list.filter(v => v.type === 'verb');
       else if (type === 'phrase') list = list.filter(v => v.type === 'phrase');
       else if (type === 'weak') {
@@ -470,6 +499,7 @@
     const sessSize = Math.max(5, Math.min(200, parseInt(localStorage.getItem('ld_sessSize') || '20', 10) || 20));
     const doShuffle = localStorage.getItem('ld_shuffle') === 'true';
     if (doShuffle) list = list.sort(() => Math.random() - 0.5);
+    else if (startOffset > 0) list = list.slice(startOffset);
     list = list.slice(0, sessSize);
 
     ST.session = {
@@ -483,6 +513,7 @@
     };
 
     // UI resets
+    if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'none';
     document.getElementById('fc-ui').style.display = 'block';
     document.getElementById('fc-done').style.display = 'none';
     ['flashcardWrap', 'typingWrap', 'listeningWrap', 'articleWrap', 'conjWrap'].forEach(id => {
@@ -500,6 +531,17 @@
     const pct = Math.round((ST.session.idx / ST.session.queue.length) * 100);
     document.getElementById('pf').style.width = `${pct}%`;
     document.getElementById('ctr').innerText = `${ST.session.idx + 1}/${ST.session.queue.length}`;
+
+    const navUI = document.getElementById('quickNav');
+    if (navUI) {
+        if (ST.session.mode === 'flash') {
+            navUI.style.display = 'flex';
+            const sl = document.getElementById('quickNavSlider');
+            if (sl) { sl.max = ST.session.queue.length; sl.value = ST.session.idx + 1; }
+        } else {
+            navUI.style.display = 'none';
+        }
+    }
 
     if (ST.session.mode === 'flash') {
       ST.session.flipped = false;
@@ -578,7 +620,23 @@
   window.ans = function (rating) {
     processAnswer(rating);
     ST.session.idx++;
-    renderCard();
+    
+    const scene = document.getElementById('scene');
+    if (scene && ST.session.mode === 'flash') {
+        scene.classList.add('card-exit');
+        setTimeout(() => {
+            renderCard();
+            scene.classList.remove('card-exit');
+            scene.classList.add('card-enter');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    scene.classList.remove('card-enter');
+                });
+            });
+        }, 250);
+    } else {
+        renderCard();
+    }
   };
 
   window.processAnswer = function(rating) {
@@ -613,6 +671,24 @@
     localStorage.setItem('ld_stats', JSON.stringify(ST.stats));
     localStorage.setItem('ld_history', JSON.stringify(ST.history));
   }
+
+  window.quickJump = function(delta) {
+    if (!ST.session || !ST.session.queue) return;
+    let newIdx = ST.session.idx + delta;
+    if(newIdx < 0) newIdx = 0;
+    if(newIdx >= ST.session.queue.length) newIdx = ST.session.queue.length - 1;
+    ST.session.idx = newIdx;
+    renderCard();
+  };
+
+  window.quickSliderJump = function(val) {
+    if (!ST.session || !ST.session.queue) return;
+    let newIdx = parseInt(val, 10) - 1;
+    if(newIdx < 0) newIdx = 0;
+    if(newIdx >= ST.session.queue.length) newIdx = ST.session.queue.length - 1;
+    ST.session.idx = newIdx;
+    renderCard();
+  };
 
   // ── DATA MANAGEMENT ─────────────────────────────────────────────────────────
 
@@ -806,7 +882,7 @@
     const slice = filtered.slice(start, start + pageSize);
 
     container.innerHTML = slice.map(v => `
-        <div class="word-row" onclick="speak('${(v.de || "").replace(/'/g, "\\'")}')">
+        <div class="word-row" onclick="toggleBrowseDetails(${v.id}, this)">
           <div class="w-info">
             <div class="de">${v.article ? `<span class="art-b" style="color:${getArtColor(v.article)}">${v.article}</span> ` : ''}${v.de}</div>
             <div class="en">${v.en}</div>
@@ -1046,7 +1122,63 @@
   };
 
   window.speakCurrent = function() { const item = ST.session.queue[ST.session.idx]; if(item) speak(item.de); };
-  window.showExamples = function() { document.getElementById('exPanel').style.display = 'block'; };
+  function buildDetailsHTML(item) {
+    if(!item) return '';
+    let html = '';
+    if(item.meta) {
+        html += `<div style="font-size:13px;color:var(--tx2);margin-bottom:16px;display:flex;flex-wrap:wrap;gap:16px;">`;
+        if(item.meta.gender) html += `<span><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">male</span> ${item.meta.gender}</span>`;
+        if(item.meta.romanization) html += `<span><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">record_voice_over</span> ${item.meta.romanization}</span>`;
+        if(item.meta.base) html += `<span><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">account_tree</span> Base: ${item.meta.base}</span>`;
+        if(item.meta.prefix) html += `<span><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">add_link</span> Prefix: ${item.meta.prefix}</span>`;
+        if(item.meta.is_separable) html += `<span><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">call_split</span> Separable</span>`;
+        if(item.meta.frequency) html += `<span><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">bar_chart</span> Freq Score: ${item.meta.frequency}</span>`;
+        html += `</div>`;
+    }
+    if (item.examples && item.examples.length > 0) {
+      item.examples.forEach(e => {
+        html += `<div style="margin-bottom:12px; border-left: 3px solid var(--accent); padding-left:12px;">
+            <div style="font-weight:600;margin-bottom:4px;color:var(--tx1);">${e.de}</div>
+            <div style="color:var(--tx2);font-size:13px;font-style:italic;">${e.en}</div>
+          </div>`;
+      });
+    } else {
+      if(!item.meta) html += `<div style="color:var(--tx3);font-size:13px;">No additional details or examples available.</div>`;
+    }
+    return html;
+  }
+
+  window.toggleBrowseDetails = function(id, el) {
+    const v = ST.vocab.find(x => x.id === id);
+    if(v && v.de) speak(v.de);
+
+    let nextEl = el.nextElementSibling;
+    if (nextEl && nextEl.classList.contains('w-details')) {
+      nextEl.remove();
+      return;
+    }
+    
+    // Auto-close others
+    document.querySelectorAll('.w-details').forEach(d => d.remove());
+    
+    let html = buildDetailsHTML(v);
+    if (!html) return;
+    const detailDiv = document.createElement('div');
+    detailDiv.className = 'w-details';
+    detailDiv.style.padding = '16px 20px 16px 48px';
+    detailDiv.style.background = 'var(--bg)';
+    detailDiv.style.borderBottom = '1px solid var(--border)';
+    detailDiv.innerHTML = html;
+    el.after(detailDiv);
+  };
+
+  window.showExamples = function() { 
+      const p = document.getElementById('exPanel');
+      if (p.style.display === 'block') { p.style.display = 'none'; return; }
+      const item = ST.session.queue[ST.session.idx];
+      document.getElementById('exContent').innerHTML = buildDetailsHTML(item);
+      p.style.display = 'block'; 
+  };
 
   // ── UI TOGGLES & SETTINGS ──────────────────────────────────────────────────
   window.toggleMobile = () => document.body.classList.toggle('menu-open');

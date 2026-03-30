@@ -119,7 +119,8 @@
 
   window.setQuizLevel=function(v){
     QS.filterLevel=v;
-    document.querySelectorAll('.qz-lvl-chip').forEach(b=>b.classList.toggle('active',b.dataset.qlvl===v));
+    var select = document.getElementById('quizLevelSelect');
+    if (select) select.value = v;
     renderQuizHome();
   };
   window.setQuizSection=function(v){
