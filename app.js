@@ -69,6 +69,17 @@
     // Auto-nav to starting screen (url fragment or home)
     const hash = window.location.hash.substring(1);
     nav(hash || 'home');
+
+    // Visitor Counter (powered by counterapi.dev)
+    try {
+      fetch('https://api.counterapi.dev/v1/deutschdeck_ssmsourav/visits/up')
+        .then(res => res.json())
+        .then(data => {
+           const el = document.getElementById('visitorCount');
+           if (el && data.count) el.innerText = data.count.toLocaleString();
+        })
+        .catch(e => console.warn('Counter failed:', e));
+    } catch(e) {}
   });
 
   // ── DATASETS (Vocab/Tenses/Quiz) via IndexedDB ─────────────────────────────
