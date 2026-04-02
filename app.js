@@ -380,7 +380,9 @@
   // ── KEYBOARD SHORTCUTS ──────────────────────────────────────────────────────
   function initKeyboard() {
     document.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SEARCH') return;
+      // Don't block Enter while typing in a quiz mode
+      const isQuizInput = (ST.screen === 'cards' && (ST.session.mode === 'typing' || ST.session.mode === 'listening' || ST.session.mode === 'conj'));
+      if ((e.target.tagName === 'INPUT' || e.target.tagName === 'SEARCH') && (!isQuizInput || e.key !== 'Enter')) return;
 
       if (ST.screen === 'cards' && ST.session.mode === 'flash') {
         if (e.key === ' ' || e.key === 'Enter') {
@@ -430,25 +432,39 @@
           descEl.innerText = `Configure your custom ${m.toLowerCase()} to master the database.`;
       }
 
-      document.getElementById('setupLevel').value = defaultType || 'all';
-      if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'block';
-      if(document.getElementById('fc-ui')) document.getElementById('fc-ui').style.display = 'none';
-      if(document.getElementById('fc-done')) document.getElementById('fc-done').style.display = 'none';
-      
-      window.updateSetupLimit();
-      nav('cards');
+    document.getElementById('setupLevel').value = defaultType || 'all';
+    if(document.getElementById('setupType')) document.getElementById('setupType').value = 'all';
+    if(document.getElementById('setupSize')) document.getElementById('setupSize').value = localStorage.getItem('ld_sessSize') || '20';
+    if(document.getElementById('setupSizeVal')) document.getElementById('setupSizeVal').innerText = document.getElementById('setupSize').value;
+    if(document.getElementById('setupStart')) document.getElementById('setupStart').value = 0;
+    if(document.getElementById('setupStartVal')) document.getElementById('setupStartVal').innerText = '0';
+
+    if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'block';
+    if(document.getElementById('fc-ui')) document.getElementById('fc-ui').style.display = 'none';
+    if(document.getElementById('fc-done')) document.getElementById('fc-done').style.display = 'none';
+    
+    window.updateSetupLimit();
+    nav('cards');
   };
+
+  // Direct Session Wrappers (Skip Setup)
+  window.session = (type) => { setupSession(type || 'all', 'flash'); nav('cards'); };
+  window.sessionTyping = (type) => { setupSession(type || 'all', 'typing'); nav('cards'); };
+  window.sessionListening = (type) => { setupSession(type || 'all', 'listening'); nav('cards'); };
+  window.sessionArticle = (type) => { setupSession(type || 'all', 'article'); nav('cards'); };
+  window.sessionConj = (type) => { setupSession(type || 'all', 'conj'); nav('cards'); };
 
   window.updateSetupLimit = function() {
     const lvl = document.getElementById('setupLevel').value || 'all';
+    const type = document.getElementById('setupType').value || 'all';
     const mode = ST.pendingMode || 'flash';
     
     // Quick count calculation
     let list = [...ST.vocab];
-    if (lvl !== 'all' && lvl !== 'vocab') {
+    
+    // 1. Level Filter
+    if (lvl !== 'all') {
       if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(lvl)) list = list.filter(v => v.level === lvl);
-      else if (lvl === 'verb') list = list.filter(v => v.type === 'verb');
-      else if (lvl === 'phrase') list = list.filter(v => v.type === 'phrase');
       else if (lvl === 'weak') {
           const weakIds = Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id);
           list = list.filter(v => weakIds.includes(v.id.toString()));
@@ -458,12 +474,25 @@
           list = list.filter(v => dueIds.includes(v.id.toString()));
       }
     }
+
+    // 2. Type Filter
+    if (type !== 'all') {
+      list = list.filter(v => v.type === type);
+    }
+
     if (mode === 'article') list = list.filter(v => v.article);
+    if (mode === 'conj') {
+        const verbInfos = ST.tenses.map(v => v.de);
+        list = list.filter(v => v.type === 'verb' && verbInfos.includes(v.de));
+    }
+
+    const totalEl = document.getElementById('setupTotalMatch');
+    if(totalEl) totalEl.innerText = list.length;
     
     const slider = document.getElementById('setupStart');
     const label = document.getElementById('setupStartVal');
     if (slider) {
-      const maxVal = Math.max(0, list.length - 5);
+      const maxVal = Math.max(0, list.length - 1);
       slider.max = maxVal;
       if (parseInt(slider.value) > maxVal) {
           slider.value = 0;
@@ -474,21 +503,25 @@
 
   window.startCustomSession = function() {
       const lvl = document.getElementById('setupLevel').value || 'all';
+      const type = document.getElementById('setupType').value || 'all';
+      const size = parseInt(document.getElementById('setupSize').value, 10) || 20;
       const offsetInput = parseInt(document.getElementById('setupStart').value, 10);
       const startOffset = isNaN(offsetInput) ? 0 : offsetInput;
+      
       window.lastST = lvl;
       const mode = ST.pendingMode || 'flash';
-      setupSession(lvl, mode, startOffset);
+      setupSession(lvl, mode, startOffset, type, size);
+      
       if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'none';
       if(typeof renderCard === 'function') renderCard();
   };
 
-  function setupSession(type, mode, startOffset = 0) {
+  function setupSession(type, mode, startOffset = 0, typeFilter = 'all', customSize = null) {
     let list = [...ST.vocab];
+    
+    // 1. Level / Category Filter
     if (type !== 'all' && type !== 'vocab') {
       if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(type)) list = list.filter(v => v.level === type);
-      else if (type === 'verb') list = list.filter(v => v.type === 'verb');
-      else if (type === 'phrase') list = list.filter(v => v.type === 'phrase');
       else if (type === 'weak') {
           const weakIds = Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id);
           list = list.filter(v => weakIds.includes(v.id.toString()));
@@ -497,7 +530,11 @@
           const dueIds = Object.entries(ST.progress).filter(([id, p]) => isDue(p)).map(([id,p])=>id);
           list = list.filter(v => dueIds.includes(v.id.toString()));
       }
-      else list = list.filter(v => v.tags && v.tags.includes(type));
+    }
+
+    // 2. Word Type Filter
+    if (typeFilter !== 'all') {
+      list = list.filter(v => v.type === typeFilter);
     }
     
     if (mode === 'article') list = list.filter(v => v.article);
@@ -506,11 +543,17 @@
         list = list.filter(v => v.type === 'verb' && verbInfos.includes(v.de));
     }
 
-    // Session sizing + shuffle (important for large DBs)
-    const sessSize = Math.max(5, Math.min(200, parseInt(localStorage.getItem('ld_sessSize') || '20', 10) || 20));
+    // Session sizing + shuffle logic
+    const sessSize = customSize || Math.max(5, Math.min(200, parseInt(localStorage.getItem('ld_sessSize') || '20', 10) || 20));
     const doShuffle = localStorage.getItem('ld_shuffle') === 'true';
-    if (doShuffle) list = list.sort(() => Math.random() - 0.5);
-    else if (startOffset > 0) list = list.slice(startOffset);
+
+    // If an offset is provided, we treat it as an ordered resume (skip shuffle)
+    if (startOffset > 0) {
+        list = list.slice(startOffset);
+    } else if (doShuffle) {
+        list = list.sort(() => Math.random() - 0.5);
+    }
+    
     list = list.slice(0, sessSize);
 
     ST.session = {
@@ -544,13 +587,12 @@
     document.getElementById('ctr').innerText = `${ST.session.idx + 1}/${ST.session.queue.length}`;
 
     const navUI = document.getElementById('quickNav');
-    if (navUI) {
-        if (ST.session.mode === 'flash') {
-            navUI.style.display = 'flex';
-            const sl = document.getElementById('quickNavSlider');
-            if (sl) { sl.max = ST.session.queue.length; sl.value = ST.session.idx + 1; }
-        } else {
-            navUI.style.display = 'none';
+    if (navUI && ST.session) {
+        navUI.style.display = 'flex';
+        const sl = document.getElementById('quickNavSlider');
+        if (sl) { 
+            sl.max = ST.session.queue.length; 
+            sl.value = ST.session.idx + 1; 
         }
     }
 
@@ -616,6 +658,13 @@
         document.getElementById('conjCheck').style.display = 'block';
         document.getElementById('conjNext').style.display = 'none';
         setTimeout(() => document.getElementById('conjInput').focus(), 50);
+    }
+
+    // Auto-update examples panel if it's open
+    const exPanel = document.getElementById('exPanel');
+    if (exPanel && exPanel.style.display === 'block') {
+        const exContent = document.getElementById('exContent');
+        if (exContent) exContent.innerHTML = buildDetailsHTML(item);
     }
   }
 

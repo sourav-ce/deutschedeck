@@ -108,42 +108,78 @@
       transition: background var(--transition)
     }
 
+    /* LOGO & BRANDING */
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--bau-white);
-      padding: 4px 12px;
-      margin-left: -12px;
-      border-radius: 4px;
+      text-align: center;
+      padding: 40px 20px;
+      font-family: 'Fira Sans', sans-serif;
+      background: none;
+      border: none;
+      margin: 0;
     }
 
-    .logo-mark {
-      width: 36px;
-      height: 36px;
-      background: var(--bau-red);
-      border: 1px solid var(--bau-yellow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 15px;
-      font-family: 'Fira Sans', sans-serif;
-      font-weight: 400;
-      letter-spacing: 1px
-    }
-
-    .logo-text {
-      font-family: 'Fira Sans', sans-serif;
-      font-size: 20px;
+    .logo-title {
+      font-size: 72px;
       font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: capitalize;
-      color: var(--bau-black)
+      color: var(--tx);
+      margin: 0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      line-height: 1;
     }
 
-    .logo-text span {
-      color: var(--bau-red)
+    .logo-line {
+      display: flex;
+      justify-content: flex-end;
+      margin: 10px 0 15px 0;
+      height: 6px;
+    }
+
+    .line-red {
+      width: 50%;
+      background-color: var(--bau-red);
+      height: 100%;
+    }
+
+    .line-yellow {
+      width: 50%;
+      background-color: var(--bau-yellow);
+      height: 100%;
+    }
+
+    .logo-tagline {
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--tx3);
+      margin: 0;
+      letter-spacing: 1px;
+      text-transform: lowercase;
+    }
+
+    /* Small Variant for Topbar */
+    .logo.logo-sm {
+      padding: 0;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+      background: none;
+      margin: 0;
+    }
+
+    .logo-sm .logo-title {
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+
+    .logo-sm .logo-line {
+      margin: 2px 0 0 0;
+      height: 3px;
+    }
+
+    .logo-sm .logo-tagline {
+      display: none;
     }
 
     .top-right {
@@ -583,10 +619,14 @@
     .cword {
       font-family: 'Fira Sans', sans-serif;
       font-size: 64px;
-      line-height: 1;
+      line-height: 1.1;
       margin-bottom: 6px;
       color: var(--tx);
-      letter-spacing: 2px
+      letter-spacing: 1px;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+      max-width: 100%;
     }
 
     .csub {
@@ -616,10 +656,14 @@
 
     .ctrans {
       font-family: 'Fira Sans', sans-serif;
-      font-size: 46px;
-      letter-spacing: 2px;
+      font-size: 44px;
+      letter-spacing: 1px;
       color: var(--bau-blue);
-      margin-bottom: 8px
+      margin-bottom: 8px;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+      max-width: 100%;
     }
 
     .cex {
@@ -741,7 +785,11 @@
       font-family: 'Fira Sans', sans-serif;
       font-size: 36px;
       text-align: center;
-      margin-bottom: 4px
+      margin-bottom: 4px;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+      max-width: 100%;
     }
 
     .typ-hint {
@@ -2447,6 +2495,15 @@
         display: flex
       }
 
+      .logo { padding: 20px 10px; }
+      .logo-title { font-size: 44px; }
+      .logo-tagline { font-size: 18px; }
+      .logo-line { height: 4px; margin: 6px 0 10px 0; }
+
+      .logo-sm { margin-left: 0 !important; }
+      .logo-sm .logo-title { font-size: 18px; }
+      .logo-sm .logo-line { height: 2px; }
+
       .stats-bar {
         display: none
       }
@@ -2493,9 +2550,12 @@
       <div style="display:flex;align-items:center;gap:12px">
         <button class="icon-btn hamburger" onclick="toggleMobile()"><span class="material-symbols-sharp"
             style="font-size:inherit;vertical-align:middle;">menu</span></button>
-        <div class="logo">
-          <img src="favicon.png" class="logo-mark" alt="Logo" style="padding:0; background:transparent;">
-          <div class="logo-text">Deutsche<span>Deck</span></div>
+        <div class="logo logo-sm">
+          <h1 class="logo-title">DEUTSCHEDECK</h1>
+          <div class="logo-line">
+            <span class="line-red"></span>
+            <span class="line-yellow"></span>
+          </div>
         </div>
       </div>
       <div class="top-right">
@@ -2567,16 +2627,6 @@
         <div class="slider-row">Daily goal: <strong id="goalVal">10</strong><input type="range" id="goalSlider" min="5"
             max="50" step="5" oninput="setGoal()"></div>
         <div class="div"></div>
-        <div class="sl">Data</div>
-        <button class="nb" onclick="exportProgress()"><span class="ic"><span class="material-symbols-sharp"
-              style="font-size:inherit;vertical-align:middle;">download</span></span>Export Progress</button>
-        <button class="nb" onclick="showImportModal()"><span class="ic"><span class="material-symbols-sharp"
-              style="font-size:inherit;vertical-align:middle;">upload</span></span>Import Progress</button>
-        <button class="nb" onclick="resetProgress()" style="color:var(--red)"><span class="ic"><span
-              class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">delete</span></span>Reset
-          Progress</button>
-
-        <div class="div"></div>
         <div class="sl" style="margin-top:auto">Analytics</div>
         <div class="nb" style="cursor:default; border-left: 2px solid var(--bau-yellow); background: var(--aml); text-transform:none; letter-spacing:0.5px;">
           <span class="ic"><span class="material-symbols-sharp"
@@ -2584,6 +2634,13 @@
           <span id="visitorCount" style="font-weight:700; font-variant-numeric: tabular-nums;">...</span>
           <span style="font-size: 11px; color: var(--tx3); margin-left: 4px;">visitors</span>
         </div>
+
+        <div class="sl" style="padding-top:12px">Support</div>
+        <a href="mailto:ssmsourav@gmail.com?subject=DeutscheDeck%20Feedback" class="nb" style="text-decoration:none;">
+          <span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">bug_report</span></span>
+          Suggestions & Bugs
+        </a>
 
         <div class="sl" style="padding-top:12px">Creator</div>
         <a href="https://www.linkedin.com/in/ssmsourav/" target="_blank" class="nb" style="text-decoration:none;">
@@ -2597,6 +2654,16 @@
           </span>
           <span class="material-symbols-sharp" style="margin-left:auto; font-size:16px; color:var(--tx3)">open_in_new</span>
         </a>
+
+        <div class="div"></div>
+        <div class="sl">Data</div>
+        <button class="nb" onclick="exportProgress()"><span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">download</span></span>Export Progress</button>
+        <button class="nb" onclick="showImportModal()"><span class="ic"><span class="material-symbols-sharp"
+              style="font-size:inherit;vertical-align:middle;">upload</span></span>Import Progress</button>
+        <button class="nb" onclick="resetProgress()" style="color:var(--red)"><span class="ic"><span
+              class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">delete</span></span>Reset
+          Progress</button>
       </div>
 
       <!-- CONTENT -->
@@ -2676,11 +2743,11 @@
               </div>
             </div>
             <div class="btns">
-              <button class="btn bp" onclick="session('all')"><span class="material-symbols-sharp"
+              <button class="btn bp" onclick="openSetup('flash', 'all')"><span class="material-symbols-sharp"
                   style="font-size:inherit;vertical-align:middle;">rocket_launch</span> Start All Cards</button>
-              <button class="btn bo" onclick="sessionTyping('all')"><span class="material-symbols-sharp"
+              <button class="btn bo" onclick="openSetup('typing', 'all')"><span class="material-symbols-sharp"
                   style="font-size:inherit;vertical-align:middle;">keyboard</span> Typing Mode</button>
-              <button class="btn bo" onclick="sessionListening('all')"><span class="material-symbols-sharp"
+              <button class="btn bo" onclick="openSetup('listening', 'all')"><span class="material-symbols-sharp"
                   style="font-size:inherit;vertical-align:middle;">headphones</span> Listening</button>
               <button class="btn bo" onclick="nav('browse')"><span class="material-symbols-sharp"
                   style="font-size:inherit;vertical-align:middle;">menu_book</span> Browse</button>
@@ -2730,33 +2797,54 @@
             <div style="margin-bottom:20px; text-align:left;">
               <label
                 style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">1.
-                Choose Level / Category</label>
+                Choose Level</label>
               <select class="sty" id="setupLevel" style="width:100%; padding:10px;"
                 onchange="if(typeof updateSetupLimit==='function') updateSetupLimit()">
-                <option value="all">All Words (Mixed)</option>
+                <option value="all">All Levels (Mixed)</option>
                 <option value="A1">A1 Level</option>
                 <option value="A2">A2 Level</option>
                 <option value="B1">B1 Level</option>
                 <option value="B2">B2 Level</option>
                 <option value="C1">C1 Level</option>
                 <option value="C2">C2 Level</option>
-                <option value="verb">Verb Core</option>
-                <option value="phrase">Useful Phrases</option>
                 <option value="weak">Weak Cards</option>
                 <option value="due">Due Today</option>
               </select>
             </div>
 
-            <div style="margin-bottom:30px; text-align:left;">
+            <div style="margin-bottom:20px; text-align:left;">
               <label
                 style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">2.
-                Starting Point: <span id="setupStartVal">0</span></label>
+                Filter by Type</label>
+              <select class="sty" id="setupType" style="width:100%; padding:10px;"
+                onchange="if(typeof updateSetupLimit==='function') updateSetupLimit()">
+                <option value="all">All Types (Mixed)</option>
+                <option value="noun">Nouns</option>
+                <option value="verb">Verbs</option>
+                <option value="adjective">Adjectives</option>
+                <option value="adverb">Adverbs</option>
+                <option value="phrase">Useful Phrases</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:20px; text-align:left;">
+              <label
+                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">3.
+                Session Size: <span id="setupSizeVal">20</span> cards</label>
+              <input type="range" id="setupSize" min="5" max="100" value="20" step="5"
+                oninput="document.getElementById('setupSizeVal').innerText = this.value"
+                style="width:100%; cursor:pointer;">
+            </div>
+
+            <div style="margin-bottom:30px; text-align:left;">
+              <label
+                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">4.
+                Start From Index: <span id="setupStartVal">0</span></label>
               <input type="range" id="setupStart" min="0" max="20000" value="0" step="10"
                 oninput="document.getElementById('setupStartVal').innerText = this.value"
                 style="width:100%; cursor:pointer;">
               <div style="font-size:11px; color:var(--tx3); margin-top:6px;"><span class="material-symbols-sharp"
-                  style="font-size:inherit;vertical-align:middle;">info</span> If shuffle is disabled in Settings, this
-                skips to a specific database index so you can resume where you left off.</div>
+                  style="font-size:inherit;vertical-align:middle;">info</span> If shuffle is disabled, this skips to a specific database point. (Total matching: <span id="setupTotalMatch">...</span>)</div>
             </div>
 
             <button class="btn bp" id="startBtn" onclick="startCustomSession()"
