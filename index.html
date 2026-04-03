@@ -116,6 +116,15 @@
       background: none;
       border: none;
       margin: 0;
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition);
+      text-decoration: none;
+    }
+    .logo:hover {
+      opacity: 0.8;
+    }
+    .logo:active {
+      transform: scale(0.98);
     }
 
     .logo-title {
@@ -1483,7 +1492,7 @@
       z-index: 1;
     }
 
-    /* GLOBAL BAUHAUS BACKGROUND */
+    /* GLOBAL BAUHAUS BACKGROUND — Modernized */
     .bau-bg {
       position: fixed;
       top: 60px;
@@ -1493,7 +1502,7 @@
       overflow: hidden;
       z-index: 0;
       pointer-events: none;
-      opacity: 0.7;
+      opacity: 0.8;
       transition: left 0.3s ease;
     }
 
@@ -1503,61 +1512,85 @@
 
     .bau-shape {
       position: absolute;
-      opacity: 0.05;
-      filter: blur(1px) grayscale(0.5);
-      transition: opacity 0.5s ease, filter 0.5s ease;
+      /* Default opacity for light mode */
+      --sh-op: 0.04;
+      --sh-blur: blur(1px);
+      --sh-glow: none;
+      
+      opacity: var(--sh-op);
+      filter: var(--sh-blur);
+      transition: all 0.8s ease;
       will-change: transform;
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--sh-glow);
     }
 
-    /* Bauhaus Soft Color Accents */
-    .bau-red-sh { background-color: var(--bau-red); }
-    .bau-blue-sh { background-color: var(--bau-blue); }
-    .bau-yellow-sh { background-color: var(--bau-yellow); }
+    /* Bauhaus Color Accents with Glows */
+    .bau-red-sh { 
+      background-color: var(--bau-red); 
+      --glow-color: rgba(183, 26, 73, 0.15);
+    }
+    .bau-blue-sh { 
+      background-color: var(--bau-blue); 
+      --glow-color: rgba(26, 58, 107, 0.15);
+    }
+    .bau-yellow-sh { 
+      background-color: var(--bau-yellow); 
+      --glow-color: rgba(212, 150, 10, 0.15);
+    }
 
     .bau-triangle.bau-red-sh { border-bottom-color: var(--bau-red); background-color: transparent !important; }
     .bau-triangle.bau-blue-sh { border-bottom-color: var(--bau-blue); background-color: transparent !important; }
     .bau-triangle.bau-yellow-sh { border-bottom-color: var(--bau-yellow); background-color: transparent !important; }
 
     body.dark .bau-shape {
-      opacity: 0.1;
-      filter: blur(4px) brightness(1.2);
+      --sh-op: 0.15; /* Increased visibility for dark mode */
+      --sh-blur: blur(40px); /* Soft glow approach for dark mode */
+      --sh-glow: 0 0 40px var(--glow-color);
     }
 
-    .bau-circle {
-      border-radius: 50%;
-    }
-
-    .bau-square {
-      display: block;
-    }
-
+    .bau-circle { border-radius: 50%; }
+    .bau-square { border-radius: 4px; }
     .bau-triangle {
       width: 0;
       height: 0;
       background: transparent !important;
-      border-left: 45px solid transparent;
-      border-right: 45px solid transparent;
-      border-bottom: 78px solid var(--tx);
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 86px solid var(--tx);
+      filter: drop-shadow(0 0 10px var(--glow-color));
     }
 
+    /* More exciting, fluid animations */
     @keyframes float-1 {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      33% { transform: translate(40px, -60px) rotate(15deg); }
-      66% { transform: translate(-20px, 40px) rotate(-10deg); }
-      100% { transform: translate(0, 0) rotate(0deg); }
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      25% { transform: translate(60px, -40px) rotate(5deg) scale(1.05); }
+      50% { transform: translate(30px, 80px) rotate(-10deg) scale(0.95); }
+      75% { transform: translate(-50px, 20px) rotate(8deg) scale(1.02); }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1); }
     }
 
     @keyframes float-2 {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      50% { transform: translate(-50px, 30px) rotate(-20deg); }
-      100% { transform: translate(0, 0) rotate(0deg); }
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      33% { transform: translate(-80px, 50px) rotate(-15deg) scale(0.9); }
+      66% { transform: translate(40px, -30px) rotate(10deg) scale(1.1); }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1); }
     }
 
     @keyframes float-3 {
       0% { transform: translate(0, 0) rotate(0deg); }
-      40% { transform: translate(20px, 80px) rotate(10deg); }
-      80% { transform: translate(-30px, -20px) rotate(-15deg); }
+      20% { transform: translate(40px, 100px) rotate(15deg); }
+      40% { transform: translate(120px, 40px) rotate(35deg); }
+      60% { transform: translate(20px, -60px) rotate(10deg); }
+      80% { transform: translate(-60px, 20px) rotate(-10deg); }
       100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    @keyframes float-4 {
+      0% { transform: translate(0,0) rotate(0deg); }
+      50% { transform: translate(100px, 100px) rotate(180deg); }
+      100% { transform: translate(0,0) rotate(360deg); }
     }
 
     .sc {
@@ -2722,7 +2755,10 @@
       <div style="display:flex;align-items:center;gap:12px">
         <button class="icon-btn hamburger" onclick="toggleMobile()"><span class="material-symbols-sharp"
             style="font-size:inherit;vertical-align:middle;">menu</span></button>
-        <div class="logo logo-sm">
+        <button id="backBtn" class="icon-btn" style="display:none" onclick="goBack()" title="Back">
+          <span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">arrow_back</span>
+        </button>
+        <div class="logo logo-sm" onclick="nav('home')" style="cursor:pointer" role="button" tabindex="0" title="Go to home">
           <h1 class="logo-title">DEUTSCHEDECK</h1>
           <div class="logo-line">
             <span class="line-red"></span>
@@ -2849,20 +2885,40 @@
       <div class="content">
 
         <!-- Global Bauhaus Background -->
+        <!-- Global Bauhaus Background — Rich & Dynamic -->
         <div class="bau-bg">
-          <div class="bau-shape bau-circle bau-red-sh" style="width: 180px; height: 180px; top: -40px; left: -50px; animation: float-1 30s infinite ease-in-out;"></div>
-          <div class="bau-shape bau-square bau-blue-sh" style="width: 120px; height: 120px; top: 15%; right: 10%; animation: float-2 35s infinite ease-in-out;"></div>
-          <div class="bau-shape bau-triangle bau-yellow-sh" style="bottom: 15%; left: 8%; animation: float-3 28s infinite ease-in-out;"></div>
-          <div class="bau-shape bau-circle bau-blue-sh" style="width: 70px; height: 70px; bottom: 25%; right: 20%; animation: float-1 22s infinite ease-in-out; opacity: 0.04;"></div>
-          <div class="bau-shape bau-square bau-red-sh" style="width: 50px; height: 50px; top: 45%; left: 5%; animation: float-2 26s infinite ease-in-out; opacity: 0.03;"></div>
-          <div class="bau-shape bau-triangle bau-blue-sh" style="top: 10%; left: 30%; animation: float-3 40s infinite ease-in-out; opacity: 0.02;"></div>
-          <div class="bau-shape bau-circle bau-yellow-sh" style="bottom: 5%; right: 5%; animation: float-2 32s infinite ease-in-out; opacity: 0.03;"></div>
+          <!-- Primary Large Shapes -->
+          <div class="bau-shape bau-circle bau-red-sh" style="width: 220px; height: 220px; top: -50px; left: -60px; animation: float-1 25s infinite ease-in-out;"></div>
+          <div class="bau-shape bau-square bau-blue-sh" style="width: 140px; height: 140px; top: 12%; right: 8%; animation: float-2 30s infinite ease-in-out;"></div>
+          <div class="bau-shape bau-triangle bau-yellow-sh" style="bottom: 12%; left: 6%; animation: float-3 24s infinite ease-in-out;"></div>
+          
+          <!-- Secondary Decorative Shapes -->
+          <div class="bau-shape bau-circle bau-blue-sh" style="width: 90px; height: 90px; bottom: 20%; right: 15%; animation: float-1 18s infinite ease-in-out; opacity: 0.05;"></div>
+          <div class="bau-shape bau-square bau-red-sh" style="width: 60px; height: 60px; top: 40%; left: 4%; animation: float-2 22s infinite ease-in-out; opacity: 0.04;"></div>
+          <div class="bau-shape bau-triangle bau-blue-sh" style="top: 8%; left: 25%; animation: float-3 35s infinite ease-in-out; opacity: 0.03;"></div>
+          <div class="bau-shape bau-circle bau-yellow-sh" style="bottom: 4%; right: 4%; animation: float-2 28s infinite ease-in-out; opacity: 0.04;"></div>
+          
+          <!-- New Floating Accents -->
+          <div class="bau-shape bau-circle bau-red-sh" style="width: 40px; height: 40px; top: 60%; right: 10%; animation: float-4 40s infinite linear; opacity: 0.03;"></div>
+          <div class="bau-shape bau-square bau-yellow-sh" style="width: 110px; height: 110px; top: -20px; left: 40%; animation: float-3 45s infinite ease-in-out; opacity: 0.02;"></div>
+          <div class="bau-shape bau-triangle bau-red-sh" style="bottom: 30%; left: 45%; animation: float-1 50s infinite ease-in-out; opacity: 0.02; transform: rotate(180deg);"></div>
+          <div class="bau-shape bau-circle bau-blue-sh" style="width: 150px; height: 150px; top: 30%; right: -30px; animation: float-2 38s infinite ease-in-out; opacity: 0.03;"></div>
         </div>
 
         <!-- HOME -->
         <div class="screen active fade-in" id="sc-home" style="position:relative;">
 
           <div style="max-width:680px; margin: 0 auto; position: relative; z-index: 2;">
+            
+            <div class="logo" onclick="nav('home')" style="margin-bottom: 24px; text-align: left; padding: 0;">
+              <h1 class="logo-title" style="font-size: 32px; letter-spacing: 1px;">DEUTSCHEDECK</h1>
+              <div class="logo-line" style="height: 4px; margin: 4px 0 8px 0;">
+                <span class="line-red"></span>
+                <span class="line-yellow"></span>
+              </div>
+              <div class="logo-tagline" style="font-size: 16px;">A1/A2 Mastery & Beyond</div>
+            </div>
+
             <div style="font-family: 'Fira Sans', sans-serif;font-size:38px;line-height:1.2;margin-bottom:8px">Guten
               Tag! <span class="material-symbols-sharp"
                 style="font-size:inherit;vertical-align:middle;">waving_hand</span><br>Ready to learn?</div>
@@ -3044,6 +3100,10 @@
                 class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">rocket_launch</span>
               Start Session</button>
             <div style="margin-top:20px; display:flex; align-items:center; gap:10px; padding:10px; background:var(--surf2); border:1px solid var(--border);">
+              <div class="tog" id="shuffleSetupToggle" onclick="toggleShuffleInSetup()"></div>
+              <span style="font-size:13px; font-weight:600; cursor:pointer;" onclick="toggleShuffleInSetup()">Shuffle Cards (Randomize Order)</span>
+            </div>
+            <div style="margin-top:10px; display:flex; align-items:center; gap:10px; padding:10px; background:var(--surf2); border:1px solid var(--border);">
               <div class="tog" id="revSetupToggle" onclick="toggleReverseInSetup()"></div>
               <span style="font-size:13px; font-weight:600; cursor:pointer;" onclick="toggleReverseInSetup()">Enable Reverse Practice (English → German)</span>
             </div>

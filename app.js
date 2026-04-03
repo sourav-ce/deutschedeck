@@ -278,8 +278,12 @@
   window.nav = function (id) {
     if (!id) id = 'home';
     ST.screen = id;
-    if(window.location.hash !== '#' + id) window.location.hash = id;
+    window.location.hash = id;
     updateBadges();
+
+    // Toggle Back Button Visibility
+    const bb = document.getElementById('backBtn');
+    if (bb) bb.style.display = (id === 'home') ? 'none' : 'flex';
 
     // Update Sidebar Buttons
     document.querySelectorAll('.nb').forEach(b => {
@@ -331,6 +335,28 @@
     window.scrollTo(0, 0);
     // Close mobile sidebar on navigation
     document.body.classList.remove('menu-open');
+  };
+
+  window.goBack = function() {
+    // If in quiz sub-view, exit to quiz home first
+    if (ST.screen === 'quiz') {
+      const playView = document.getElementById('quizPlayView');
+      const resultView = document.getElementById('quizResultView');
+      if ((playView && playView.style.display === 'block') || (resultView && resultView.style.display === 'block')) {
+        if (typeof window.exitQuiz === 'function') {
+          window.exitQuiz();
+          return;
+        }
+      }
+    }
+    // If in cards sub-view (done screen), nav('home')
+    if (ST.screen === 'cards') {
+      const doneView = document.getElementById('fc-done');
+      if (doneView && doneView.style.display === 'block') {
+         // already handled by nav('home')
+      }
+    }
+    nav('home');
   };
 
   function updateBadges() {
@@ -561,7 +587,7 @@
     if (startOffset > 0) {
         list = list.slice(startOffset);
     } else if (doShuffle) {
-        list = list.sort(() => Math.random() - 0.5);
+        shuffleArray(list);
     }
     
     list = list.slice(0, sessSize);
@@ -1281,12 +1307,26 @@
   window.toggleShortcuts = () => openModal('shortcutsModal');
   
   window.toggleShuffle = () => {
-    const tog = document.getElementById('shuffleToggle');
-    if (tog) {
-        tog.classList.toggle('on');
-        localStorage.setItem('ld_shuffle', tog.classList.contains('on'));
+    const sTog = document.getElementById('shuffleToggle');
+    const uTog = document.getElementById('shuffleSetupToggle');
+    let on = false;
+
+    if (sTog) {
+        sTog.classList.toggle('on');
+        on = sTog.classList.contains('on');
+    } else if (uTog) {
+        // Fallback if only one exists for some reason
+        uTog.classList.toggle('on');
+        on = uTog.classList.contains('on');
     }
+
+    localStorage.setItem('ld_shuffle', on);
+    if (sTog) sTog.className = 'tog' + (on ? ' on' : '');
+    if (uTog) uTog.className = 'tog' + (on ? ' on' : '');
+    
+    toast(on ? 'Shuffle: ON (Randomized order)' : 'Shuffle: OFF (Ordered)');
   };
+  window.toggleShuffleInSetup = () => window.toggleShuffle();
   window.toggleAutoSpeak = () => {
     const tog = document.getElementById('autoSpeakToggle');
     if (tog) {
@@ -1295,13 +1335,15 @@
     }
   };
   window.toggleReverse = () => {
-    const tog = document.getElementById('reverseToggle');
-    if (tog) {
-        tog.classList.toggle('on');
-        ST.reverseMode = tog.classList.contains('on');
-        localStorage.setItem('dd_reverseMode', ST.reverseMode);
-        toast(ST.reverseMode ? 'Reverse Mode: English → German' : 'Reverse Mode: German → English');
-    }
+    const sTog = document.getElementById('reverseToggle');
+    const uTog = document.getElementById('revSetupToggle');
+    ST.reverseMode = !ST.reverseMode;
+    localStorage.setItem('dd_reverseMode', ST.reverseMode);
+    
+    if (sTog) sTog.className = 'tog' + (ST.reverseMode ? ' on' : '');
+    if (uTog) uTog.className = 'tog' + (ST.reverseMode ? ' on' : '');
+    
+    toast(ST.reverseMode ? 'Reverse Mode: ON' : 'Reverse Mode: OFF');
   };
   window.setSessSize = () => {
     const slider = document.getElementById('sessSlider');
@@ -1358,9 +1400,17 @@
     if(localStorage.getItem('ld_theme') === 'dark') document.body.classList.add('dark');
 
     // Toggles
-    if(localStorage.getItem('ld_shuffle') === 'true') {
+    let shState = localStorage.getItem('ld_shuffle');
+    if (shState === null) {
+      shState = 'true';
+      localStorage.setItem('ld_shuffle', 'true');
+    }
+    
+    if(shState === 'true') {
       const sh = document.getElementById('shuffleToggle');
       if(sh) sh.classList.add('on');
+      const shSetup = document.getElementById('shuffleSetupToggle');
+      if(shSetup) shSetup.classList.add('on');
     }
     if(localStorage.getItem('ld_autospeak') === 'true') {
       const as = document.getElementById('autoSpeakToggle');
@@ -1386,6 +1436,14 @@
       document.getElementById('goalSlider').value = String(ST.stats.dailyGoal || 10);
       document.getElementById('goalVal').innerText = String(ST.stats.dailyGoal || 10);
     }
+  }
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
 
   // ── QUICK SEARCH LOGIC ───────────────────────────────────────────────────
