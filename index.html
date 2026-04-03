@@ -1478,7 +1478,86 @@
       grid-template-columns: 1fr 1fr 1fr;
       gap: 0;
       margin-bottom: 24px;
-      border: 1px solid var(--border)
+      border: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* GLOBAL BAUHAUS BACKGROUND */
+    .bau-bg {
+      position: fixed;
+      top: 60px;
+      left: 272px;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.7;
+      transition: left 0.3s ease;
+    }
+
+    @media(max-width:768px) {
+      .bau-bg { left: 0; }
+    }
+
+    .bau-shape {
+      position: absolute;
+      opacity: 0.05;
+      filter: blur(1px) grayscale(0.5);
+      transition: opacity 0.5s ease, filter 0.5s ease;
+      will-change: transform;
+    }
+
+    /* Bauhaus Soft Color Accents */
+    .bau-red-sh { background-color: var(--bau-red); }
+    .bau-blue-sh { background-color: var(--bau-blue); }
+    .bau-yellow-sh { background-color: var(--bau-yellow); }
+
+    .bau-triangle.bau-red-sh { border-bottom-color: var(--bau-red); background-color: transparent !important; }
+    .bau-triangle.bau-blue-sh { border-bottom-color: var(--bau-blue); background-color: transparent !important; }
+    .bau-triangle.bau-yellow-sh { border-bottom-color: var(--bau-yellow); background-color: transparent !important; }
+
+    body.dark .bau-shape {
+      opacity: 0.1;
+      filter: blur(4px) brightness(1.2);
+    }
+
+    .bau-circle {
+      border-radius: 50%;
+    }
+
+    .bau-square {
+      display: block;
+    }
+
+    .bau-triangle {
+      width: 0;
+      height: 0;
+      background: transparent !important;
+      border-left: 45px solid transparent;
+      border-right: 45px solid transparent;
+      border-bottom: 78px solid var(--tx);
+    }
+
+    @keyframes float-1 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(40px, -60px) rotate(15deg); }
+      66% { transform: translate(-20px, 40px) rotate(-10deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    @keyframes float-2 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(-50px, 30px) rotate(-20deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    @keyframes float-3 {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      40% { transform: translate(20px, 80px) rotate(10deg); }
+      80% { transform: translate(-30px, -20px) rotate(-15deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
 
     .sc {
@@ -2495,14 +2574,34 @@
         display: flex
       }
 
-      .logo { padding: 20px 10px; }
-      .logo-title { font-size: 44px; }
-      .logo-tagline { font-size: 18px; }
-      .logo-line { height: 4px; margin: 6px 0 10px 0; }
+      .logo {
+        padding: 20px 10px;
+      }
 
-      .logo-sm { margin-left: 0 !important; }
-      .logo-sm .logo-title { font-size: 18px; }
-      .logo-sm .logo-line { height: 2px; }
+      .logo-title {
+        font-size: 44px;
+      }
+
+      .logo-tagline {
+        font-size: 18px;
+      }
+
+      .logo-line {
+        height: 4px;
+        margin: 6px 0 10px 0;
+      }
+
+      .logo-sm {
+        margin-left: 0 !important;
+      }
+
+      .logo-sm .logo-title {
+        font-size: 18px;
+      }
+
+      .logo-sm .logo-line {
+        height: 2px;
+      }
 
       .stats-bar {
         display: none
@@ -2535,6 +2634,79 @@
       .qz-cloze-sentence {
         font-size: 20px
       }
+    }
+    .badge-irr {
+      background: var(--bau-red);
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+    .badge-irr:hover { background: var(--accent2); }
+
+    /* QUICK SEARCH COMMAND PALETTE */
+    #quickSearchOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 10000;
+      padding: 100px 20px;
+      backdrop-filter: blur(4px);
+    }
+    #quickSearchOverlay.active { display: block; }
+    .qs-box {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--surf);
+      border: 3px solid var(--bau-black);
+      padding: 0;
+      box-shadow: 12px 12px 0 var(--bau-yellow);
+    }
+    .qs-input {
+      width: 100%;
+      border: none;
+      border-bottom: 3px solid var(--bau-black);
+      padding: 20px 25px;
+      font-size: 24px;
+      font-family: inherit;
+      background: transparent;
+      color: var(--tx);
+      outline: none;
+    }
+    .qs-results { max-height: 400px; overflow-y: auto; }
+    .qs-item {
+      padding: 15px 25px;
+      border-bottom: 1px dotted var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .qs-item:hover { background: var(--surf2); }
+    .qs-de { font-weight: 700; font-size: 18px; }
+    .qs-en { color: var(--tx2); font-size: 14px; }
+    .qs-tip { font-size: 10px; color: var(--tx3); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* INTERACTIVE WORDS IN EXAMPLES */
+    .inter-word {
+      cursor: pointer;
+      border-bottom: 1px dotted var(--bau-red);
+      transition: all 0.1s;
+      display: inline-block;
+    }
+    .inter-word:hover {
+      background: var(--bau-yellow);
+      color: var(--bau-black);
+      border-bottom-style: solid;
     }
   </style>
   <link
@@ -2622,13 +2794,16 @@
         </div>
         <div class="tog-row">Auto-pronounce <div class="tog" id="autoSpeakToggle" onclick="toggleAutoSpeak()"></div>
         </div>
+        <div class="tog-row">Reverse Practice <div class="tog" id="reverseToggle" onclick="toggleReverse()"></div>
+        </div>
         <div class="slider-row">Session size: <strong id="sessVal">20</strong><input type="range" id="sessSlider"
             min="5" max="50" step="5" oninput="setSessSize()"></div>
         <div class="slider-row">Daily goal: <strong id="goalVal">10</strong><input type="range" id="goalSlider" min="5"
             max="50" step="5" oninput="setGoal()"></div>
         <div class="div"></div>
         <div class="sl" style="margin-top:auto">Analytics</div>
-        <div class="nb" style="cursor:default; border-left: 2px solid var(--bau-yellow); background: var(--aml); text-transform:none; letter-spacing:0.5px;">
+        <div class="nb"
+          style="cursor:default; border-left: 2px solid var(--bau-yellow); background: var(--aml); text-transform:none; letter-spacing:0.5px;">
           <span class="ic"><span class="material-symbols-sharp"
               style="font-size:inherit;vertical-align:middle; color:var(--bau-yellow)">visibility</span></span>
           <span id="visitorCount" style="font-weight:700; font-variant-numeric: tabular-nums;">...</span>
@@ -2636,7 +2811,8 @@
         </div>
 
         <div class="sl" style="padding-top:12px">Support</div>
-        <a href="mailto:ssmsourav@gmail.com?subject=DeutscheDeck%20Feedback" class="nb" style="text-decoration:none;">
+        <a href="mailto:ssmsourav@gmail.com?subject=DeutscheDeck%20Feedback" class="nb" style="text-decoration:none;"
+          onclick="window.location.href=this.href; if(window.toast) toast('Opening mail client... (ssmsourav@gmail.com)'); return false;">
           <span class="ic"><span class="material-symbols-sharp"
               style="font-size:inherit;vertical-align:middle;">bug_report</span></span>
           Suggestions & Bugs
@@ -2648,11 +2824,14 @@
               style="font-size:inherit;vertical-align:middle;">person</span></span>
           <span style="display:flex; align-items:center; gap:6px;">
             Sourav
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#0077B5" style="vertical-align:middle; margin-top:-1px;">
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.238 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#0077B5"
+              style="vertical-align:middle; margin-top:-1px;">
+              <path
+                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.238 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
             </svg>
           </span>
-          <span class="material-symbols-sharp" style="margin-left:auto; font-size:16px; color:var(--tx3)">open_in_new</span>
+          <span class="material-symbols-sharp"
+            style="margin-left:auto; font-size:16px; color:var(--tx3)">open_in_new</span>
         </a>
 
         <div class="div"></div>
@@ -2669,9 +2848,21 @@
       <!-- CONTENT -->
       <div class="content">
 
+        <!-- Global Bauhaus Background -->
+        <div class="bau-bg">
+          <div class="bau-shape bau-circle bau-red-sh" style="width: 180px; height: 180px; top: -40px; left: -50px; animation: float-1 30s infinite ease-in-out;"></div>
+          <div class="bau-shape bau-square bau-blue-sh" style="width: 120px; height: 120px; top: 15%; right: 10%; animation: float-2 35s infinite ease-in-out;"></div>
+          <div class="bau-shape bau-triangle bau-yellow-sh" style="bottom: 15%; left: 8%; animation: float-3 28s infinite ease-in-out;"></div>
+          <div class="bau-shape bau-circle bau-blue-sh" style="width: 70px; height: 70px; bottom: 25%; right: 20%; animation: float-1 22s infinite ease-in-out; opacity: 0.04;"></div>
+          <div class="bau-shape bau-square bau-red-sh" style="width: 50px; height: 50px; top: 45%; left: 5%; animation: float-2 26s infinite ease-in-out; opacity: 0.03;"></div>
+          <div class="bau-shape bau-triangle bau-blue-sh" style="top: 10%; left: 30%; animation: float-3 40s infinite ease-in-out; opacity: 0.02;"></div>
+          <div class="bau-shape bau-circle bau-yellow-sh" style="bottom: 5%; right: 5%; animation: float-2 32s infinite ease-in-out; opacity: 0.03;"></div>
+        </div>
+
         <!-- HOME -->
-        <div class="screen active fade-in" id="sc-home">
-          <div style="max-width:680px; margin: 0 auto">
+        <div class="screen active fade-in" id="sc-home" style="position:relative;">
+
+          <div style="max-width:680px; margin: 0 auto; position: relative; z-index: 2;">
             <div style="font-family: 'Fira Sans', sans-serif;font-size:38px;line-height:1.2;margin-bottom:8px">Guten
               Tag! <span class="material-symbols-sharp"
                 style="font-size:inherit;vertical-align:middle;">waving_hand</span><br>Ready to learn?</div>
@@ -2844,13 +3035,18 @@
                 oninput="document.getElementById('setupStartVal').innerText = this.value"
                 style="width:100%; cursor:pointer;">
               <div style="font-size:11px; color:var(--tx3); margin-top:6px;"><span class="material-symbols-sharp"
-                  style="font-size:inherit;vertical-align:middle;">info</span> If shuffle is disabled, this skips to a specific database point. (Total matching: <span id="setupTotalMatch">...</span>)</div>
+                  style="font-size:inherit;vertical-align:middle;">info</span> If shuffle is disabled, this skips to a
+                specific database point. (Total matching: <span id="setupTotalMatch">...</span>)</div>
             </div>
 
             <button class="btn bp" id="startBtn" onclick="startCustomSession()"
               style="width:100%; justify-content:center; font-size:16px; padding: 16px;"><span
                 class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">rocket_launch</span>
               Start Session</button>
+            <div style="margin-top:20px; display:flex; align-items:center; gap:10px; padding:10px; background:var(--surf2); border:1px solid var(--border);">
+              <div class="tog" id="revSetupToggle" onclick="toggleReverseInSetup()"></div>
+              <span style="font-size:13px; font-weight:600; cursor:pointer;" onclick="toggleReverseInSetup()">Enable Reverse Practice (English → German)</span>
+            </div>
           </div>
 
           <div id="fc-ui">
@@ -3299,6 +3495,13 @@
       </p>
       <input type="file" accept=".json" onchange="importDatabase(event)" style="margin-bottom:16px">
       <div><button class="btn bo" onclick="closeModal()">Cancel</button></div>
+    </div>
+  </div>
+
+  <div id="quickSearchOverlay" onclick="if(event.target === this) closeQuickSearch()">
+    <div class="qs-box">
+      <input type="text" class="qs-input" id="qsInput" placeholder="Suchen... (Search words)" oninput="handleQuickSearchInput()">
+      <div class="qs-results" id="qsResults"></div>
     </div>
   </div>
 

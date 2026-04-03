@@ -21,7 +21,8 @@
     },
     progress: JSON.parse(localStorage.getItem('ld_progress') || '{}'), // {wordId: {rate, last, interval, ease}}
     stats: JSON.parse(localStorage.getItem('ld_stats') || '{"sessions":0, "streak":0, "lastDate":null, "dailyGoal":10, "todayCount":0}'),
-    history: JSON.parse(localStorage.getItem('ld_history') || '[]') // [{date: YYYY-MM-DD, count: N}]
+    history: JSON.parse(localStorage.getItem('ld_history') || '[]'), // [{date: YYYY-MM-DD, count: N}]
+    reverseMode: localStorage.getItem('dd_reverseMode') === 'true'
   };
 
   // ── INIT ──────────────────────────────────────────────────────────────────
@@ -405,8 +406,17 @@
          }
       }
 
-      if (e.key === 'Escape') nav('home');
+      if (e.key === 'Escape') {
+          if (document.getElementById('quickSearchOverlay').classList.contains('active')) closeQuickSearch();
+          else nav('home');
+      }
       if (e.key === '?' && e.shiftKey) openModal('shortcutsModal');
+      
+      // CMD+K or CTRL+K for Search
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          openQuickSearch();
+      }
     });
   }
 
@@ -601,23 +611,55 @@
       document.getElementById('inner').classList.remove('flipped');
       document.getElementById('ansBtns').style.display = 'none';
       document.getElementById('fn').style.opacity = '1';
-      document.getElementById('fword').innerText = item.de;
-      document.getElementById('flvl').innerText = item.level;
-      document.getElementById('ftag').innerText = item.type;
-      document.getElementById('fart').innerText = item.article || '';
+      
+      const frontText = ST.reverseMode ? item.en : item.de;
+      const backText = ST.reverseMode ? item.de : item.en;
+
+      document.getElementById('fword').innerText = frontText;
+      document.getElementById('flvl').innerText = item.level || '';
+      document.getElementById('ftag').innerText = item.type || '';
+      document.getElementById('fart').innerText = (!ST.reverseMode && item.article) ? item.article : '';
       document.getElementById('fart').style.color = getArtColor(item.article);
-      document.getElementById('fsub').innerText = (item.type === 'noun' && item.plural) ? `die ${item.plural}` : '';
-      document.getElementById('btrans').innerText = item.en || '';
+      document.getElementById('fsub').innerText = (!ST.reverseMode && item.type === 'noun' && item.plural) ? `die ${item.plural}` : '';
+      
+      document.getElementById('btrans').innerText = backText || '';
+      if (ST.reverseMode && item.article) {
+          // If in reverse mode, show the article/word on the back
+          document.getElementById('btrans').innerHTML = `<div style="color:var(--tx3); font-size:14px; margin-bottom:4px;">${item.en}</div><div style="font-size:24px;">${item.article ? `<span style="color:${getArtColor(item.article)}">${item.article}</span> ` : ''}${item.de}</div>`;
+      }
+
       const blvlEl = document.getElementById('b-lvl');
       if (blvlEl) blvlEl.innerText = item.level || '';
       document.getElementById('btag').innerText = item.type || '';
       document.getElementById('bex').innerText = item.examples && item.examples[0] ? item.examples[0].de : '';
       document.getElementById('bexen').innerText = item.examples && item.examples[0] ? item.examples[0].en : '';
       document.getElementById('bpl').innerText = item.tip || '';
+
+      // PHASE 2: IRREGULAR BADGE
+      const irrContainer = document.getElementById('flvl').parentElement;
+      const oldBadge = irrContainer.querySelector('.badge-irr');
+      if(oldBadge) oldBadge.remove();
+
+      if(item.type === 'verb') {
+          const verbData = ST.tenses.find(v => v.de === item.de);
+          if(verbData && verbData.irregular) {
+              const badge = document.createElement('div');
+              badge.className = 'badge-irr';
+              badge.innerHTML = '<span class="material-symbols-sharp" style="font-size:12px">warning</span> Irregular';
+              badge.title = 'Click to view conjugation';
+              badge.onclick = (e) => {
+                  e.stopPropagation();
+                  nav('tenses');
+                  if(typeof renderTenseDetail === 'function') renderTenseDetail(verbData.id);
+              };
+              irrContainer.appendChild(badge);
+          }
+      }
     }
     else if (ST.session.mode === 'typing') {
-      document.getElementById('typQ').innerText = item.en;
-      document.getElementById('typHint').innerText = `${item.level} · ${item.type}`;
+      const qText = ST.reverseMode ? item.en : item.de;
+      document.getElementById('typQ').innerText = qText;
+      document.getElementById('typHint').innerText = ST.reverseMode ? `Type the German word (${item.type})` : `${item.level} · ${item.type}`;
       document.getElementById('typInput').value = '';
       document.getElementById('typFeedback').style.display = 'none';
       document.getElementById('typCheck').style.display = 'block';
@@ -1181,8 +1223,13 @@
     }
     if (item.examples && item.examples.length > 0) {
       item.examples.forEach(e => {
+        // Make German words interactive
+        const interactiveDe = e.de.replace(/[A-Za-zÄäÖöÜüß]+/g, (match) => {
+            return `<span class="inter-word" onclick="handleWordClick(event, '${match}')">${match}</span>`;
+        });
+
         html += `<div style="margin-bottom:12px; border-left: 3px solid var(--accent); padding-left:12px;">
-            <div style="font-weight:600;margin-bottom:4px;color:var(--tx1);">${e.de}</div>
+            <div style="font-weight:600;margin-bottom:4px;color:var(--tx1); line-height:1.6;">${interactiveDe}</div>
             <div style="color:var(--tx2);font-size:13px;font-style:italic;">${e.en}</div>
           </div>`;
       });
@@ -1245,6 +1292,15 @@
     if (tog) {
         tog.classList.toggle('on');
         localStorage.setItem('ld_autospeak', tog.classList.contains('on'));
+    }
+  };
+  window.toggleReverse = () => {
+    const tog = document.getElementById('reverseToggle');
+    if (tog) {
+        tog.classList.toggle('on');
+        ST.reverseMode = tog.classList.contains('on');
+        localStorage.setItem('dd_reverseMode', ST.reverseMode);
+        toast(ST.reverseMode ? 'Reverse Mode: English → German' : 'Reverse Mode: German → English');
     }
   };
   window.setSessSize = () => {
@@ -1310,6 +1366,12 @@
       const as = document.getElementById('autoSpeakToggle');
       if(as) as.classList.add('on');
     }
+    if(localStorage.getItem('dd_reverseMode') === 'true') {
+      const rev = document.getElementById('reverseToggle');
+      if(rev) rev.classList.add('on');
+      const revSetup = document.getElementById('revSetupToggle');
+      if(revSetup) revSetup.classList.add('on');
+    }
 
     // Session size slider
     const savedSzl = localStorage.getItem('ld_sessSize');
@@ -1325,5 +1387,109 @@
       document.getElementById('goalVal').innerText = String(ST.stats.dailyGoal || 10);
     }
   }
+
+  // ── QUICK SEARCH LOGIC ───────────────────────────────────────────────────
+  window.openQuickSearch = function() {
+      const os = document.getElementById('quickSearchOverlay');
+      if(!os) return;
+      os.classList.add('active');
+      const input = document.getElementById('qsInput');
+      input.value = '';
+      input.focus();
+      document.getElementById('qsResults').innerHTML = '';
+  };
+
+  window.closeQuickSearch = function() {
+      const os = document.getElementById('quickSearchOverlay');
+      if(os) os.classList.remove('active');
+  };
+
+  window.handleQuickSearchInput = function() {
+      const q = document.getElementById('qsInput').value.toLowerCase().trim();
+      const results = document.getElementById('qsResults');
+      if (!q) { results.innerHTML = ''; return; }
+
+      const matches = ST.vocab.filter(v => 
+          (v.de && v.de.toLowerCase().includes(q)) || 
+          (v.en && v.en.toLowerCase().includes(q))
+      ).slice(0, 10);
+
+      if (matches.length === 0) {
+          results.innerHTML = '<div style="padding:20px; color:var(--tx3); text-align:center;">No matches found</div>';
+          return;
+      }
+
+      results.innerHTML = matches.map(v => `
+          <div class="qs-item" onclick="jumpToWord('${v.id}')">
+              <div>
+                  <div class="qs-de">${v.de}</div>
+                  <div class="qs-en">${v.en}</div>
+              </div>
+              <div class="qs-tip">${v.level} · ${v.type}</div>
+          </div>
+      `).join('');
+  };
+
+  window.jumpToWord = function(id) {
+      closeQuickSearch();
+      const v = ST.vocab.find(x => x.id.toString() === id.toString());
+      if(!v) return;
+      
+      nav('browse');
+      const bSearch = document.getElementById('bsearch');
+      if (bSearch) {
+          bSearch.value = v.de;
+          renderBrowse();
+      }
+  };
+
+  window.toggleReverseInSetup = function() {
+      const sTog = document.getElementById('revSetupToggle');
+      const bTog = document.getElementById('reverseToggle');
+      ST.reverseMode = !ST.reverseMode;
+      localStorage.setItem('dd_reverseMode', ST.reverseMode);
+      
+      if(sTog) sTog.className = 'tog' + (ST.reverseMode ? ' on' : '');
+      if(bTog) bTog.className = 'tog' + (ST.reverseMode ? ' on' : '');
+      
+      toast(ST.reverseMode ? 'Reverse Mode: ON' : 'Reverse Mode: OFF');
+  };
+
+  window.handleWordClick = function(e, word) {
+      if(e) e.stopPropagation();
+      speak(word);
+      
+      // Try to find exact or close match in vocab
+      const match = ST.vocab.find(v => v.de.toLowerCase() === word.toLowerCase());
+      if(match) {
+          toast(`Jump to: ${match.de} (${match.en})`, 2500, () => jumpToWord(match.id));
+      } else {
+          toast(`Playing: ${word}`);
+      }
+  };
+
+  // Improved toast to support callbacks (for action buttons)
+  window.toast = function (msg, duration = 2000, actionCb = null) {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.innerHTML = msg + (actionCb ? ' <span style="text-decoration:underline; cursor:pointer; margin-left:8px; font-weight:700">VIEW</span>' : '');
+    t.classList.add('active');
+    
+    // Clear previous timeouts
+    if(window._toastTimer) clearTimeout(window._toastTimer);
+    
+    if(actionCb) {
+        t.onclick = () => {
+            actionCb();
+            t.classList.remove('active');
+        };
+    } else {
+        t.onclick = null;
+    }
+
+    window._toastTimer = setTimeout(() => {
+        t.classList.remove('active');
+    }, duration);
+  };
 
 })();
