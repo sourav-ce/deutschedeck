@@ -44,11 +44,14 @@
 
     const baseVocab = loaded.vocab || window.VOCAB_DB || [];
     const extraVocab = Array.isArray(window.VOCAB_EXTRA_DB) ? window.VOCAB_EXTRA_DB : [];
-    ST.vocab = baseVocab.concat(extraVocab).map(normalizeVocabEntry);
+    const vocabPrep = prepareVocab(baseVocab, extraVocab);
+    ST.vocab = vocabPrep.vocab;
     ST.tenses = loaded.tenses || window.VERB_DB || [];
+    rebuildIndexes();
+    populateVocabTypeOptions();
     
     // Check if progress items actually exist in DB (prevent ghost data)
-    const validIds = new Set(ST.vocab.map(v => v.id.toString()));
+    const validIds = new Set(ST.vocabById.keys());
     Object.keys(ST.progress).forEach(id => {
        if(!validIds.has(id)) delete ST.progress[id];
     });
@@ -61,6 +64,13 @@
         ST.stats.todayCount = 0;
         ST.stats.lastDate = today;
     }
+
+    if (vocabPrep.removedDuplicates || vocabPrep.repairedIds) {
+      console.info(`Vocab cleanup: removed ${vocabPrep.removedDuplicates} duplicates, repaired ${vocabPrep.repairedIds} duplicate IDs.`);
+    }
+
+    document.title = repairMojibake(document.title);
+    repairDocumentText(document.body);
 
     // Initial UI render
     renderHome();
@@ -224,18 +234,241 @@
 
 
 
-  function toast(msg) {
+  function toast(msg, duration = 2500, actionCb = null) {
     const el = document.getElementById('notif');
     if (!el) return;
     el.textContent = msg;
+    el.onclick = null;
+    el.style.cursor = actionCb ? 'pointer' : '';
+    if (actionCb) {
+      const action = document.createElement('span');
+      action.textContent = ' VIEW';
+      action.style.textDecoration = 'underline';
+      action.style.marginLeft = '8px';
+      action.style.fontWeight = '700';
+      el.appendChild(action);
+      el.onclick = () => {
+        actionCb();
+        el.classList.remove('show');
+      };
+    }
     el.classList.add('show');
     clearTimeout(toast._t);
-    toast._t = setTimeout(() => el.classList.remove('show'), 2500);
+    toast._t = setTimeout(() => {
+      el.classList.remove('show');
+      el.onclick = null;
+      el.style.cursor = '';
+    }, duration);
+  }
+
+  const MOJIBAKE_RE = /[ÃÂâð]/;
+
+  function textRepairScore(str) {
+    if (typeof str !== 'string') return 0;
+    let score = 0;
+    score -= (str.match(/[ÃÂâð]/g) || []).length * 3;
+    score += (str.match(/[äöüÄÖÜß„“”‚‘’–—…→✅❌🎧💬📊🏆📚📋🔄]/gu) || []).length * 2;
+    return score;
+  }
+
+  function repairMojibake(str) {
+    if (typeof str !== 'string' || !MOJIBAKE_RE.test(str)) return str;
+    try {
+      const bytes = Uint8Array.from(Array.from(str, ch => ch.charCodeAt(0) & 255));
+      const decoded = new TextDecoder('utf-8').decode(bytes);
+      return textRepairScore(decoded) > textRepairScore(str) ? decoded : str;
+    } catch {
+      return str;
+    }
+  }
+
+  function repairDocumentText(root = document.body) {
+    if (!root || typeof document === 'undefined') return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (!node.nodeValue || !node.nodeValue.trim()) continue;
+      const repaired = repairMojibake(node.nodeValue);
+      if (repaired !== node.nodeValue) node.nodeValue = repaired;
+    }
+
+    root.querySelectorAll?.('[placeholder],[title],[aria-label]').forEach(el => {
+      ['placeholder', 'title', 'aria-label'].forEach(attr => {
+        const value = el.getAttribute(attr);
+        if (!value) return;
+        const repaired = repairMojibake(value);
+        if (repaired !== value) el.setAttribute(attr, repaired);
+      });
+    });
+  }
+
+  window.repairMojibake = repairMojibake;
+  window.repairDocumentText = repairDocumentText;
+
+  const TYPE_LABELS = {
+    noun: 'Nouns',
+    verb: 'Verbs',
+    adjective: 'Adjectives',
+    adverb: 'Adverbs',
+    phrase: 'Phrases',
+    number: 'Numbers',
+    preposition: 'Prepositions',
+    conjunction: 'Conjunctions',
+    question: 'Questions',
+    pronoun: 'Pronouns',
+    interjection: 'Interjections',
+    other: 'Other'
+  };
+  const TYPE_ORDER = ['noun', 'verb', 'phrase', 'adjective', 'adverb', 'number', 'preposition', 'conjunction', 'question', 'pronoun', 'interjection', 'other'];
+
+  function normalizeVocabType(type, entry) {
+    const raw = String(type || '').trim().toLowerCase();
+    const typeMap = {
+      adj: 'adjective',
+      adjektiv: 'adjective',
+      adv: 'adverb',
+      numeral: 'number',
+      num: 'number'
+    };
+    if (typeMap[raw]) return typeMap[raw];
+    if (TYPE_LABELS[raw]) return raw;
+
+    if (entry && entry.article) return 'noun';
+    if (entry && typeof entry.de === 'string' && entry.de.includes(' ')) return 'phrase';
+    return 'other';
+  }
+
+  function buildVocabKey(entry) {
+    return [
+      String(entry.deLower || '').trim(),
+      String(entry.type || '').trim(),
+      String(entry.article || '').trim()
+    ].join('||');
+  }
+
+  function mergeUniqueStrings(a = [], b = []) {
+    return [...new Set([...a, ...b].filter(Boolean))];
+  }
+
+  function mergeExamples(a = [], b = []) {
+    const seen = new Set();
+    return [...a, ...b].filter(ex => {
+      if (!ex || (!ex.de && !ex.en)) return false;
+      const key = `${String(ex.de || '').trim()}||${String(ex.en || '').trim()}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function cloneVocabEntry(v) {
+    if (!v || typeof v !== 'object') return v;
+    return {
+      ...v,
+      tags: Array.isArray(v.tags) ? [...v.tags] : [],
+      examples: Array.isArray(v.examples) ? v.examples.map(ex => ({ ...ex })) : [],
+      meta: v.meta && typeof v.meta === 'object' ? { ...v.meta } : undefined
+    };
+  }
+
+  function mergeVocabEntries(existing, incoming) {
+    existing.tags = mergeUniqueStrings(existing.tags, incoming.tags);
+    existing.examples = mergeExamples(existing.examples, incoming.examples);
+    if (!existing.en && incoming.en) existing.en = incoming.en;
+    if (!existing.level && incoming.level) existing.level = incoming.level;
+    if (!existing.article && incoming.article) existing.article = incoming.article;
+    if (!existing.plural && incoming.plural) existing.plural = incoming.plural;
+    if (!existing.tip && incoming.tip) existing.tip = incoming.tip;
+    existing.meta = { ...(incoming.meta || {}), ...(existing.meta || {}) };
+    existing.deLower = existing.deLower || incoming.deLower;
+    existing.enLower = existing.enLower || incoming.enLower;
+    return existing;
+  }
+
+  function prepareVocab(baseVocab, extraVocab) {
+    const cleaned = [];
+    const seenByKey = new Map();
+    const usedIds = new Set();
+    let removedDuplicates = 0;
+    let repairedIds = 0;
+    let nextId = [...baseVocab, ...extraVocab].reduce((max, item) => {
+      const num = Number(item && item.id);
+      return Number.isFinite(num) ? Math.max(max, num) : max;
+    }, 0) + 1;
+
+    for (const raw of [...baseVocab, ...extraVocab]) {
+      const entry = normalizeVocabEntry(cloneVocabEntry(raw));
+      if (!entry || !entry.deLower) continue;
+
+      const key = buildVocabKey(entry);
+      const existing = seenByKey.get(key);
+      if (existing) {
+        mergeVocabEntries(existing, entry);
+        removedDuplicates++;
+        continue;
+      }
+
+      let idKey = String(entry.id);
+      if (usedIds.has(idKey)) {
+        while (usedIds.has(String(nextId))) nextId++;
+        entry.id = nextId++;
+        idKey = String(entry.id);
+        repairedIds++;
+      }
+
+      usedIds.add(idKey);
+      seenByKey.set(key, entry);
+      cleaned.push(entry);
+    }
+
+    return { vocab: cleaned, removedDuplicates, repairedIds };
+  }
+
+  function populateSelectWithTypes(select, allLabel) {
+    if (!select) return;
+    const current = select.value || 'all';
+    const types = [...new Set((ST.vocab || []).map(v => v.type).filter(Boolean))]
+      .sort((a, b) => {
+        const ai = TYPE_ORDER.indexOf(a);
+        const bi = TYPE_ORDER.indexOf(b);
+        if (ai === -1 && bi === -1) return a.localeCompare(b);
+        if (ai === -1) return 1;
+        if (bi === -1) return -1;
+        return ai - bi;
+      });
+
+    select.innerHTML = [
+      `<option value="all">${allLabel}</option>`,
+      ...types.map(type => `<option value="${type}">${TYPE_LABELS[type] || type}</option>`)
+    ].join('');
+    select.value = types.includes(current) ? current : 'all';
+  }
+
+  function populateVocabTypeOptions() {
+    populateSelectWithTypes(document.getElementById('setupType'), 'All Types (Mixed)');
+    populateSelectWithTypes(document.getElementById('bcat'), 'All Types');
   }
 
   function normalizeVocabEntry(v) {
     if (!v || typeof v !== 'object') return v;
     const out = v; // mutate in-place to keep references stable
+
+    out.de = repairMojibake(out.de);
+    out.en = repairMojibake(out.en);
+    out.tip = repairMojibake(out.tip);
+    out.plural = repairMojibake(out.plural);
+    if (Array.isArray(out.examples)) {
+      out.examples = out.examples.map(ex => ({
+        ...ex,
+        de: repairMojibake(ex.de),
+        en: repairMojibake(ex.en)
+      }));
+    }
+    if (out.meta && typeof out.meta === 'object') {
+      Object.keys(out.meta).forEach(key => {
+        if (typeof out.meta[key] === 'string') out.meta[key] = repairMojibake(out.meta[key]);
+      });
+    }
 
     if (typeof out.de === 'string') {
       let de = out.de.trim().replace(/\s+/g, ' ');
@@ -267,7 +500,29 @@
       if (a === 'der' || a === 'die' || a === 'das') out.article = a;
     }
 
+    out.type = normalizeVocabType(out.type, out);
+
+    out.deLower = typeof out.de === 'string' ? out.de.toLowerCase() : '';
+    out.enLower = typeof out.en === 'string' ? out.en.toLowerCase() : '';
+
     return out;
+  }
+
+  function rebuildIndexes() {
+    ST.vocabSorted = [...(ST.vocab || [])].sort((a, b) => (a.de || '').localeCompare(b.de || ''));
+    ST.vocabById = new Map((ST.vocab || []).map(v => [String(v.id), v]));
+    ST.vocabByDeLower = new Map(
+      (ST.vocab || [])
+        .filter(v => v && v.deLower)
+        .map(v => [v.deLower, v])
+    );
+    ST.tensesById = new Map((ST.tenses || []).map(v => [String(v.id), v]));
+    ST.tensesByDe = new Map(
+      (ST.tenses || [])
+        .filter(v => v && typeof v.de === 'string' && v.de)
+        .map(v => [v.de, v])
+    );
+    ST.tensesDeSet = new Set(ST.tensesByDe.keys());
   }
 
   // ── NAVIGATION ─────────────────────────────────────────────────────────────
@@ -332,6 +587,7 @@
     // Run registered nav hooks (e.g. quiz-engine)
     window._navHooks.forEach(fn => { try { fn(id); } catch(e) { console.error('Nav hook error:', e); } });
 
+    repairDocumentText(target || document.body);
     window.scrollTo(0, 0);
     // Close mobile sidebar on navigation
     document.body.classList.remove('menu-open');
@@ -484,11 +740,11 @@
   };
 
   // Direct Session Wrappers (Skip Setup)
-  window.session = (type) => { setupSession(type || 'all', 'flash'); nav('cards'); };
-  window.sessionTyping = (type) => { setupSession(type || 'all', 'typing'); nav('cards'); };
-  window.sessionListening = (type) => { setupSession(type || 'all', 'listening'); nav('cards'); };
-  window.sessionArticle = (type) => { setupSession(type || 'all', 'article'); nav('cards'); };
-  window.sessionConj = (type) => { setupSession(type || 'all', 'conj'); nav('cards'); };
+  window.session = (type) => { if (setupSession(type || 'all', 'flash')) nav('cards'); };
+  window.sessionTyping = (type) => { if (setupSession(type || 'all', 'typing')) nav('cards'); };
+  window.sessionListening = (type) => { if (setupSession(type || 'all', 'listening')) nav('cards'); };
+  window.sessionArticle = (type) => { if (setupSession(type || 'all', 'article')) nav('cards'); };
+  window.sessionConj = (type) => { if (setupSession(type || 'all', 'conj')) nav('cards'); };
 
   window.updateSetupLimit = function() {
     const lvl = document.getElementById('setupLevel').value || 'all';
@@ -502,12 +758,12 @@
     if (lvl !== 'all') {
       if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(lvl)) list = list.filter(v => v.level === lvl);
       else if (lvl === 'weak') {
-          const weakIds = Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id);
-          list = list.filter(v => weakIds.includes(v.id.toString()));
+          const weakIds = new Set(Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id));
+          list = list.filter(v => weakIds.has(v.id.toString()));
       }
       else if (lvl === 'due') {
-          const dueIds = Object.entries(ST.progress).filter(([id, p]) => isDue(p)).map(([id,p])=>id);
-          list = list.filter(v => dueIds.includes(v.id.toString()));
+          const dueIds = new Set(Object.entries(ST.progress).filter(([id, p]) => isDue(p)).map(([id,p])=>id));
+          list = list.filter(v => dueIds.has(v.id.toString()));
       }
     }
 
@@ -518,8 +774,7 @@
 
     if (mode === 'article') list = list.filter(v => v.article);
     if (mode === 'conj') {
-        const verbInfos = ST.tenses.map(v => v.de);
-        list = list.filter(v => v.type === 'verb' && verbInfos.includes(v.de));
+        list = list.filter(v => v.type === 'verb' && ST.tensesDeSet.has(v.de));
     }
 
     const totalEl = document.getElementById('setupTotalMatch');
@@ -546,7 +801,7 @@
       
       window.lastST = lvl;
       const mode = ST.pendingMode || 'flash';
-      setupSession(lvl, mode, startOffset, type, size);
+      if (!setupSession(lvl, mode, startOffset, type, size)) return;
       
       if(document.getElementById('fc-setup')) document.getElementById('fc-setup').style.display = 'none';
       if(typeof renderCard === 'function') renderCard();
@@ -559,12 +814,12 @@
     if (type !== 'all' && type !== 'vocab') {
       if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(type)) list = list.filter(v => v.level === type);
       else if (type === 'weak') {
-          const weakIds = Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id);
-          list = list.filter(v => weakIds.includes(v.id.toString()));
+          const weakIds = new Set(Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id));
+          list = list.filter(v => weakIds.has(v.id.toString()));
       }
       else if (type === 'due') {
-          const dueIds = Object.entries(ST.progress).filter(([id, p]) => isDue(p)).map(([id,p])=>id);
-          list = list.filter(v => dueIds.includes(v.id.toString()));
+          const dueIds = new Set(Object.entries(ST.progress).filter(([id, p]) => isDue(p)).map(([id,p])=>id));
+          list = list.filter(v => dueIds.has(v.id.toString()));
       }
     }
 
@@ -575,8 +830,7 @@
     
     if (mode === 'article') list = list.filter(v => v.article);
     if (mode === 'conj') {
-        const verbInfos = ST.tenses.map(v => v.de);
-        list = list.filter(v => v.type === 'verb' && verbInfos.includes(v.de));
+        list = list.filter(v => v.type === 'verb' && ST.tensesDeSet.has(v.de));
     }
 
     // Session sizing + shuffle logic
@@ -592,6 +846,11 @@
     
     list = list.slice(0, sessSize);
 
+    if (!list.length) {
+      toast('No matching cards found for this setup.');
+      return false;
+    }
+
     ST.session = {
       queue: list,
       idx: 0,
@@ -599,7 +858,8 @@
       mode: mode,
       correct: 0,
       wrong: 0,
-      flipped: false
+      flipped: false,
+      currentAnswered: false
     };
 
     // UI resets
@@ -611,6 +871,7 @@
     });
     document.getElementById('ansBtns').style.display = 'none';
     document.getElementById('exPanel').style.display = 'none';
+    return true;
   }
 
   function renderCard() {
@@ -667,7 +928,7 @@
       if(oldBadge) oldBadge.remove();
 
       if(item.type === 'verb') {
-          const verbData = ST.tenses.find(v => v.de === item.de);
+          const verbData = ST.tensesByDe.get(item.de);
           if(verbData && verbData.irregular) {
               const badge = document.createElement('div');
               badge.className = 'badge-irr';
@@ -676,16 +937,21 @@
               badge.onclick = (e) => {
                   e.stopPropagation();
                   nav('tenses');
-                  if(typeof renderTenseDetail === 'function') renderTenseDetail(verbData.id);
+                  showVerb(verbData.id);
               };
               irrContainer.appendChild(badge);
           }
       }
     }
     else if (ST.session.mode === 'typing') {
-      const qText = ST.reverseMode ? item.en : item.de;
+      // Show English by default (ST.reverseMode = false), or German if reversed
+      const qText = ST.reverseMode ? item.de : item.en;
       document.getElementById('typQ').innerText = qText;
-      document.getElementById('typHint').innerText = ST.reverseMode ? `Type the German word (${item.type})` : `${item.level} · ${item.type}`;
+      
+      // Update hint to match required input language
+      const targetLang = ST.reverseMode ? 'English' : 'German';
+      document.getElementById('typHint').innerText = `Type the ${targetLang} word (${item.type})`;
+      
       document.getElementById('typInput').value = '';
       document.getElementById('typFeedback').style.display = 'none';
       document.getElementById('typCheck').style.display = 'block';
@@ -702,13 +968,17 @@
       setTimeout(() => document.getElementById('listenInput').focus(), 50);
     }
     else if (ST.session.mode === 'article') {
+        ST.session.currentAnswered = false;
         document.getElementById('artWord').innerText = item.de;
         document.getElementById('artHint').innerText = item.en;
         document.getElementById('artFb').style.display = 'none';
         document.getElementById('artNext').style.display = 'none';
+        document.querySelectorAll('#articleWrap .art-btn').forEach(b => {
+            b.disabled = false;
+        });
     }
     else if (ST.session.mode === 'conj') {
-        const verbData = ST.tenses.find(v => v.de === item.de) || ST.tenses[0];
+        const verbData = ST.tensesByDe.get(item.de) || ST.tenses[0];
         if (!verbData) { finishSession(); return; }
         
         const validTenses = (window.TENSE_META || []).filter(meta => Array.isArray(verbData[meta.key]));
@@ -892,11 +1162,26 @@
   window.checkTyping = function() {
     const item = ST.session.queue[ST.session.idx];
     const input = document.getElementById('typInput').value.trim().toLowerCase();
-    const target = item.de.toLowerCase().replace(/^(der |die |das )/, '');
-    const fullTarget = item.de.toLowerCase();
-    const isCorrect = (input === target || input === fullTarget);
+    
+    let isCorrect = false;
+    let revealText = '';
+
+    if (ST.reverseMode) {
+        // We showed German (item.de), we expect English (item.en)
+        // en field can contain multiple translations like "also;too"
+        const targets = item.en.toLowerCase().split(/[;]/).map(s => s.trim());
+        isCorrect = targets.some(t => input === t);
+        revealText = item.en;
+    } else {
+        // We showed English (item.en), we expect German (item.de)
+        const target = item.de.toLowerCase().replace(/^(der |die |das )/, '');
+        const fullTarget = item.de.toLowerCase();
+        isCorrect = (input === target || input === fullTarget);
+        revealText = item.de;
+    }
+
     processAnswer(isCorrect ? 'c' : 'w');
-    showFeedback(isCorrect, item.de, 'typFeedback', 'typCheck', 'typNext');
+    showFeedback(isCorrect, revealText, 'typFeedback', 'typCheck', 'typNext');
   };
   window.nextTyping = function() { ST.session.idx++; renderCard(); };
 
@@ -910,13 +1195,21 @@
   window.nextListening = function() { ST.session.idx++; renderCard(); };
 
   window.ansArticle = function(art) {
+    if (ST.session.currentAnswered) return;
     const item = ST.session.queue[ST.session.idx];
+    if (!item) return;
+    ST.session.currentAnswered = true;
     const isCorrect = (art === item.article);
     processAnswer(isCorrect ? 'c' : 'w');
     showFeedback(isCorrect, `${item.article} ${item.de}`, 'artFb', '', 'artNext');
-    document.querySelectorAll('.art-btn').forEach(b => b.disabled = true);
+    document.querySelectorAll('#articleWrap .art-btn').forEach(b => b.disabled = true);
   };
-  window.nextArticle = function() { document.querySelectorAll('.art-btn').forEach(b => b.disabled = false); ST.session.idx++; renderCard(); };
+  window.nextArticle = function() {
+    ST.session.currentAnswered = false;
+    document.querySelectorAll('#articleWrap .art-btn').forEach(b => b.disabled = false);
+    ST.session.idx++;
+    renderCard();
+  };
 
   window.checkConj = function() {
       const input = document.getElementById('conjInput').value.trim().toLowerCase();
@@ -943,6 +1236,9 @@
     clearTimeout(browseDebounce);
     browseDebounce = setTimeout(() => window.renderBrowse(), 120);
   }
+  window.handleBrowseInput = function() {
+    scheduleBrowseRender();
+  };
 
   window.browsePage = function (delta) {
     ST.browseState.page = Math.max(1, (ST.browseState.page || 1) + delta);
@@ -961,13 +1257,7 @@
     
     const lvl = lvlEl.value;
     const cat = catEl.value;
-    const query = queryEl.value.toLowerCase();
-
-    // Ensure search input doesn't re-filter huge DB on every keystroke
-    if (!queryEl._ddBound) {
-      queryEl.addEventListener('input', scheduleBrowseRender);
-      queryEl._ddBound = true;
-    }
+    const query = queryEl.value.trim().toLowerCase();
 
     const key = `${lvl}::${cat}::${query}`;
     if (key !== ST.browseState.lastKey) {
@@ -975,14 +1265,13 @@
       ST.browseState.page = 1;
     }
     
-    let filtered = ST.vocab.filter(v => {
+    const source = ST.vocabSorted || ST.vocab;
+    let filtered = source.filter(v => {
       if (lvl !== 'all' && v.level !== lvl) return false;
       if (cat !== 'all' && v.type !== cat) return false;
-      if (query && !v.de.toLowerCase().includes(query) && !v.en.toLowerCase().includes(query)) return false;
+      if (query && !v.deLower.includes(query) && !v.enLower.includes(query)) return false;
       return true;
     });
-
-    filtered.sort((a,b) => (a.de || "").localeCompare(b.de || ""));
 
     // Pagination for scalability
     const pageSize = 200;
@@ -994,7 +1283,7 @@
     const slice = filtered.slice(start, start + pageSize);
 
     container.innerHTML = slice.map(v => `
-        <div class="word-row" onclick="toggleBrowseDetails(${v.id}, this)">
+        <div class="word-row" onclick='toggleBrowseDetails(${JSON.stringify(String(v.id))}, this)'>
           <div class="w-info">
             <div class="de">${v.article ? `<span class="art-b" style="color:${getArtColor(v.article)}">${v.article}</span> ` : ''}${v.de}</div>
             <div class="en">${v.en}</div>
@@ -1025,17 +1314,17 @@
   window.renderTenses = function() {
     const grid = document.getElementById('vgrid');
     if(!grid) return;
-    ST.tenses.sort((a,b) => (a.de || a.id || "").localeCompare(b.de || b.id || ""));
-    grid.innerHTML = ST.tenses.map(v => `<div class="v-chip" onclick="showVerb('${v.id}')">${v.de || v.id}</div>`).join('');
-    if(ST.tenses.length) showVerb(ST.tenses[0].id);
+    const sortedTenses = [...ST.tenses].sort((a,b) => (a.de || a.id || "").localeCompare(b.de || b.id || ""));
+    grid.innerHTML = sortedTenses.map(v => `<div class="v-chip" data-verb-id="${String(v.id)}" onclick='showVerb(${JSON.stringify(String(v.id))})'>${v.de || v.id}</div>`).join('');
+    if(sortedTenses.length) showVerb(sortedTenses[0].id);
   };
 
   window.showVerb = function(id) {
-    const v = ST.tenses.find(x => x.id === id);
+    const targetId = String(id);
+    const v = ST.tensesById.get(targetId);
     if (!v) return;
     document.querySelectorAll('.v-chip').forEach(c => {
-      c.classList.remove('active');
-      if (c.innerText === v.de) c.classList.add('active');
+      c.classList.toggle('active', c.dataset.verbId === targetId);
     });
     const container = document.getElementById('tdisp');
     if (!container) return;
@@ -1087,7 +1376,7 @@
     // Word List in progress
     const sorted = Object.entries(ST.progress).sort((a,b) => b[1].last - a[1].last).slice(0, 50);
     document.getElementById('wlistb').innerHTML = sorted.map(([id, p]) => {
-        const v = ST.vocab.find(x => x.id.toString() === id);
+        const v = ST.vocabById.get(String(id));
         if(!v) return '';
         return `<div class="word-row">
             <span style="flex:1;font-weight:600">${v.de}</span>
@@ -1193,6 +1482,9 @@
   function playBlob(blob) {
       const url = URL.createObjectURL(blob);
       const au = new Audio(url);
+      const cleanup = () => URL.revokeObjectURL(url);
+      au.addEventListener('ended', cleanup, { once: true });
+      au.addEventListener('error', cleanup, { once: true });
       au.play();
   }
   
@@ -1251,7 +1543,7 @@
       item.examples.forEach(e => {
         // Make German words interactive
         const interactiveDe = e.de.replace(/[A-Za-zÄäÖöÜüß]+/g, (match) => {
-            return `<span class="inter-word" onclick="handleWordClick(event, '${match}')">${match}</span>`;
+            return `<span class="inter-word" onclick='handleWordClick(event, ${JSON.stringify(match)})'>${match}</span>`;
         });
 
         html += `<div style="margin-bottom:12px; border-left: 3px solid var(--accent); padding-left:12px;">
@@ -1266,7 +1558,7 @@
   }
 
   window.toggleBrowseDetails = function(id, el) {
-    const v = ST.vocab.find(x => x.id === id);
+    const v = ST.vocabById.get(String(id));
     if(v && v.de) speak(v.de);
 
     let nextEl = el.nextElementSibling;
@@ -1467,9 +1759,9 @@
       const results = document.getElementById('qsResults');
       if (!q) { results.innerHTML = ''; return; }
 
-      const matches = ST.vocab.filter(v => 
-          (v.de && v.de.toLowerCase().includes(q)) || 
-          (v.en && v.en.toLowerCase().includes(q))
+      const matches = (ST.vocabSorted || ST.vocab).filter(v =>
+          v.deLower.includes(q) ||
+          v.enLower.includes(q)
       ).slice(0, 10);
 
       if (matches.length === 0) {
@@ -1478,7 +1770,7 @@
       }
 
       results.innerHTML = matches.map(v => `
-          <div class="qs-item" onclick="jumpToWord('${v.id}')">
+          <div class="qs-item" onclick='jumpToWord(${JSON.stringify(String(v.id))})'>
               <div>
                   <div class="qs-de">${v.de}</div>
                   <div class="qs-en">${v.en}</div>
@@ -1490,11 +1782,11 @@
 
   window.jumpToWord = function(id) {
       closeQuickSearch();
-      const v = ST.vocab.find(x => x.id.toString() === id.toString());
+      const v = ST.vocabById.get(String(id));
       if(!v) return;
       
       nav('browse');
-      const bSearch = document.getElementById('bsearch');
+      const bSearch = document.getElementById('sq');
       if (bSearch) {
           bSearch.value = v.de;
           renderBrowse();
@@ -1518,7 +1810,7 @@
       speak(word);
       
       // Try to find exact or close match in vocab
-      const match = ST.vocab.find(v => v.de.toLowerCase() === word.toLowerCase());
+      const match = ST.vocabByDeLower.get(word.toLowerCase());
       if(match) {
           toast(`Jump to: ${match.de} (${match.en})`, 2500, () => jumpToWord(match.id));
       } else {
@@ -1526,28 +1818,6 @@
       }
   };
 
-  // Improved toast to support callbacks (for action buttons)
-  window.toast = function (msg, duration = 2000, actionCb = null) {
-    const t = document.getElementById('toast');
-    if (!t) return;
-    t.innerHTML = msg + (actionCb ? ' <span style="text-decoration:underline; cursor:pointer; margin-left:8px; font-weight:700">VIEW</span>' : '');
-    t.classList.add('active');
-    
-    // Clear previous timeouts
-    if(window._toastTimer) clearTimeout(window._toastTimer);
-    
-    if(actionCb) {
-        t.onclick = () => {
-            actionCb();
-            t.classList.remove('active');
-        };
-    } else {
-        t.onclick = null;
-    }
-
-    window._toastTimer = setTimeout(() => {
-        t.classList.remove('active');
-    }, duration);
-  };
+  window.toast = toast;
 
 })();
