@@ -10,66 +10,198 @@
     content="DeutscheDeck — Interactive German vocabulary and grammar learning app for Netzwerk A1/A2 with flashcards, typing quizzes, spaced repetition and verb conjugation tables.">
 
 
-  <script src="vocab.js?v=1.0.3"></script>
-  <script src="vocab_extra.js?v=1.0.3"></script>
-  <script src="tenses.js?v=1.0.3"></script>
+  <!-- Tier 1 Core Data Layer: Loaded with defer for instant initial boot.
+       Tier 2 Extended Vocabulary (~8.3 MB) hydrates asynchronously in the background. -->
+  <script src="data/vocab.js?v=1.0.4" defer></script>
+  <script src="data/tenses.js?v=1.0.4" defer></script>
   <style>
     :root {
-      --bau-red: #b71a49;
-      --bau-black: #000000;
+      --bau-red: #ff5f3c;
+      --bau-black: #211d1a;
       --bau-white: #ffffff;
-      --bau-blue: #1a3a6b;
-      --bau-yellow: #d4960a;
+      --bau-blue: #2c5288;
+      --bau-yellow: #ffb703;
 
-      --bg: #ffffff;
+      --bg: #fff9f2;
       --surf: #ffffff;
-      --surf2: #f4f4f4;
-      --border: #e0e0e0;
-      --tx: #000000;
-      --tx2: #444444;
-      --tx3: #777777;
-      --accent: #b71a49;
-      --accent2: #8a1336;
-      --al: #fdf1f4;
+      --surf2: #fbf4eb;
+      --border: #ece3d8;
+      --tx: #242019;
+      --tx2: #5c5345;
+      --tx3: #8c8273;
+      --accent: #ff5f3c;
+      --accent2: #f04e26;
+      --al: #ffede3;
 
-      --green: #008b45;
-      --gl: #e6f4ea;
-      --red: #b71a49;
-      --rl: #fdf1f4;
-      --amber: #d4960a;
-      --aml: #fcf5e6;
-      --purple: #000000;
-      --pl: #f2f2f2;
+      --green: #1aa556;
+      --gl: #e8f6ec;
+      --red: #e5484d;
+      --rl: #fdecec;
+      --amber: #f0a323;
+      --aml: #fdf1dc;
+      --purple: #242019;
+      --pl: #f7f0e7;
 
-      --r: 0px;
-      --rs: 0px;
-      --sh: none;
-      --shl: none;
-      --transition: .1s ease
+      --r: 16px;
+      --rs: 10px;
+      --sh: 0 1px 3px rgba(36,32,25,0.08), 0 8px 22px rgba(36,32,25,0.05);
+      --shl: 0 12px 34px rgba(36,32,25,0.09);
+      --transition: .15s ease;
+      --font: 'Plus Jakarta Sans', 'Fira Sans', sans-serif;
+      --hl: #ffe082;
+      --nav-active: var(--accent)
     }
 
     body.dark {
-      --bg: #000000;
-      --surf: #000000;
-      --surf2: #111111;
-      --border: #333333;
-      --tx: #ffffff;
-      --tx2: #cccccc;
-      --tx3: #999999;
-      --accent: #b71a49;
-      --accent2: #ff4d85;
-      --al: #330814;
-      --green: #008b45;
-      --gl: #002411;
-      --red: #b71a49;
-      --rl: #330814;
-      --amber: #d4960a;
-      --aml: #2a2000;
-      --purple: #ffffff;
-      --pl: #222222;
+      --bg: #1d1815;
+      --surf: #231d19;
+      --surf2: #2b241f;
+      --border: #3b332c;
+      --tx: #f7f3ee;
+      --tx2: #cdc4b6;
+      --tx3: #9a907f;
+      --accent: #ff7a52;
+      --accent2: #ff9a73;
+      --al: #3a2015;
+
+      --green: #48d47e;
+      --gl: #153327;
+      --red: #ff5c5c;
+      --rl: #3b1d1d;
+      --amber: #ffb14a;
+      --aml: #3a2a12;
+      --purple: #f7f3ee;
+      --pl: #2b241f;
+      --hl: #3a2f1c;
+
+      --r: 16px;
+      --rs: 10px;
       --sh: none;
       --shl: none;
+      --transition: .15s ease
     }
+
+    /* ── Town-style UI overrides ─────────────────────────────── */
+    h1, h2, h3, h4 { font-family: var(--font); }
+
+    /* warm selection */
+    ::selection { background: var(--hl); color: var(--tx); }
+    .hl {
+      background: linear-gradient(180deg, transparent 55%, var(--hl) 55%);
+      padding: 0 2px;
+      border-radius: 3px;
+    }
+
+    /* sidebar -> friendly pill nav */
+    .sidebar {
+      background: linear-gradient(180deg, var(--bg) 0%, var(--surf) 100%);
+      padding: 22px 14px;
+    }
+    .sl {
+      text-transform: none;
+      letter-spacing: .2px;
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--tx3);
+      padding: 18px 14px 8px;
+    }
+    .nb {
+      border: none;
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--tx2);
+      gap: 12px;
+      margin-bottom: 2px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .nb:hover { background: var(--surf2); color: var(--tx); }
+    .nb.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(255, 95, 60, .25);
+    }
+    .nb.active:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+    .nb .ic {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surf2);
+      font-size: 17px;
+      flex: none;
+    }
+    .nb.active .ic { background: rgba(255,255,255,.2); color: #fff; }
+    .nb .bdg { background: var(--surf2); color: var(--tx3); border-radius: 8px; padding: 2px 8px; font-weight: 700; }
+    .nb.active .bdg { background: rgba(255,255,255,.22); color: #fff; }
+
+    /* topbar polish */
+    .icon-btn { border-radius: 12px; }
+    .icon-btn:hover { background: var(--surf2); border-color: var(--border); color: var(--accent); }
+    .spill { border-radius: 999px; text-transform: none; letter-spacing: .2px; font-weight: 600; }
+    .logo-title { letter-spacing: .5px; }
+
+    /* rounded, friendly cards */
+    .sc { border-radius: 18px; box-shadow: var(--sh); transition: transform .15s ease, box-shadow .15s ease; }
+    .sc:hover { transform: translateY(-3px); box-shadow: var(--shl); }
+    .sc::before { border-radius: 18px; }
+    .scene, .face { border-radius: 22px; }
+    .ctag, .clvl { border-radius: 10px; text-transform: none; letter-spacing: .3px; }
+
+    /* brand button gradient */
+    .bp {
+      background: linear-gradient(135deg, #ff7a52, var(--accent));
+      box-shadow: 0 8px 22px rgba(255, 95, 60, .28);
+    }
+    .bp:hover { background: var(--accent); color: #fff; border-color: transparent; }
+
+    /* highlight marks */
+    .hl2 { color: var(--accent); font-weight: 800; }
+
+    /* cartoon mascot */
+    .mascot-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 6px 0 18px;
+    }
+    .mascot {
+      flex: none;
+      filter: drop-shadow(0 10px 18px rgba(255, 95, 60, .3));
+      animation: mascot-bob 4s ease-in-out infinite;
+    }
+    @keyframes mascot-bob {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50%      { transform: translateY(-7px) rotate(2deg); }
+    }
+    .mascot-bubble {
+      position: relative;
+      background: var(--surf);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--tx);
+      box-shadow: var(--sh);
+      max-width: 220px;
+    }
+    .mascot-bubble::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+      border-right-color: var(--border);
+    }
+    .mascot-bubble b { color: var(--accent); }
 
     * {
       box-sizing: border-box;
@@ -78,7 +210,7 @@
     }
 
     body {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Fira Sans', sans-serif;
       background: var(--bg);
       color: var(--tx);
       min-height: 100vh;
@@ -96,7 +228,8 @@
 
     .topbar {
       background: var(--surf);
-      border-bottom: 2px solid var(--bau-red);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 14px rgba(36,32,25,0.06);
       padding: 0 20px;
       height: 60px;
       display: flex;
@@ -112,7 +245,7 @@
     .logo {
       text-align: center;
       padding: 40px 20px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       background: none;
       border: none;
       margin: 0;
@@ -206,7 +339,7 @@
     .spill {
       font-size: 11px;
       font-weight: 600;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: .8px;
       text-transform: uppercase;
       background: var(--surf2);
@@ -291,7 +424,7 @@
     }
 
     .sl {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 13px;
       text-transform: uppercase;
       letter-spacing: 2.5px;
@@ -310,7 +443,7 @@
       cursor: pointer;
       font-size: 13px;
       font-weight: 600;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: .8px;
       text-transform: uppercase;
       color: var(--tx2);
@@ -438,7 +571,7 @@
       padding: 5px 14px;
       font-size: 11px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
@@ -578,7 +711,7 @@
       text-transform: uppercase;
       letter-spacing: 1.5px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       padding: 4px 10px;
       border: 1px solid currentColor
     }
@@ -618,7 +751,7 @@
     .art {
       font-size: 26px;
       color: var(--bau-red);
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 2px;
@@ -626,7 +759,7 @@
     }
 
     .cword {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 64px;
       line-height: 1.1;
       margin-bottom: 6px;
@@ -664,7 +797,7 @@
     }
 
     .ctrans {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 44px;
       letter-spacing: 1px;
       color: var(--bau-blue);
@@ -708,7 +841,7 @@
       border: 1px solid var(--border);
       font-size: 12px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
@@ -791,7 +924,7 @@
     }
 
     .typ-q {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 36px;
       text-align: center;
       margin-bottom: 4px;
@@ -897,7 +1030,7 @@
       border-bottom: 1px dotted var(--bau-red);
       font-weight: 700;
       font-size: 11px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       display: flex;
@@ -971,7 +1104,7 @@
     }
 
     .gram-title {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 16px;
       font-weight: 700;
       letter-spacing: .8px;
@@ -1047,7 +1180,7 @@
     }
 
     .conj-prompt {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 28px;
       text-align: center;
       margin-bottom: 4px
@@ -1055,7 +1188,7 @@
 
     .conj-pronoun {
       font-size: 42px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       color: var(--accent);
       text-align: center;
       margin-bottom: 12px
@@ -1100,7 +1233,7 @@
     .pnum {
       font-size: 36px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 2px
     }
 
@@ -1353,7 +1486,7 @@
     }
 
     .v-title {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 20px;
       font-weight: 700;
       letter-spacing: .8px;
@@ -1386,7 +1519,7 @@
     }
 
     .t-name {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 1.5px;
@@ -1425,7 +1558,7 @@
       border-bottom: 1px dotted var(--bau-red);
       font-size: 10px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: #fff
@@ -1529,7 +1662,7 @@
     /* Bauhaus Color Accents with Glows */
     .bau-red-sh { 
       background-color: var(--bau-red); 
-      --glow-color: rgba(183, 26, 73, 0.15);
+      --glow-color: rgba(255, 95, 60, 0.18);
     }
     .bau-blue-sh { 
       background-color: var(--bau-blue); 
@@ -1661,7 +1794,7 @@
     }
 
     .sc-ti {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 16px;
       font-weight: 700;
       letter-spacing: .5px;
@@ -1767,7 +1900,7 @@
     }
 
     .done-ti {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 52px;
       letter-spacing: 3px;
       margin-bottom: 8px
@@ -1776,7 +1909,7 @@
     .done-su {
       color: var(--tx2);
       margin-bottom: 28px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: .5px;
       text-transform: uppercase;
       font-size: 13px
@@ -1801,13 +1934,13 @@
     .done-n {
       font-size: 48px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 2px
     }
 
     .done-l {
       font-size: 11px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--tx3)
@@ -1818,12 +1951,13 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 11px 22px;
-      font-size: 12px;
-      font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 650;
+      font-family: var(--font);
+      letter-spacing: 0.2px;
+      text-transform: none;
+      border-radius: 999px;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all .15s
@@ -1833,7 +1967,7 @@
       background: var(--bau-red);
       color: var(--bau-white);
       border: 1px solid var(--bau-red);
-      letter-spacing: 1px;
+      letter-spacing: 0.3px;
       font-weight: 600;
     }
 
@@ -1865,9 +1999,9 @@
     }
 
     .stitle {
-      font-family: 'Fira Sans', sans-serif;
-      font-size: 44px;
-      letter-spacing: 3px;
+      font-family: var(--font);
+      font-size: 40px;
+      letter-spacing: 0.5px;
       margin-bottom: 22px;
       position: relative;
       display: inline-block
@@ -1945,7 +2079,7 @@
       padding: 12px 20px;
       font-size: 11px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       opacity: 0;
@@ -1985,7 +2119,7 @@
     }
 
     .modal-title {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 28px;
       letter-spacing: 2px;
       font-weight: 400;
@@ -2020,7 +2154,7 @@
     }
 
     .qz-filter-label {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 14px;
       letter-spacing: 2px;
       color: var(--bau-red);
@@ -2071,7 +2205,7 @@
 
     .qz-filter-meta {
       font-size: 11px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--tx3);
@@ -2094,7 +2228,7 @@
       color: var(--tx2);
       padding: 8px 12px;
       font-size: 12px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: .6px;
       white-space: nowrap;
       cursor: pointer;
@@ -2123,7 +2257,7 @@
       padding: 5px 14px;
       font-size: 11px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
@@ -2163,7 +2297,7 @@
     }
 
     .qz-sec-title {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 20px;
       font-weight: 700;
       letter-spacing: .8px;
@@ -2172,7 +2306,7 @@
 
     .qz-sec-count {
       font-size: 11px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--tx3);
@@ -2227,7 +2361,7 @@
     .qz-lvl-tag {
       font-size: 10px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       padding: 3px 10px;
@@ -2237,7 +2371,7 @@
     .qz-done-badge {
       font-size: 10px;
       font-weight: 700;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       background: var(--bau-yellow);
@@ -2246,7 +2380,7 @@
     }
 
     .qz-card-title {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 17px;
       font-weight: 700;
       letter-spacing: .2px;
@@ -2273,7 +2407,7 @@
       border: 1px solid var(--border);
       padding: 3px 8px;
       font-size: 10px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: .8px;
       text-transform: uppercase;
       color: var(--tx2)
@@ -2281,7 +2415,7 @@
 
     .qz-card-meta {
       font-size: 11px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: .8px;
       text-transform: uppercase;
       color: var(--tx3)
@@ -2295,7 +2429,7 @@
     }
 
     .qz-empty-title {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 22px;
       letter-spacing: 1px;
       margin-bottom: 8px
@@ -2350,7 +2484,7 @@
     }
 
     .qz-question {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 30px;
       letter-spacing: 1.5px;
       margin-bottom: 16px;
@@ -2440,7 +2574,7 @@
       border: 1px solid var(--border);
       background: var(--surf2);
       font-size: 12px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-weight: 700;
       letter-spacing: .8px;
       text-transform: uppercase;
@@ -2466,7 +2600,7 @@
 
     /* Cloze */
     .qz-cloze-sentence {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 32px;
       letter-spacing: 2px;
       text-align: center;
@@ -2483,7 +2617,7 @@
 
     .qz-cloze-hint {
       font-size: 12px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: .8px;
       text-transform: uppercase;
       color: var(--tx3);
@@ -2559,7 +2693,7 @@
     }
 
     .qz-match-num {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 18px;
       letter-spacing: 1px;
       color: var(--bau-blue);
@@ -2595,7 +2729,7 @@
       border: 1px solid var(--border);
       background: var(--surf);
       font-size: 14px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-weight: 700;
       letter-spacing: .8px;
       text-transform: uppercase;
@@ -2632,7 +2766,7 @@
       color: #fff;
       padding: 6px 14px;
       font-size: 14px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-weight: 700;
       letter-spacing: .8px;
       text-transform: uppercase
@@ -2663,14 +2797,14 @@
     }
 
     .qz-result-title {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 44px;
       letter-spacing: 3px;
       margin-bottom: 6px
     }
 
     .qz-result-subtitle {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 15px;
       letter-spacing: .8px;
       text-transform: uppercase;
@@ -2699,7 +2833,7 @@
     }
 
     .qz-result-pct {
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       font-size: 36px;
       letter-spacing: 2px;
       color: var(--bau-blue)
@@ -2707,7 +2841,7 @@
 
     .qz-result-label {
       font-size: 11px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--tx3)
@@ -2715,7 +2849,7 @@
 
     .qz-result-info {
       font-size: 11px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: .8px;
       color: var(--tx3);
       background: var(--surf2);
@@ -2743,7 +2877,7 @@
     .qz-result-stat span {
       display: block;
       font-size: 10px;
-      font-family: 'Fira Sans', sans-serif;
+      font-family: var(--font);
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--tx3);
@@ -3055,30 +3189,51 @@
       border-bottom-style: solid;
     }
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;700&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,1,0&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,1,0&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="css/town-theme.css">
+  <link rel="stylesheet" href="css/grammar.css">
+  <link rel="stylesheet" href="css/glass-theme.css?v=8">
+  <link rel="stylesheet" href="css/sentence-board.css">
+  <link rel="stylesheet" href="css/germany-photos.css?v=6">
+  <link rel="stylesheet" href="css/wide-photos.css?v=6">
+  <link rel="stylesheet" href="css/sidebar-glass.css?v=6">
 </head>
 
 <body>
+  <!-- SVG Refraction Filter for Liquid Glass -->
+  <svg class="switcher__filter" width="0" height="0" aria-hidden="true" style="position:absolute;width:0;height:0;pointer-events:none">
+    <defs>
+      <filter id="switcher" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.015 0.03" numOctaves="2" seed="3" result="noise" />
+        <feGaussianBlur in="noise" stdDeviation="1.5" result="smooth" />
+        <feDisplacementMap in="SourceGraphic" in2="smooth" scale="12" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
   <div class="app">
 
     <!-- TOPBAR -->
     <div class="topbar">
       <div style="display:flex;align-items:center;gap:12px">
-        <button class="icon-btn hamburger" onclick="toggleMobile()"><span class="material-symbols-sharp"
+        <button class="icon-btn hamburger" aria-label="Toggle navigation" aria-expanded="false" onclick="toggleMobile()"><span class="material-symbols-sharp"
             style="font-size:inherit;vertical-align:middle;">menu</span></button>
         <button id="backBtn" class="icon-btn" style="display:none" onclick="goBack()" title="Back">
           <span class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">arrow_back</span>
         </button>
         <div class="logo logo-sm" onclick="nav('home')" style="cursor:pointer" role="button" tabindex="0" title="Go to home">
-          <h1 class="logo-title">DEUTSCHEDECK</h1>
+          <div class="logo-title">DeutscheDeck</div>
           <div class="logo-line">
             <span class="line-red"></span>
             <span class="line-yellow"></span>
           </div>
         </div>
       </div>
+
       <div class="top-right">
         <div class="stats-bar">
           <div class="spill"><span class="dot dg"></span><span id="sC">0</span> correct</div>
@@ -3093,17 +3248,19 @@
       </div>
     </div>
 
+
     <div class="overlay" onclick="closeMobile()"></div>
 
     <div class="main">
       <!-- SIDEBAR -->
-      <div class="sidebar">
+      <div class="sidebar" aria-label="Main navigation">
         <div class="sl">Study</div>
         <button class="nb active" onclick="nav('home')" id="n-home"><span class="ic"><span
               class="material-symbols-sharp"
               style="font-size:inherit;vertical-align:middle;">home</span></span>Home</button>
         <button class="nb" onclick="nav('cards')" id="n-cards"><span class="ic"><span class="material-symbols-sharp"
               style="font-size:inherit;vertical-align:middle;">style</span></span>Flashcards</button>
+        <button class="nb" onclick="nav('board')" id="n-board"><span class="ic"><span class="material-symbols-sharp">dashboard</span></span>Sentence Board</button>
         <button class="nb" onclick="nav('tenses')" id="n-tenses"><span class="ic"><span class="material-symbols-sharp"
               style="font-size:inherit;vertical-align:middle;">architecture</span></span>Tenses &amp; Grammar</button>
         <button class="nb" onclick="nav('browse')" id="n-browse"><span class="ic"><span class="material-symbols-sharp"
@@ -3118,7 +3275,7 @@
           Progress</button>
 
         <div class="div"></div>
-        <div class="sl">Settings</div>
+        <details class="study-settings"><summary>Study settings</summary>
         <div class="slider-row" style="padding-top:8px; margin-bottom:4px">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
             Voice: <span title="Local voices work offline. Online voices require internet."
@@ -3150,6 +3307,7 @@
         <div class="slider-row">Daily goal: <strong id="goalVal">10</strong><input type="range" id="goalSlider" min="5"
             max="50" step="5" oninput="setGoal()"></div>
         <div class="div"></div>
+        </details>
         <div class="sl" style="margin-top:auto">Analytics</div>
         <div class="nb"
           style="cursor:default; border-left: 2px solid var(--bau-yellow); background: var(--aml); text-transform:none; letter-spacing:0.5px;">
@@ -3184,7 +3342,7 @@
         </a>
 
         <div class="div"></div>
-        <div class="sl">Data</div>
+        <details><summary>Your data</summary>
         <button class="nb" onclick="exportProgress()"><span class="ic"><span class="material-symbols-sharp"
               style="font-size:inherit;vertical-align:middle;">download</span></span>Export Progress</button>
         <button class="nb" onclick="showImportModal()"><span class="ic"><span class="material-symbols-sharp"
@@ -3192,6 +3350,7 @@
         <button class="nb" onclick="resetProgress()" style="color:var(--red)"><span class="ic"><span
               class="material-symbols-sharp" style="font-size:inherit;vertical-align:middle;">delete</span></span>Reset
           Progress</button>
+        </details>
       </div>
 
       <!-- CONTENT -->
@@ -3223,29 +3382,30 @@
 
           <div style="max-width:680px; margin: 0 auto; position: relative; z-index: 2;">
             
-            <div class="logo" onclick="nav('home')" style="margin-bottom: 24px; text-align: left; padding: 0;">
-              <h1 class="logo-title" style="font-size: 32px; letter-spacing: 1px;">DEUTSCHEDECK</h1>
-              <div class="logo-line" style="height: 4px; margin: 4px 0 8px 0;">
-                <span class="line-red"></span>
-                <span class="line-yellow"></span>
+            <section class="welcome-hero" aria-labelledby="welcome-title">
+              <div class="eyebrow">A little German. Every day.</div>
+              <h1 id="welcome-title">Learn the words.<br>Find your <em>voice.</em></h1>
+              <p class="hero-copy">Your everyday companion for learning German.<br>Build your vocabulary, make grammar click, and turn a little practice into real progress.</p>
+              <div class="hero-actions">
+                <button class="btn bp" onclick="openSetup('flash', 'all')">Let's practice <span aria-hidden="true">→</span></button>
+                <button class="btn bo" onclick="nav('browse')">Explore the words</button>
               </div>
-              <div class="logo-tagline" style="font-size: 16px;">A1/A2 Mastery & Beyond</div>
+              <div class="hero-note"><span id="homeCount">0</span> words · Flashcards, grammar &amp; exam practice</div>
+              <div class="deck-art" aria-hidden="true"><div class="paper"><small>YOUR DAILY DEUTSCH</small><strong>Hallo!</strong><p>A small word. A new beginning.</p><svg width="94" height="72" viewBox="0 0 94 72" fill="none"><path d="M22 49C7 22 24 5 46 8c29-5 44 21 27 44l-5 12-14-4-17 5-6-11Z" fill="#d2dcbf" stroke="#34382d" stroke-width="2"/><path d="M34 30v5m22-5v5M35 44q10 10 21-1M22 43 11 38M72 39l11-7" stroke="#34382d" stroke-width="2.5" stroke-linecap="round"/></svg></div></div>
+            </section>
+            <div class="tracker-glass-card">
+              <div class="eyebrow" style="margin-bottom:12px">Your daily rhythm</div>
+              <div class="goal-bar">
+                <div class="goal-fill" id="goalFill" style="width:0%"></div>
+              </div>
+              <div class="goal-text"><span id="goalText">0 / 10 words today</span> · <span class="due-badge"
+                  id="dueBadge"></span></div>
+              <div class="streak-row" id="streakBar"></div>
+              <div class="streak-num"><span class="material-symbols-sharp"
+                  style="font-size:inherit;vertical-align:middle;">local_fire_department</span> <strong
+                  id="streakNum">0</strong> day streak</div>
             </div>
-
-            <div style="font-family: 'Fira Sans', sans-serif;font-size:38px;line-height:1.2;margin-bottom:8px">Guten
-              Tag! <span class="material-symbols-sharp"
-                style="font-size:inherit;vertical-align:middle;">waving_hand</span><br>Ready to learn?</div>
-            <div style="color:var(--tx2);margin-bottom:16px">Netzwerk A1 to C2 — <span id="homeCount">0</span> words
-              · verb tables · grammar notes</div>
-            <div class="goal-bar">
-              <div class="goal-fill" id="goalFill" style="width:0%"></div>
-            </div>
-            <div class="goal-text"><span id="goalText">0 / 10 words today</span> · <span class="due-badge"
-                id="dueBadge"></span></div>
-            <div class="streak-row" id="streakBar"></div>
-            <div class="streak-num" style="margin-bottom:20px"><span class="material-symbols-sharp"
-                style="font-size:inherit;vertical-align:middle;">local_fire_department</span> <strong
-                id="streakNum">0</strong> day streak</div>
+            <div class="section-heading"><h2>Make it your own.</h2><span>Ten ways to find your flow</span></div>
             <div class="sgrid">
               <div class="sc" onclick="openSetup('flash', 'vocab')">
                 <div class="sc-ic"><span class="material-symbols-sharp"
@@ -3264,6 +3424,12 @@
                     style="font-size:inherit;vertical-align:middle;">chat</span></div>
                 <div class="sc-ti">Phrases</div>
                 <div class="sc-de">Everyday expressions</div>
+              </div>
+              <div class="sc" onclick="nav('tenses'); window.GrammarUI?.showTab?.('speak');">
+                <div class="sc-ic"><span class="material-symbols-sharp"
+                    style="font-size:inherit;vertical-align:middle;">record_voice_over</span></div>
+                <div class="sc-ti">Mini-Dialoge</div>
+                <div class="sc-de">Prüfung Sprechen &amp; Hören</div>
               </div>
               <div class="sc" onclick="openSetup('flash', 'weak')">
                 <div class="sc-ic"><span class="material-symbols-sharp"
@@ -3317,28 +3483,32 @@
 
             <div style="margin-top: 32px; padding-top: 24px; border-top: 1px dotted var(--border);">
               <div
-                style="font-family: 'Fira Sans', sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;color:var(--tx2);">
-                Practice Specific Topics & Levels</div>
-              <div class="row" style="gap:8px;">
+                style="font-family: var(--font);font-size:16px;font-weight:800;letter-spacing:.2px;text-transform:none;margin-bottom:18px;color:var(--tx2);">
+                Official Exam Sprints &amp; Topics</div>
+              <div class="row" style="gap:8px; flex-wrap:wrap;">
                 <select class="sty" id="homeLevelSelect"
                   onchange="if(this.value) { openSetup('flash', this.value); this.value=''; }">
-                  <option value="">-- Level --</option>
-                  <option value="A1">A1</option>
-                  <option value="A2">A2</option>
-                  <option value="B1">B1</option>
-                  <option value="B2">B2</option>
-                  <option value="C1">C1</option>
-                  <option value="C2">C2</option>
+                  <option value="">-- Exam &amp; Level Sprint --</option>
+                  <option value="goethe-a1">🎯 Goethe A1 (14-Day Sprint)</option>
+                  <option value="telc-a2">🏛️ Telc A2 (14-Day Sprint)</option>
+                  <option value="A1">A1 Level</option>
+                  <option value="A2">A2 Level</option>
+                  <option value="B1">B1 Level</option>
+                  <option value="B2">B2 Level</option>
+                  <option value="C1">C1 Level</option>
+                  <option value="C2">C2 Level</option>
                 </select>
                 <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+                <button class="chip exam-chip" onclick="openSetup('flash', 'goethe-a1')" style="background:var(--al);border-color:var(--bau-red);font-weight:700;">🎯 Goethe A1 Sprint</button>
+                <button class="chip exam-chip" onclick="openSetup('flash', 'telc-a2')" style="background:var(--gl);border-color:var(--green);font-weight:700;">🏛️ Telc A2 Sprint</button>
                 <button class="chip" onclick="session('greeting')">Greetings</button>
                 <button class="chip" onclick="session('numbers')">Numbers</button>
-                <button class="chip" onclick="session('time')">Time & Date</button>
-                <button class="chip" onclick="session('food')">Food & Drink</button>
+                <button class="chip" onclick="session('time')">Time &amp; Date</button>
+                <button class="chip" onclick="session('food')">Food &amp; Drink</button>
                 <button class="chip" onclick="session('travel')">Travel</button>
                 <button class="chip" onclick="session('clothing')">Clothing</button>
                 <button class="chip" onclick="session('family')">Family</button>
-                <button class="chip" onclick="session('body')">Body & Health</button>
+                <button class="chip" onclick="session('body')">Body &amp; Health</button>
                 <button class="chip" onclick="session('home')">Home</button>
                 <button class="chip" onclick="session('profession')">Work</button>
               </div>
@@ -3356,11 +3526,13 @@
 
             <div style="margin-bottom:20px; text-align:left;">
               <label
-                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">1.
+                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: var(--font); letter-spacing: 1px; text-transform: uppercase;">1.
                 Choose Level</label>
               <select class="sty" id="setupLevel" style="width:100%; padding:10px;"
                 onchange="if(typeof updateSetupLimit==='function') updateSetupLimit()">
                 <option value="all">All Levels (Mixed)</option>
+                <option value="goethe-a1">🎯 Goethe-Zertifikat A1 (14-Day Sprint)</option>
+                <option value="telc-a2">🏛️ Telc A2 (14-Day Sprint)</option>
                 <option value="A1">A1 Level</option>
                 <option value="A2">A2 Level</option>
                 <option value="B1">B1 Level</option>
@@ -3374,7 +3546,7 @@
 
             <div style="margin-bottom:20px; text-align:left;">
               <label
-                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">2.
+                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: var(--font); letter-spacing: 1px; text-transform: uppercase;">2.
                 Filter by Type</label>
               <select class="sty" id="setupType" style="width:100%; padding:10px;"
                 onchange="if(typeof updateSetupLimit==='function') updateSetupLimit()">
@@ -3389,7 +3561,7 @@
 
             <div style="margin-bottom:20px; text-align:left;">
               <label
-                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">3.
+                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: var(--font); letter-spacing: 1px; text-transform: uppercase;">3.
                 Session Size: <span id="setupSizeVal">20</span> cards</label>
               <input type="range" id="setupSize" min="5" max="100" value="20" step="5"
                 oninput="document.getElementById('setupSizeVal').innerText = this.value"
@@ -3398,7 +3570,7 @@
 
             <div style="margin-bottom:30px; text-align:left;">
               <label
-                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: 'Fira Sans', sans-serif; letter-spacing: 1px; text-transform: uppercase;">4.
+                style="display:block; margin-bottom:8px; font-weight:bold; font-size:14px; color:var(--tx2); font-family: var(--font); letter-spacing: 1px; text-transform: uppercase;">4.
                 Start From Index: <span id="setupStartVal">0</span></label>
               <input type="range" id="setupStart" min="0" max="20000" value="0" step="10"
                 oninput="document.getElementById('setupStartVal').innerText = this.value"
@@ -3579,6 +3751,7 @@
         </div>
 
         <!-- TENSES -->
+        <div class="screen" id="sc-board"></div>
         <div class="screen" id="sc-tenses">
           <div style="max-width:860px; margin: 0 auto">
             <div class="stitle">Tenses &amp; Grammar</div>
@@ -3614,6 +3787,8 @@
               <div class="row">
                 <select class="sty" id="blvl" onchange="renderBrowse()">
                   <option value="all">All Levels</option>
+                  <option value="goethe-a1">🎯 Goethe-Zertifikat A1 (14-Day Sprint)</option>
+                  <option value="telc-a2">🏛️ Telc A2 (14-Day Sprint)</option>
                   <option value="A1">A1</option>
                   <option value="A2">A2</option>
                   <option value="B1">B1</option>
@@ -3819,7 +3994,7 @@
     let activeGermanInput = null;
 
     document.addEventListener('focusin', (e) => {
-      if (e.target.tagName === 'INPUT' && (e.target.type === 'text' || e.target.type === 'search')) {
+      if (e.target && e.target.nodeName === 'INPUT' && (e.target.type === 'text' || e.target.type === 'search')) {
         activeGermanInput = e.target;
         const kb = document.getElementById('germanKeyboard');
         kb.style.display = 'block';
@@ -3830,7 +4005,7 @@
 
     document.addEventListener('focusout', (e) => {
       setTimeout(() => {
-        if (!document.activeElement || document.activeElement.tagName !== 'INPUT') {
+        if (!document.activeElement || (document.activeElement.nodeName !== 'INPUT' && document.activeElement.nodeName !== 'TEXTAREA')) {
           const kb = document.getElementById('germanKeyboard');
           kb.style.opacity = '0';
           kb.style.transform = 'translateY(10px)';
@@ -3890,12 +4065,21 @@
     </div>
   </div>
 
-  <script src="quiz-data.js?v=1.0.3"></script>
-  <script src="quiz-expansion.js?v=1.0.0"></script>
-  <script src="app.js?v=1.0.3"></script>
-  <script src="quiz-engine.js?v=1.0.3"></script>
+  <script src="data/quiz-data.js?v=1.0.4" defer></script>
+  <script src="data/quiz-expansion.js?v=1.0.4" defer></script>
+  <script src="js/quiz-engine.js?v=1.0.4" defer></script>
+  <script src="js/germany-photos.js?v=5" defer></script>
+  <script src="js/grammar-core.js" defer></script>
+  <script src="js/grammar-content.js" defer></script>
+  <script src="js/grammar-examples.js" defer></script>
+  <script src="js/grammar-ui.js" defer></script>
+  <script src="js/sentence-board.js" defer></script>
+  <script src="js/app.js?v=2.0.4" defer></script>
+  <script src="js/wide-photos.js?v=5" defer></script>
+  <script src="js/sidebar-glass.js?v=2" defer></script>
 </body>
 
 </html>
+
 
 

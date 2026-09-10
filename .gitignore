@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Node / tooling
+node_modules/
+package-lock.json
+
+# Local dev / build output
+imports/
+_site/
+*.log
+
+# Temp scratch files
+_tmp/

@@ -1,0 +1,13 @@
+{
+  "name": "deutschedeck",
+  "version": "2.0.1",
+  "description": "Interactive German vocabulary and grammar learning app (A1/A2) - static, client-side.",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "gen:verbs": "node scripts/generate_verbs.js",
+    "gen:verbs2": "node scripts/generate_verbs_2.js",
+    "serve": "python -m http.server 8000",
+    "test": "node scripts/test-grammar.js"
+  }
+}
