@@ -1,0 +1,873 @@
+/* ==========================================================================
+   True Liquid Glass Design System
+   Replicating the fluid refraction, specular curvature, and caustics
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&display=swap');
+
+:root, body {
+  --c-glass: #bbbbbc;
+  --c-light: #fff;
+  --c-dark: #000;
+  
+  --c-content: #161412;
+  --c-action: #0052f5;
+  
+  --c-bg: #f8f6f0;
+  
+  --tx: #161412;
+  --tx2: #464038;
+  --tx3: #756d62;
+  
+  --glass-reflex-dark: 1;
+  --glass-reflex-light: 1;
+  
+  --saturation: 150%;
+  
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-optical-sizing: auto;
+  
+  /* True Optical Liquid Glass: Crystal transparency + Internal optical brightness + Specular rim */
+  --liquid-glass-fill: rgba(255, 255, 255, 0.38);
+  --liquid-glass-fill-hover: rgba(255, 255, 255, 0.52);
+  --liquid-glass-bubble: rgba(255, 255, 255, 0.78);
+  --liquid-glass-bubble-hover: rgba(255, 255, 255, 0.94);
+  --liquid-glass-rim: color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 35%), transparent);
+  --glass-fill: var(--liquid-glass-fill);
+  --glass-rim: var(--liquid-glass-rim);
+  --glass-light: color-mix(in srgb, var(--c-light) 80%, transparent);
+  --glass-shadow: rgba(15, 23, 42, 0.12);
+
+  --liquid-filter: blur(14px) url(#switcher) saturate(var(--saturation)) brightness(1.14);
+
+  /* Unified Circle & Corner Radius System */
+  --radius-panel: 20px;
+  --radius-card: 18px;
+  --radius-control: 12px;
+  --radius-stamp: 8px;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  transition: background 400ms cubic-bezier(1, 0.0, 0.4, 1), color 400ms cubic-bezier(1, 0.0, 0.4, 1);
+}
+
+body.dark {
+  --c-glass: #bbbbbc;
+  --c-light: #fff;
+  --c-dark: #000;
+  
+  --c-content: #f8fafc;
+  --c-action: #03d5ff;
+  
+  --c-bg: #14171d;
+  
+  --tx: #f8fafc;
+  --tx2: #cbd5e1;
+  --tx3: #94a3b8;
+  
+  --glass-reflex-dark: 2;
+  --glass-reflex-light: 0.35;
+  
+  --saturation: 160%;
+
+  --liquid-glass-fill: rgba(18, 22, 32, 0.52);
+  --liquid-glass-fill-hover: rgba(26, 32, 46, 0.68);
+  --liquid-glass-bubble: rgba(36, 46, 66, 0.82);
+  --liquid-glass-bubble-hover: rgba(48, 60, 84, 0.94);
+  --liquid-glass-rim: color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 40%), transparent);
+  --glass-fill: var(--liquid-glass-fill);
+  --glass-rim: var(--liquid-glass-rim);
+  --glass-light: rgba(255, 255, 255, 0.20);
+  --glass-shadow: rgba(0, 0, 0, 0.50);
+
+  --liquid-filter: blur(14px) url(#switcher) saturate(var(--saturation)) brightness(0.85);
+}
+
+body.dim {
+  --c-light: #99deff;
+  --c-dark: #20001b;
+  --c-glass: hsl(335 250% 74% / 1);
+  
+  --c-content: #f1f5f9;
+  --c-action: #ff48a9;
+  
+  --c-bg: #0f1d2d;
+  
+  --tx: #f1f5f9;
+  --tx2: #cbd5e1;
+  --tx3: #94a3b8;
+  
+  --glass-reflex-dark: 2;
+  --glass-reflex-light: 0.7;
+  
+  --saturation: 200%;
+
+  --liquid-glass-fill: rgba(16, 28, 46, 0.56);
+  --liquid-glass-fill-hover: rgba(22, 38, 62, 0.70);
+  --liquid-glass-bubble: rgba(30, 52, 84, 0.82);
+  --liquid-glass-bubble-hover: rgba(40, 68, 108, 0.94);
+  --liquid-glass-rim: color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 45%), transparent);
+  --glass-fill: var(--liquid-glass-fill);
+  --glass-rim: var(--liquid-glass-rim);
+  --glass-light: rgba(153, 222, 255, 0.28);
+  --glass-shadow: rgba(5, 14, 25, 0.55);
+
+  --liquid-filter: blur(14px) url(#switcher) saturate(var(--saturation)) brightness(0.90);
+}
+
+/* ==========================================================================
+   1. Liquid Glass Panels & Cards (Outer Liquid Glass Capsule)
+   ========================================================================== */
+
+:is(.sc,.face,.tcard,.gram-card,.pcard,.v-card,.exp,.hmap,.wlist,.btable,
+.qz-card,.qz-empty,.qz-text-block,.qz-match-sit,.qz-result-card,.qz-result-stat,.qz-review-item,
+.modal-box,.qs-box,.qs-modal,.modal,[id$="-setup"],
+#browse,#progList,#dueList,#weakList,.search-w,
+.grammar-lessons,.grammar-lesson,.grammar-tense-guide,.grammar-dialogue,.grammar-drill,
+.grammar-rule,.grammar-tip,.grammar-task,.grammar-principal,.grammar-progress,.grammar-compare,.grammar-your-line,.grammar-empty) {
+  background-color: var(--liquid-glass-fill);
+  color: var(--tx);
+  border: none;
+  border-radius: 22px;
+  backdrop-filter: var(--liquid-filter);
+  -webkit-backdrop-filter: blur(14px) saturate(var(--saturation));
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 16%), transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 95%), transparent), 
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 85%), transparent), 
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 60%), transparent), 
+    inset -0.3px -1px 4px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent), 
+    inset -1.5px 2.5px 0px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 16%), transparent), 
+    inset 0px 3px 4px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 16%), transparent), 
+    inset 2px -6.5px 1px -4px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent), 
+    0px 1px 5px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 8%), transparent), 
+    0px 10px 28px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent);
+  transition: 
+    background-color 250ms cubic-bezier(0.5, 0, 0, 1),
+    box-shadow 250ms cubic-bezier(0.5, 0, 0, 1),
+    transform 200ms cubic-bezier(0.5, 0, 0, 1);
+}
+
+#browse, #progList, #dueList, #weakList {
+  overflow: hidden;
+  margin-top: 14px;
+}
+.word-row {
+  border-bottom: 1px solid color-mix(in srgb, var(--c-light) 15%, transparent) !important;
+  transition: background 150ms ease;
+}
+.word-row:hover {
+  background: var(--liquid-glass-fill-hover) !important;
+}
+.search-w {
+  border-radius: 99em !important;
+  padding: 4px 18px !important;
+}
+.search-i {
+  background: transparent !important;
+  color: var(--tx) !important;
+  border: none !important;
+}
+
+[id$="-setup"] {
+  padding: 36px 36px !important;
+  border-radius: 28px !important;
+  margin: 30px auto !important;
+}
+
+.stitle {
+  font-family: Georgia, 'DM Sans', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--tx) !important;
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+}
+body.dark .stitle, body.dim .stitle {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+select.sty, input.sty {
+  background: var(--liquid-glass-fill) !important;
+  border: 1px solid var(--glass-rim) !important;
+  border-radius: 14px !important;
+  color: var(--tx) !important;
+  backdrop-filter: var(--liquid-filter) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  padding: 10px 14px !important;
+}
+
+:is(.qz-card:hover, .tcard:hover, .pcard:hover) {
+  background-color: var(--liquid-glass-fill-hover);
+  transform: translateY(-2px) scale(1.008);
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 22%), transparent),
+    inset 2.2px 3.5px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 100%), transparent), 
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 90%), transparent), 
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 75%), transparent), 
+    inset -0.3px -1px 4px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent), 
+    inset -1.5px 2.5px 0px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 16%), transparent), 
+    inset 0px 3px 4px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 16%), transparent), 
+    0px 4px 12px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 12%), transparent), 
+    0px 14px 34px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 12%), transparent);
+}
+
+/* Playful Tinted Liquid Glass Cards (.sc) - Town.com inspired */
+.sc {
+  --card-tint: #ffe4d4;
+  --card-ink: #b83d1c;
+  --card-icon-bg: #ffcbb3;
+  position: relative;
+  background: color-mix(in srgb, var(--card-tint) 16%, var(--liquid-glass-fill)) !important;
+  border: 1px solid var(--glass-rim) !important;
+  border-radius: 18px !important;
+  backdrop-filter: var(--liquid-filter) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  padding: 22px 20px !important;
+  min-height: 154px;
+  cursor: pointer;
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease,
+              background-color 0.3s ease,
+              border-color 0.3s ease !important;
+  overflow: hidden;
+}
+
+.sc:nth-child(2) { --card-tint: #e0e9ff; --card-ink: #204db8; --card-icon-bg: #c7d8ff; }
+.sc:nth-child(3) { --card-tint: #fff2be; --card-ink: #8a6008; --card-icon-bg: #ffe48a; }
+.sc:nth-child(4) { --card-tint: #f3e5ff; --card-ink: #7b38ad; --card-icon-bg: #e2c2ff; }
+.sc:nth-child(5) { --card-tint: #daf2df; --card-ink: #1f7039; --card-icon-bg: #b9e8c4; }
+.sc:nth-child(6) { --card-tint: #ffe5ec; --card-ink: #c22956; --card-icon-bg: #ffc2d4; }
+.sc:nth-child(7) { --card-tint: #e0f4ff; --card-ink: #0b6899; --card-icon-bg: #bde7ff; }
+.sc:nth-child(8) { --card-tint: #fef0db; --card-ink: #995c07; --card-icon-bg: #fedeb2; }
+.sc:nth-child(9) { --card-tint: #e3faea; --card-ink: #1b7a42; --card-icon-bg: #bcf3cd; }
+
+body.dark .sc {
+  background: color-mix(in srgb, var(--card-tint) 12%, var(--liquid-glass-fill)) !important;
+}
+
+.sc:hover {
+  background: color-mix(in srgb, var(--card-tint) 26%, var(--liquid-glass-fill-hover)) !important;
+  transform: translateY(-5px) scale(1.02) !important;
+  border-color: color-mix(in srgb, var(--card-ink) 50%, var(--glass-rim)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
+    inset 2.2px 3.5px 0px -2px rgba(255, 255, 255, 0.8),
+    0 16px 36px rgba(0, 0, 0, 0.14),
+    0 4px 12px color-mix(in srgb, var(--card-ink) 18%, transparent) !important;
+}
+
+.sc .sc-ic {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--card-icon-bg) 60%, #ffffffb0) !important;
+  color: var(--card-ink) !important;
+  font-size: 22px;
+  margin-bottom: 16px;
+  box-shadow: inset 1px 1.5px 0.5px rgba(255, 255, 255, 0.9), 0 3px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+body.dark .sc .sc-ic {
+  background: color-mix(in srgb, var(--card-ink) 35%, #1e2638) !important;
+  color: var(--card-icon-bg) !important;
+}
+
+.sc:hover .sc-ic {
+  transform: scale(1.15) rotate(6deg) !important;
+}
+
+.sc::after {
+  content: '↗';
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--card-ink);
+  opacity: 0.5;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.sc:hover::after {
+  transform: translate(2px, -2px);
+  opacity: 1;
+}
+
+/* Editorial Typography Refinements for Razor-Sharp Readability */
+.sc-ti {
+  color: var(--tx) !important;
+  font-family: Georgia, 'DM Sans', serif;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+}
+body.dark .sc-ti, body.dim .sc-ti {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+.sc-de {
+  color: var(--tx2) !important;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+body.dark .sc-de, body.dim .sc-de {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.welcome-hero h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  letter-spacing: -2.5px;
+  color: var(--tx);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+body.dark .welcome-hero h1, body.dim .welcome-hero h1 {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.hero-copy {
+  color: var(--tx2);
+  font-size: 15px;
+  line-height: 1.75;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+body.dark .hero-copy, body.dim .hero-copy {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
+}
+
+.eyebrow {
+  color: var(--c-action) !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+}
+
+/* Flashcards Letterpress Contrast */
+.face {
+  background: var(--liquid-glass-fill) !important;
+  color: var(--tx) !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: var(--liquid-filter) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(var(--saturation)) !important;
+}
+.face .wrd {
+  color: var(--tx) !important;
+  font-family: Georgia, 'DM Sans', serif;
+  font-size: clamp(38px, 4.5vw, 64px) !important;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+body.dark .face .wrd, body.dim .face .wrd {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
+}
+
+.face .meaning {
+  color: var(--c-action) !important;
+  font-size: 22px !important;
+  font-weight: 600;
+  margin-top: 8px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+body.dark .face .meaning, body.dim .face .meaning {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.face .ex {
+  color: var(--tx2) !important;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+body.dark .face .ex, body.dim .face .ex {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+
+.grammar-lesson, .grammar-tense-guide { padding: 24px; }
+.grammar-rule { border-left: 4px solid var(--c-action, var(--accent)); }
+.grammar-task, .grammar-principal { background-color: color-mix(in srgb, var(--c-action) 12%, var(--liquid-glass-fill)); }
+.grammar-progress, .grammar-your-line { background-color: color-mix(in srgb, var(--c-action) 16%, var(--liquid-glass-fill)); }
+
+/* ==========================================================================
+   2. Liquid Glass Interactive Controls (The Liquid Bubble / Capsule Pill)
+   ========================================================================== */
+
+:is(.btn, .icon-btn, .chip, .spill, .background-credit, .grammar-audio, 
+    .grammar-tense-tabs button, .qz-topic-chip, .qz-lvl-chip, .qz-sec-chip,
+    .sidebar .sidebar-practice, .sidebar-collapse) {
+  border: none;
+  border-radius: 99em;
+  background-color: var(--liquid-glass-fill);
+  backdrop-filter: blur(8px) url(#switcher) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(8px) saturate(var(--saturation));
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 10%), transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 90%), transparent), 
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 80%), transparent), 
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 60%), transparent), 
+    inset -0.3px -1px 4px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 12%), transparent), 
+    inset -1.5px 2.5px 0px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent), 
+    inset 0px 3px 4px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent), 
+    inset 2px -6.5px 1px -4px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent), 
+    0px 1px 5px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent), 
+    0px 6px 16px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 8%), transparent);
+  transition: 
+    background-color 200ms cubic-bezier(0.5, 0, 0, 1),
+    box-shadow 200ms cubic-bezier(0.5, 0, 0, 1),
+    scale 200ms cubic-bezier(0.5, 0, 0, 1);
+}
+
+:is(.btn, .icon-btn, .chip, .background-credit, .grammar-audio):hover {
+  background-color: var(--liquid-glass-fill-hover);
+  scale: 1.05;
+  cursor: pointer;
+}
+
+/* Selected / Active State (The Solid Fluid Glass Pill) */
+:is(.btn.bp, .sidebar .nb.active, .chip.active, .qz-topic-chip.active, 
+    .grammar-tense-tabs button.active) {
+  background-color: var(--liquid-glass-bubble) !important;
+  color: var(--c-content) !important;
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 10%), transparent),
+    inset 2px 1px 0px -1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 90%), transparent), 
+    inset -1.5px -1px 0px -1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 80%), transparent), 
+    inset -2px -6px 1px -5px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 60%), transparent), 
+    inset -1px 2px 3px -1px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent), 
+    inset 0px -4px 1px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent), 
+    0px 3px 6px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 8%), transparent) !important;
+}
+
+:is(.btn.bp, .sidebar .nb.active):hover {
+  background-color: var(--liquid-glass-bubble-hover) !important;
+}
+
+/* ==========================================================================
+   3. Topbar and Sidebar Liquid Glass Panels
+   ========================================================================== */
+
+.topbar, body.photo-background .topbar {
+  background-color: color-mix(in srgb, var(--c-glass) 10%, transparent) !important;
+  border-bottom: none !important;
+  backdrop-filter: blur(8px) url(#switcher) saturate(var(--saturation)) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(var(--saturation)) !important;
+  box-shadow: 
+    inset 0 -1px 0 0 color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 15%), transparent),
+    inset 0px 3px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 80%), transparent),
+    0px 4px 20px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 8%), transparent) !important;
+}
+
+body .sidebar, body.photo-background .sidebar {
+  background-color: color-mix(in srgb, var(--c-glass) 12%, transparent) !important;
+  border: none !important;
+  border-radius: 28px !important;
+  backdrop-filter: blur(8px) url(#switcher) saturate(var(--saturation)) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(var(--saturation)) !important;
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 10%), transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 90%), transparent), 
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 80%), transparent), 
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 60%), transparent), 
+    inset -0.3px -1px 4px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 12%), transparent), 
+    inset -1.5px 2.5px 0px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent), 
+    inset 0px 3px 4px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent), 
+    inset 2px -6.5px 1px -4px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent), 
+    0px 1px 5px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent), 
+    0px 6px 16px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 8%), transparent) !important;
+}
+
+.sidebar .nb {
+  border-radius: 16px;
+  transition: all 160ms cubic-bezier(0.5, 0, 0, 1);
+}
+
+.sidebar .nb:hover {
+  background-color: var(--liquid-glass-fill-hover) !important;
+  scale: 1.02;
+}
+
+/* Card faces retain 3D flip */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  body { --liquid-glass-fill: var(--surf); }
+}
+
+@media(prefers-reduced-transparency:reduce) {
+  body { --liquid-glass-fill: var(--surf); }
+}
+
+/* ==========================================================================
+   Multi-Screen Playful Hybrid Glass Controls (Cards, Quiz, Progress, Browse, Tenses)
+   ========================================================================== */
+
+/* 1. Flashcard Level Badge: Vintage Serrated German Postage Stamp */
+.clvl {
+  position: absolute !important;
+  top: 16px !important;
+  right: 18px !important;
+  font-family: monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+  padding: 5px 12px !important;
+  border-radius: 6px !important;
+  border: 1.5px dashed var(--accent, #ff5f3c) !important;
+  background: color-mix(in srgb, #fffdf8 90%, var(--accent)) !important;
+  color: var(--accent, #ff5f3c) !important;
+  transform: rotate(-4deg);
+  box-shadow: 0 3px 8px rgba(255, 95, 60, 0.18) !important;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  z-index: 5;
+}
+
+body.dark .clvl {
+  background: #2b241f !important;
+  border-color: #ff9675 !important;
+  color: #ff9675 !important;
+}
+
+.clvl:hover {
+  transform: rotate(0deg) scale(1.12) !important;
+}
+
+/* 2. Flashcard Category Badge: Chunky Pastel Squircle Sticker */
+.ctag {
+  position: absolute !important;
+  top: 16px !important;
+  left: 18px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 5px 14px !important;
+  border-radius: 999px !important;
+  background: #ffe5d9 !important;
+  color: #91341e !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 2px 6px rgba(145, 52, 30, 0.15) !important;
+  transform: rotate(2deg);
+  transition: transform 0.25s ease !important;
+  z-index: 5;
+}
+
+body.dark .ctag {
+  background: #4a281e !important;
+  color: #ffb49c !important;
+}
+
+.ctag:hover {
+  transform: rotate(0deg) scale(1.08) !important;
+}
+
+/* 3. Flashcard Article Badge (der / die / das) */
+.art {
+  display: inline-block !important;
+  font-family: var(--font, 'Plus Jakarta Sans'), sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  padding: 4px 16px !important;
+  border-radius: 12px !important;
+  margin-bottom: 8px !important;
+  box-shadow: inset 1px 1.5px 1px #fff, 0 3px 8px rgba(0, 0, 0, 0.08) !important;
+  background: #ffe2e8 !important;
+  color: #ba1a4f !important;
+  border: 1.5px solid #ff8aa5 !important;
+}
+
+/* 4. Browse Word Rows: Tactile Glass Cards with Postal Stamp Badges */
+.wrow {
+  border-radius: 16px !important;
+  margin-bottom: 10px !important;
+  background: color-mix(in srgb, var(--c-light, #fff) 45%, var(--liquid-glass-fill)) !important;
+  border: 1px solid var(--glass-rim) !important;
+  backdrop-filter: var(--liquid-filter) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease !important;
+}
+
+body.dark .wrow {
+  background: color-mix(in srgb, #1a2230 65%, var(--liquid-glass-fill)) !important;
+}
+
+.wrow:hover {
+  transform: translateY(-2px) scale(1.008) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1) !important;
+}
+
+.wrow .bdg, .wlvl {
+  font-family: monospace !important;
+  border: 1.5px dashed var(--accent) !important;
+  border-radius: 6px !important;
+  padding: 3px 8px !important;
+  background: var(--al) !important;
+  color: var(--accent) !important;
+  font-weight: 800 !important;
+  transform: rotate(-3deg);
+  display: inline-block;
+}
+
+/* 5. Prüfungstrainer / Quiz Cards: Pastel Tinted Liquid Glass */
+.qz-card {
+  --card-tint: #ffe4d4;
+  --card-ink: #b83d1c;
+  position: relative;
+  background: color-mix(in srgb, var(--card-tint) 16%, var(--liquid-glass-fill)) !important;
+  border: 1px solid var(--glass-rim) !important;
+  border-radius: 18px !important;
+  backdrop-filter: var(--liquid-filter) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  padding: 22px 20px !important;
+  cursor: pointer;
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease !important;
+}
+
+.qz-card:nth-child(2) { --card-tint: #e0e9ff; --card-ink: #204db8; }
+.qz-card:nth-child(3) { --card-tint: #fff2be; --card-ink: #8a6008; }
+.qz-card:nth-child(4) { --card-tint: #daf2df; --card-ink: #1f7039; }
+
+body.dark .qz-card {
+  background: color-mix(in srgb, var(--card-tint) 12%, var(--liquid-glass-fill)) !important;
+}
+
+.qz-card:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14) !important;
+}
+
+.qz-opt {
+  border-radius: 14px !important;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease !important;
+}
+
+.qz-opt:hover {
+  transform: scale(1.02) !important;
+}
+
+/* 6. My Progress Stat Cards (.pcard) */
+.pcard {
+  --card-tint: #e0e9ff;
+  --card-ink: #204db8;
+  background: color-mix(in srgb, var(--card-tint) 16%, var(--liquid-glass-fill)) !important;
+  border: 1px solid var(--glass-rim) !important;
+  border-radius: 18px !important;
+  backdrop-filter: var(--liquid-filter) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  padding: 22px 20px !important;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease !important;
+}
+
+.pcard:nth-child(2) { --card-tint: #daf2df; --card-ink: #1f7039; }
+.pcard:nth-child(3) { --card-tint: #ffe5ec; --card-ink: #c22956; }
+.pcard:nth-child(4) { --card-tint: #fff2be; --card-ink: #8a6008; }
+.pcard:nth-child(5) { --card-tint: #f3e5ff; --card-ink: #7b38ad; }
+
+body.dark .pcard {
+  background: color-mix(in srgb, var(--card-tint) 12%, var(--liquid-glass-fill)) !important;
+}
+
+.pcard:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* 7. Verb Chips & Tense Cards (.v-btn, .tcard) */
+.v-btn {
+  border-radius: 12px !important;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease !important;
+}
+
+.v-btn:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+}
+
+.tcard {
+  border-radius: var(--radius-card) !important;
+  background: color-mix(in srgb, #fffdf8 20%, var(--liquid-glass-fill)) !important;
+  backdrop-filter: var(--liquid-filter) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--glass-rim) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ==========================================================================
+   Universal Uniform Radius Enforcement
+   ========================================================================== */
+
+/* 1. Major Panels & Scenes (20px) */
+:is(.scene, .face, .modal-box, .qs-box, .photo-panorama, .sidebar, .fc-wrap, .sentence-card, .done) {
+  border-radius: var(--radius-panel) !important;
+}
+
+/* 2. Content Cards & Postcards (18px) */
+:is(.sc, .qz-card, .pcard, .tcard, .postcard, .mini-polaroid, .exp, .tracker-glass-card, .dialog-box) {
+  border-radius: var(--radius-card) !important;
+}
+
+/* Inner photos of cards & polaroids */
+:is(.postcard img, .mini-polaroid img, .panorama-image) {
+  border-radius: calc(var(--radius-card) - 6px) !important;
+}
+
+/* 3. Controls, Buttons, Inputs & Squircles (12px) */
+:is(.btn, .nb, .icon-btn, select.sty, input.sty, .search-i, .qs-input, .typ-input, .v-btn, .qz-opt, .wrow, .sc-ic, .sidebar-avatar, .sidebar-collapse, .exp-badge, .glass-switcher) {
+  border-radius: var(--radius-control) !important;
+}
+
+/* 4. Pills, Chips, Category Tags & Stickers (999px) */
+:is(.chip, .ctag, .pretzel-sticker, .art, .spill, .due-badge, .chint, .qz-topic-chip, .qz-lvl-chip, .qz-sec-chip, .goal-bar, .goal-fill, .prog-bar, .prog-fill, .glass-switcher label) {
+  border-radius: var(--radius-pill) !important;
+}
+
+/* 5. Postal Stamps, Level Badges & Micro-tags (8px) */
+:is(.clvl, .playful-stamp, .level-badge-stamp, .bdg, .wlvl, .postcard-num, .stamp-inner) {
+  border-radius: var(--radius-stamp) !important;
+}
+
+/* 6. Perfect Circles (50%) */
+:is(.post-seal, .progress-ring, .dot, .stat-circle, .mini-pin, .postcard-pin) {
+  border-radius: var(--radius-circle) !important;
+}
+
+/* 7. Quiz & Typing Feedback Banner Styles */
+.typ-fb {
+  padding: 14px 20px !important;
+  border-radius: var(--radius-control, 12px) !important;
+  backdrop-filter: var(--liquid-filter) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--glass-rim) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  margin: 14px auto !important;
+  font-family: var(--font, 'Plus Jakarta Sans'), sans-serif !important;
+  line-height: 1.4 !important;
+}
+
+.typ-fb.correct {
+  background: color-mix(in srgb, var(--green, #1aa556) 18%, var(--liquid-glass-fill)) !important;
+  border-color: var(--green, #1aa556) !important;
+  color: var(--green, #1aa556) !important;
+}
+
+.typ-fb.typo {
+  background: color-mix(in srgb, var(--amber, #f0a323) 22%, var(--liquid-glass-fill)) !important;
+  border-color: var(--amber, #f0a323) !important;
+  color: #946000 !important;
+}
+
+body.dark .typ-fb.typo {
+  color: #ffc744 !important;
+}
+
+.typ-fb.wrong {
+  background: color-mix(in srgb, var(--red, #e5484d) 18%, var(--liquid-glass-fill)) !important;
+  border-color: var(--red, #e5484d) !important;
+  color: var(--red, #e5484d) !important;
+}
+
+/* ==========================================================================
+   8. German Curriculum Mastery: Verb Rektion & Gender Mnemonics
+   ========================================================================== */
+
+/* Subtle Case Pill Badge (Front of Card & Browse List) */
+.badge-rektion {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 3px 10px !important;
+  border-radius: var(--radius-pill, 999px) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.4px !important;
+  background: rgba(99, 102, 241, 0.12) !important;
+  color: #4338ca !important;
+  border: 1px solid rgba(99, 102, 241, 0.28) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.08) !important;
+  vertical-align: middle !important;
+  transition: all 0.15s ease !important;
+}
+
+body.dark .badge-rektion {
+  background: rgba(129, 140, 248, 0.18) !important;
+  color: #c7d2fe !important;
+  border-color: rgba(129, 140, 248, 0.35) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Back of Card Rektion Banner */
+.case-badge-banner {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 14px !important;
+  margin-top: 8px !important;
+  border-radius: var(--radius-control, 12px) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  background: rgba(99, 102, 241, 0.10) !important;
+  color: #3730a3 !important;
+  border: 1px solid rgba(99, 102, 241, 0.22) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+body.dark .case-badge-banner {
+  background: rgba(129, 140, 248, 0.14) !important;
+  color: #e0e7ff !important;
+  border-color: rgba(129, 140, 248, 0.28) !important;
+}
+
+/* Noun Gender & Plural Mnemonic Note (Back of Card) */
+.gender-rule-note {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 14px !important;
+  margin-top: 8px !important;
+  border-radius: var(--radius-control, 12px) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #92400e !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+body.dark .gender-rule-note {
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #fde68a !important;
+  border-color: rgba(245, 158, 11, 0.32) !important;
+}
+
+/* Front of Card Inline Mnemonic Hint */
+.mnemonic-inline {
+  display: inline-block !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #b45309 !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  padding: 2px 8px !important;
+  border-radius: var(--radius-pill, 999px) !important;
+  vertical-align: middle !important;
+}
+
+body.dark .mnemonic-inline {
+  color: #fcd34d !important;
+  background: rgba(245, 158, 11, 0.18) !important;
+  border-color: rgba(245, 158, 11, 0.30) !important;
+}
+
+

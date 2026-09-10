@@ -42,12 +42,13 @@
     const embeddedQuiz = (typeof QUIZ_BANK !== 'undefined') ? QUIZ_BANK : undefined;
     window.QUIZ_BANK = loaded.quiz || embeddedQuiz || window.QUIZ_BANK;
 
+    // Tier 1: Prepare core A1/A2 vocabulary and verbs immediately (<15ms)
     const baseVocab = loaded.vocab || window.VOCAB_DB || [];
     const extraVocab = Array.isArray(window.VOCAB_EXTRA_DB) ? window.VOCAB_EXTRA_DB : [];
     const vocabPrep = prepareVocab(baseVocab, extraVocab);
     ST.vocab = vocabPrep.vocab;
-    ST.tenses = loaded.tenses || window.VERB_DB || [];
-    rebuildIndexes();
+    ST.tenses = window.GrammarCore.prepare(loaded.tenses || window.VERB_DB || []);
+    rebuildIndexes(true); // Fast startup index: skip heavy sorting
     populateVocabTypeOptions();
     
     // Check if progress items actually exist in DB (prevent ghost data)
@@ -66,20 +67,39 @@
     }
 
     if (vocabPrep.removedDuplicates || vocabPrep.repairedIds) {
-      console.info(`Vocab cleanup: removed ${vocabPrep.removedDuplicates} duplicates, repaired ${vocabPrep.repairedIds} duplicate IDs.`);
+      console.log(`Vocab cleanup: removed ${vocabPrep.removedDuplicates} duplicates, repaired ${vocabPrep.repairedIds} duplicate IDs.`);
     }
 
     document.title = repairMojibake(document.title);
-    repairDocumentText(document.body);
 
-    // Initial UI render
+    // Initial instant UI render - App is interactive right now!
     renderHome();
     initKeyboard();
     initSettingsUI();
+
+    // Give existing clickable study tiles native keyboard behavior.
+    document.querySelectorAll('.sc[onclick], .logo[role="button"]').forEach(el => {
+      el.setAttribute('role', 'button');
+      el.tabIndex = 0;
+      el.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          event.stopPropagation();
+          el.click();
+        }
+      });
+    });
     
     // Auto-nav to starting screen (url fragment or home)
     const hash = window.location.hash.substring(1);
     nav(hash || 'home');
+
+    // Defer text repair and background hydration to idle time so main thread stays 100% fluid
+    const scheduleIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 100));
+    scheduleIdle(() => {
+      repairDocumentText(document.body);
+      hydrateExtendedVocab();
+    });
 
     // Visitor Counter (powered by counterapi.dev)
     try {
@@ -89,9 +109,100 @@
            const el = document.getElementById('visitorCount');
            if (el && data.count) el.innerText = data.count.toLocaleString();
         })
-        .catch(e => console.warn('Counter failed:', e));
+        .catch(e => console.log('Counter failed:', e));
     } catch(e) {}
   });
+
+  // ── BACKGROUND HYDRATION (Tier 2 Extended 40,000 Vocab) ─────────────────────
+  let _extendedVocabLoaded = false;
+  async function hydrateExtendedVocab() {
+    if (_extendedVocabLoaded) return;
+    _extendedVocabLoaded = true;
+
+    // Dynamically load vocab_extra.js in background if not already in memory
+    if (!Array.isArray(window.VOCAB_EXTRA_DB)) {
+      try {
+        await new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'data/vocab_extra.js?v=1.0.4';
+          s.async = true;
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      } catch (err) {
+        console.warn('Could not load extended vocabulary in background:', err);
+        return;
+      }
+    }
+
+    const extra = window.VOCAB_EXTRA_DB;
+    if (!Array.isArray(extra) || extra.length === 0) return;
+
+    // Process extra in non-blocking slices so the browser never drops frames
+    const CHUNK_SIZE = 4000;
+    let offset = 0;
+    const existingKeys = new Set((ST.vocab || []).map(v => buildVocabKey(v)));
+    const existingIds = new Set((ST.vocab || []).map(v => String(v.id)));
+    let nextId = Math.max(...(ST.vocab || []).map(v => Number(v.id) || 0), 0) + 1;
+
+    function processNextChunk() {
+      const chunk = extra.slice(offset, offset + CHUNK_SIZE);
+      if (chunk.length === 0) {
+        // Complete! Update indexes and UI smoothly
+        rebuildIndexes(true);
+        populateVocabTypeOptions();
+        
+        const counterEl = document.getElementById('homeCount');
+        if (counterEl) {
+          animateCount(counterEl, ST.vocab.length, 600);
+        }
+        if (ST.screen === 'browse') {
+          window.renderBrowse?.();
+        }
+        return;
+      }
+
+      for (let i = 0; i < chunk.length; i++) {
+        const raw = chunk[i];
+        const entry = normalizeVocabEntry(cloneVocabEntry(raw));
+        if (!entry || !entry.deLower) continue;
+
+        const key = buildVocabKey(entry);
+        if (existingKeys.has(key)) continue;
+
+        let idKey = String(entry.id);
+        if (existingIds.has(idKey)) {
+          entry.id = nextId++;
+          idKey = String(entry.id);
+        }
+        existingIds.add(idKey);
+        existingKeys.add(key);
+        ST.vocab.push(entry);
+      }
+
+      offset += CHUNK_SIZE;
+      const schedule = window.requestIdleCallback || ((cb) => setTimeout(cb, 16));
+      schedule(processNextChunk);
+    }
+
+    const schedule = window.requestIdleCallback || ((cb) => setTimeout(cb, 30));
+    schedule(processNextChunk);
+  }
+
+  function animateCount(el, target, duration = 600) {
+    const start = parseInt(el.innerText.replace(/,/g, ''), 10) || 0;
+    const startTime = performance.now();
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(start + (target - start) * ease);
+      el.innerText = current.toLocaleString();
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
 
   // ── DATASETS (Vocab/Tenses/Quiz) via IndexedDB ─────────────────────────────
   const DS_DB_NAME = 'deutschedeck';
@@ -449,6 +560,99 @@
     populateSelectWithTypes(document.getElementById('bcat'), 'All Types');
   }
 
+  // ── GERMAN UMLAUT & FUZZY SEARCH NORMALIZERS ──────────────────────────────
+  function normalizeGerman(str) {
+    if (!str || typeof str !== 'string') return '';
+    return str
+      .toLowerCase()
+      .trim()
+      .replace(/ä/g, 'ae')
+      .replace(/ö/g, 'oe')
+      .replace(/ü/g, 'ue')
+      .replace(/ß/g, 'ss')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()?"'„“”]/g, '')
+      .replace(/\s+/g, ' ');
+  }
+
+  function getSimpleVowels(str) {
+    if (!str) return '';
+    return str.replace(/ae/g, 'a').replace(/oe/g, 'o').replace(/ue/g, 'u');
+  }
+
+  function germanFuzzyMatch(v, qNorm, qSimple) {
+    if (!v) return false;
+    const deNorm = v.deNorm || normalizeGerman(v.de);
+    if (deNorm.includes(qNorm)) return true;
+    const deSimple = v.deSimple || getSimpleVowels(deNorm);
+    if (deSimple.includes(qSimple)) return true;
+    return false;
+  }
+
+  // ── LEVENSHTEIN DISTANCE & TYPO TOLERANCE ──────────────────────────────────
+  function levenshtein(a, b) {
+    if (a === b) return 0;
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    const matrix = [];
+    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+    for (let i = 1; i <= b.length; i++) {
+      for (let j = 1; j <= a.length; j++) {
+        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          );
+        }
+      }
+    }
+    return matrix[b.length][a.length];
+  }
+
+  function evaluateTyping(rawInput, targets) {
+    if (!rawInput || !rawInput.trim()) return { status: 'wrong', diff: Infinity, reveal: targets[0] || '' };
+    const cleanIn = rawInput.trim();
+    const normIn = normalizeGerman(cleanIn);
+    const inNoArt = normIn.replace(/^(der |die |das )/, '');
+    const inSimple = getSimpleVowels(inNoArt);
+
+    let bestStatus = 'wrong';
+    let minDiff = Infinity;
+    let bestTarget = targets[0] || '';
+
+    for (const t of targets) {
+      if (!t) continue;
+      const cleanT = t.trim();
+      const normT = normalizeGerman(cleanT);
+      const tNoArt = normT.replace(/^(der |die |das )/, '');
+      const tSimple = getSimpleVowels(tNoArt);
+
+      // 1. Exact match (raw, normalized, or without leading article)
+      if (cleanIn.toLowerCase() === cleanT.toLowerCase() || normIn === normT || inNoArt === tNoArt || inSimple === tSimple) {
+        return { status: 'exact', diff: 0, reveal: cleanT };
+      }
+
+      // 2. Levenshtein typo distance
+      const dist = levenshtein(inNoArt, tNoArt);
+      if (dist < minDiff) {
+        minDiff = dist;
+        bestTarget = cleanT;
+      }
+
+      // Allow 1 typo for words >= 4 chars, 2 typos for words >= 8 chars
+      const maxTypo = tNoArt.length >= 8 ? 2 : (tNoArt.length >= 4 ? 1 : 0);
+      if (dist <= maxTypo && dist > 0) {
+        bestStatus = 'typo';
+      }
+    }
+
+    return { status: bestStatus, diff: minDiff, reveal: bestTarget };
+  }
+
   function normalizeVocabEntry(v) {
     if (!v || typeof v !== 'object') return v;
     const out = v; // mutate in-place to keep references stable
@@ -504,12 +708,20 @@
 
     out.deLower = typeof out.de === 'string' ? out.de.toLowerCase() : '';
     out.enLower = typeof out.en === 'string' ? out.en.toLowerCase() : '';
+    out.deNorm = normalizeGerman(out.de);
+    out.deSimple = getSimpleVowels(out.deNorm);
 
     return out;
   }
 
-  function rebuildIndexes() {
-    ST.vocabSorted = [...(ST.vocab || [])].sort((a, b) => (a.de || '').localeCompare(b.de || ''));
+  function rebuildIndexes(skipSort = true) {
+    if (!skipSort) {
+      const collator = new Intl.Collator('de', { sensitivity: 'base' });
+      ST.vocabSorted = [...(ST.vocab || [])].sort((a, b) => collator.compare(a.de || '', b.de || ''));
+      ST.vocabSortedVersion = (ST.vocab || []).length;
+    } else {
+      ST.vocabSorted = null; // Lazily computed on demand to prevent startup blocking
+    }
     ST.vocabById = new Map((ST.vocab || []).map(v => [String(v.id), v]));
     ST.vocabByDeLower = new Map(
       (ST.vocab || [])
@@ -525,12 +737,22 @@
     ST.tensesDeSet = new Set(ST.tensesByDe.keys());
   }
 
+  function getVocabSorted() {
+    if (!ST.vocabSorted || ST.vocabSortedVersion !== (ST.vocab || []).length) {
+      const collator = new Intl.Collator('de', { sensitivity: 'base' });
+      ST.vocabSorted = [...(ST.vocab || [])].sort((a, b) => collator.compare(a.de || '', b.de || ''));
+      ST.vocabSortedVersion = (ST.vocab || []).length;
+    }
+    return ST.vocabSorted;
+  }
+
   // ── NAVIGATION ─────────────────────────────────────────────────────────────
   // Hook registry so modules (quiz-engine, etc.) can register callbacks
   // without dangerously wrapping window.nav.
   window._navHooks = window._navHooks || [];
 
   window.nav = function (id) {
+    window.SentenceBoard?.stop();
     if (!id) id = 'home';
     ST.screen = id;
     window.location.hash = id;
@@ -561,6 +783,7 @@
     try {
         if (id === 'browse') renderBrowse();
         else if (id === 'tenses') renderTenses();
+        else if (id === 'board') window.SentenceBoard.render(ST.vocab);
         else if (id === 'progress') renderProgress();
         else if (id === 'home') renderHome();
         else if (id === 'cards') {
@@ -590,7 +813,7 @@
     repairDocumentText(target || document.body);
     window.scrollTo(0, 0);
     // Close mobile sidebar on navigation
-    document.body.classList.remove('menu-open');
+    closeMobile();
   };
 
   window.goBack = function() {
@@ -640,6 +863,9 @@
     const homeCount = document.getElementById('homeCount');
     if (homeCount) homeCount.innerText = ST.vocab.length;
 
+    const goalFill = document.getElementById('goalFill');
+    if (goalFill) goalFill.style.width = `${Math.min(100, ST.stats.todayCount / Math.max(1, ST.stats.dailyGoal) * 100)}%`;
+
     // Goal & Streak
     if(document.getElementById('goalText')) {
         document.getElementById('goalText').innerText = `${ST.stats.todayCount} / ${ST.stats.dailyGoal} words today`;
@@ -665,7 +891,8 @@
     document.addEventListener('keydown', (e) => {
       // Don't block Enter while typing in a quiz mode
       const isQuizInput = (ST.screen === 'cards' && (ST.session.mode === 'typing' || ST.session.mode === 'listening' || ST.session.mode === 'conj'));
-      if ((e.target.tagName === 'INPUT' || e.target.tagName === 'SEARCH') && (!isQuizInput || e.key !== 'Enter')) return;
+      const inField = e.target && (e.target.nodeName === 'INPUT' || e.target.nodeName === 'SEARCH' || e.target.nodeName === 'TEXTAREA');
+      if (inField && (!isQuizInput || e.key !== 'Enter')) return;
 
       if (ST.screen === 'cards' && ST.session.mode === 'flash') {
         if (e.key === ' ' || e.key === 'Enter') {
@@ -700,6 +927,156 @@
           openQuickSearch();
       }
     });
+  }
+
+  // ── GERMAN CURRICULUM MASTERY: REKTION, MNEMONICS & EXAM SPRINTS ──────────
+  const VERB_REKTION = {
+    'warten': 'auf + Akk',
+    'freuen': 'über + Akk / auf + Akk',
+    'sich freuen': 'über + Akk / auf + Akk',
+    'helfen': '+ Dat',
+    'denken': 'an + Akk',
+    'glauben': 'an + Akk',
+    'erinnern': 'an + Akk',
+    'sich erinnern': 'an + Akk',
+    'interessieren': 'für + Akk',
+    'sich interessieren': 'für + Akk',
+    'bitten': 'um + Akk',
+    'danken': '+ Dat (für + Akk)',
+    'gehören': 'zu + Dat / + Dat',
+    'passen': 'zu + Dat / + Dat',
+    'gratulieren': '+ Dat (zu + Dat)',
+    'einladen': 'zu + Dat',
+    'teilnehmen': 'an + Dat',
+    'arbeiten': 'an + Dat / bei + Dat',
+    'fragen': 'nach + Dat',
+    'suchen': 'nach + Dat',
+    'träumen': 'von + Dat',
+    'erzählen': 'von + Dat / über + Akk',
+    'sprechen': 'mit + Dat / über + Akk',
+    'reden': 'mit + Dat / über + Akk',
+    'diskutieren': 'mit + Dat / über + Akk',
+    'streiten': 'mit + Dat / über + Akk',
+    'anfangen': 'mit + Dat',
+    'beginnen': 'mit + Dat',
+    'aufhören': 'mit + Dat',
+    'abhängen': 'von + Dat',
+    'achten': 'auf + Akk',
+    'hoffen': 'auf + Akk',
+    'verlieben': 'in + Akk',
+    'sich verlieben': 'in + Akk',
+    'beschäftigen': 'mit + Dat',
+    'sich beschäftigen': 'mit + Dat',
+    'beschweren': 'über + Akk (bei + Dat)',
+    'sich beschweren': 'über + Akk (bei + Dat)',
+    'schmecken': '+ Dat',
+    'gefallen': '+ Dat',
+    'antworten': '+ Dat (auf + Akk)',
+    'fehlen': '+ Dat',
+    'folgen': '+ Dat',
+    'zuhören': '+ Dat',
+    'zuschauen': '+ Dat',
+    'vertrauen': '+ Dat',
+    'gehorchen': '+ Dat',
+    'wehtun': '+ Dat',
+    'schaden': '+ Dat',
+    'begegnen': '+ Dat',
+    'gelingen': '+ Dat',
+    'schreiben': 'an + Akk (mit + Dat)',
+    'verabreden': 'mit + Dat',
+    'sich verabreden': 'mit + Dat',
+    'abstimmen': 'über + Akk',
+    'ankommen': 'auf + Akk',
+    'aufpassen': 'auf + Akk',
+    'sich ärgern': 'über + Akk',
+    'ärgern': 'über + Akk',
+    'sich bewerben': 'um + Akk (bei + Dat)',
+    'bewerben': 'um + Akk',
+    'sich kümmern': 'um + Akk',
+    'kümmern': 'um + Akk',
+    'sich sorgen': 'um + Akk',
+    'sorgen': 'für + Akk',
+    'verzichten': 'auf + Akk',
+    'vorbereiten': 'auf + Akk',
+    'sich vorbereiten': 'auf + Akk',
+    'warnen': 'vor + Dat',
+    'zweifeln': 'an + Dat'
+  };
+
+  function getVerbRektion(de) {
+    if (!de || typeof de !== 'string') return null;
+    const clean = de.trim().toLowerCase().replace(/^to\s+/i, '').replace(/^(sich|jemandem)\s+/i, '').replace(/\s*\(.*?\)/g, '').trim();
+    if (VERB_REKTION[clean]) return VERB_REKTION[clean];
+    const full = de.trim().toLowerCase();
+    if (VERB_REKTION[full]) return VERB_REKTION[full];
+    for (const [v, r] of Object.entries(VERB_REKTION)) {
+      if (clean === v || clean.endsWith(' ' + v) || clean.startsWith(v + ' ')) return r;
+    }
+    return null;
+  }
+
+  function getGenderAndPluralMnemonic(item) {
+    if (!item || item.type !== 'noun') return null;
+    const de = (item.de || '').trim().replace(/^(der|die|das)\s+/i, '');
+    const art = (item.article || '').trim().toLowerCase();
+    const deLower = de.toLowerCase();
+
+    // Feminine rules
+    if (deLower.endsWith('ung')) return { rule: 'Endung "-ung" ist immer feminin (die)', pluralRule: 'Plural bildet immer mit "-en"' };
+    if (deLower.endsWith('heit')) return { rule: 'Endung "-heit" ist immer feminin (die)', pluralRule: 'Plural bildet immer mit "-en"' };
+    if (deLower.endsWith('keit')) return { rule: 'Endung "-keit" ist immer feminin (die)', pluralRule: 'Plural bildet immer mit "-en"' };
+    if (deLower.endsWith('schaft')) return { rule: 'Endung "-schaft" ist immer feminin (die)', pluralRule: 'Plural bildet immer mit "-en"' };
+    if (deLower.endsWith('tät')) return { rule: 'Endung "-tät" ist immer feminin (die)', pluralRule: 'Plural bildet immer mit "-en"' };
+    if (deLower.endsWith('ion')) return { rule: 'Endung "-ion" ist immer feminin (die)', pluralRule: 'Plural bildet immer mit "-en"' };
+    if (deLower.endsWith('ei')) return { rule: 'Endung "-ei" ist meistens feminin (die)', pluralRule: 'Plural bildet mit "-en"' };
+    if (deLower.endsWith('ur')) return { rule: 'Endung "-ur" ist meistens feminin (die)', pluralRule: 'Plural bildet mit "-en"' };
+    if (deLower.endsWith('ik')) return { rule: 'Endung "-ik" ist fast immer feminin (die)', pluralRule: 'Plural bildet mit "-en"' };
+    if (deLower.endsWith('anz') || deLower.endsWith('enz')) return { rule: 'Endung "-anz/-enz" ist feminin (die)', pluralRule: 'Plural bildet mit "-en"' };
+    if (deLower.endsWith('in') && art === 'die') return { rule: 'Weibliche Personen auf "-in" sind feminin (die)', pluralRule: 'Plural bildet immer mit "-innen"' };
+
+    // Masculine rules
+    if (deLower.endsWith('ling')) return { rule: 'Endung "-ling" ist immer maskulin (der)', pluralRule: 'Plural bildet mit "-e"' };
+    if (deLower.endsWith('ismus')) return { rule: 'Endung "-ismus" ist immer maskulin (der)', pluralRule: 'Meist ohne Plural' };
+    if (deLower.endsWith('or')) return { rule: 'Endung "-or" ist maskulin (der)', pluralRule: 'Plural bildet mit "-en"' };
+    if (deLower.endsWith('ist')) return { rule: 'Endung "-ist" ist maskulin (der)', pluralRule: 'Plural bildet mit "-en"' };
+
+    // Neuter rules
+    if (deLower.endsWith('chen')) return { rule: 'Diminutiv "-chen" ist immer sächlich (das)', pluralRule: 'Plural bleibt unverändert' };
+    if (deLower.endsWith('lein')) return { rule: 'Diminutiv "-lein" ist immer sächlich (das)', pluralRule: 'Plural bleibt unverändert' };
+    if (deLower.endsWith('ment')) return { rule: 'Endung "-ment" ist sächlich (das)', pluralRule: 'Plural bildet mit "-e"' };
+    if (deLower.endsWith('um')) return { rule: 'Endung "-um" ist sächlich (das)', pluralRule: 'Plural bildet mit "-en"' };
+    if (deLower.endsWith('tum')) return { rule: 'Endung "-tum" ist meistens sächlich (das)', pluralRule: 'Plural bildet mit "-er"' };
+    if (deLower.endsWith('ma') && art === 'das') return { rule: 'Griechische Fremdwörter auf "-ma" sind sächlich (das)', pluralRule: 'Plural bildet mit "-en / -ta"' };
+
+    // General plural formation heuristics
+    if (deLower.endsWith('e') && art === 'die') {
+      return { rule: 'Zweisilbige Nomen auf "-e" sind meist feminin (die)', pluralRule: 'Plural bildet fast immer mit "-n"' };
+    }
+    if ((deLower.endsWith('el') || deLower.endsWith('en') || deLower.endsWith('er')) && (art === 'der' || art === 'das')) {
+      return { rule: 'Maskulin/Neutral auf "-el/-en/-er"', pluralRule: 'Pluralform hat keine Endung (oft mit Umlaut)' };
+    }
+    if (['a','o','i','u','y'].some(v => deLower.endsWith(v)) && !deLower.endsWith('ie')) {
+      return { rule: 'Fremdwörter & Kurzwörter auf Vokal', pluralRule: 'Plural bildet meistens mit "-s"' };
+    }
+
+    return null;
+  }
+
+  // Official Exam Sprint Predicates
+  const GOETHE_A1_TOPICS = new Set(['greeting', 'social', 'identity', 'people', 'family', 'food', 'drink', 'numbers', 'time', 'travel', 'home', 'body', 'work', 'shopping', 'city']);
+  function isGoetheA1(v) {
+    if (!v || v.level !== 'A1') return false;
+    if (typeof v.id === 'number' && v.id < 900) return true;
+    if (Array.isArray(v.tags) && v.tags.some(t => GOETHE_A1_TOPICS.has(t))) return true;
+    return false;
+  }
+
+  const TELC_A2_TOPICS = new Set(['work', 'office', 'health', 'housing', 'transport', 'communication', 'appointment', 'environment', 'travel', 'daily', 'social', 'profession', 'shopping']);
+  function isTelcA2(v) {
+    if (!v || v.level !== 'A2') return false;
+    if (typeof v.id === 'number' && v.id < 1800) return true;
+    if (Array.isArray(v.tags) && v.tags.some(t => TELC_A2_TOPICS.has(t))) return true;
+    return false;
   }
 
   // ── SESSIONS ────────────────────────────────────────────────────────────────
@@ -756,7 +1133,9 @@
     
     // 1. Level Filter
     if (lvl !== 'all') {
-      if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(lvl)) list = list.filter(v => v.level === lvl);
+      if (lvl === 'goethe-a1') list = list.filter(isGoetheA1);
+      else if (lvl === 'telc-a2') list = list.filter(isTelcA2);
+      else if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(lvl)) list = list.filter(v => v.level === lvl);
       else if (lvl === 'weak') {
           const weakIds = new Set(Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id));
           list = list.filter(v => weakIds.has(v.id.toString()));
@@ -764,6 +1143,8 @@
       else if (lvl === 'due') {
           const dueIds = new Set(Object.entries(ST.progress).filter(([id, p]) => isDue(p)).map(([id,p])=>id));
           list = list.filter(v => dueIds.has(v.id.toString()));
+      } else {
+          list = list.filter(v => Array.isArray(v.tags) && v.tags.includes(lvl));
       }
     }
 
@@ -812,7 +1193,9 @@
     
     // 1. Level / Category Filter
     if (type !== 'all' && type !== 'vocab') {
-      if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(type)) list = list.filter(v => v.level === type);
+      if (type === 'goethe-a1') list = list.filter(isGoetheA1);
+      else if (type === 'telc-a2') list = list.filter(isTelcA2);
+      else if (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(type)) list = list.filter(v => v.level === type);
       else if (type === 'weak') {
           const weakIds = new Set(Object.entries(ST.progress).filter(([id, p]) => p.rate < 2).map(([id,p])=>id));
           list = list.filter(v => weakIds.has(v.id.toString()));
@@ -820,6 +1203,8 @@
       else if (type === 'due') {
           const dueIds = new Set(Object.entries(ST.progress).filter(([id, p]) => isDue(p)).map(([id,p])=>id));
           list = list.filter(v => dueIds.has(v.id.toString()));
+      } else {
+          list = list.filter(v => Array.isArray(v.tags) && v.tags.includes(type));
       }
     }
 
@@ -907,7 +1292,14 @@
       document.getElementById('ftag').innerText = item.type || '';
       document.getElementById('fart').innerText = (!ST.reverseMode && item.article) ? item.article : '';
       document.getElementById('fart').style.color = getArtColor(item.article);
-      document.getElementById('fsub').innerText = (!ST.reverseMode && item.type === 'noun' && item.plural) ? `die ${item.plural}` : '';
+      
+      // Gender mnemonic for nouns
+      const nounMnem = (item.type === 'noun') ? getGenderAndPluralMnemonic(item) : null;
+      let subHtml = (!ST.reverseMode && item.type === 'noun' && item.plural) ? `die ${item.plural}` : '';
+      if (!ST.reverseMode && nounMnem && nounMnem.rule) {
+        subHtml += (subHtml ? ' ' : '') + `<span class="mnemonic-inline" title="${nounMnem.rule}">💡 ${nounMnem.rule}</span>`;
+      }
+      document.getElementById('fsub').innerHTML = subHtml;
       
       document.getElementById('btrans').innerText = backText || '';
       if (ST.reverseMode && item.article) {
@@ -920,12 +1312,24 @@
       document.getElementById('btag').innerText = item.type || '';
       document.getElementById('bex').innerText = item.examples && item.examples[0] ? item.examples[0].de : '';
       document.getElementById('bexen').innerText = item.examples && item.examples[0] ? item.examples[0].en : '';
-      document.getElementById('bpl').innerText = item.tip || '';
+      
+      // Back rule notes & rektion banner
+      let backHtml = item.tip ? `<div style="margin-bottom:6px;">${item.tip}</div>` : '';
+      if (item.type === 'noun' && nounMnem) {
+        backHtml += `<div class="gender-rule-note"><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">lightbulb</span> <strong>Merkregel:</strong> ${nounMnem.rule}${nounMnem.pluralRule ? ` · ${nounMnem.pluralRule}` : ''}</div>`;
+      }
+      const verbRektion = (item.type === 'verb') ? getVerbRektion(item.de) : null;
+      if (item.type === 'verb' && verbRektion) {
+        backHtml += `<div class="case-badge-banner"><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">link</span> <strong>Rektion:</strong> ${verbRektion}</div>`;
+      }
+      document.getElementById('bpl').innerHTML = backHtml;
 
-      // PHASE 2: IRREGULAR BADGE
+      // Badges: Irregular & Verb Rektion (Preposition + Case)
       const irrContainer = document.getElementById('flvl').parentElement;
       const oldBadge = irrContainer.querySelector('.badge-irr');
       if(oldBadge) oldBadge.remove();
+      const oldRekt = irrContainer.querySelector('.badge-rektion');
+      if(oldRekt) oldRekt.remove();
 
       if(item.type === 'verb') {
           const verbData = ST.tensesByDe.get(item.de);
@@ -940,6 +1344,13 @@
                   showVerb(verbData.id);
               };
               irrContainer.appendChild(badge);
+          }
+          if (verbRektion) {
+              const rektBadge = document.createElement('div');
+              rektBadge.className = 'badge-rektion';
+              rektBadge.innerHTML = `<span class="material-symbols-sharp" style="font-size:12px">link</span> ${verbRektion}`;
+              rektBadge.title = `Rektion der Verben: ${verbRektion}`;
+              irrContainer.appendChild(rektBadge);
           }
       }
     }
@@ -981,11 +1392,11 @@
         const verbData = ST.tensesByDe.get(item.de) || ST.tenses[0];
         if (!verbData) { finishSession(); return; }
         
-        const validTenses = (window.TENSE_META || []).filter(meta => Array.isArray(verbData[meta.key]));
+        const validTenses = (window.TENSE_META || []).filter(meta => window.GrammarCore.forms(verbData, meta.key).length === 6);
         if (validTenses.length === 0) { finishSession(); return; }
         
         const randomMeta = validTenses[Math.floor(Math.random() * validTenses.length)];
-        const forms = verbData[randomMeta.key];
+        const forms = window.GrammarCore.forms(verbData, randomMeta.key);
         const randomIdx = Math.floor(Math.random() * forms.length);
         
         ST.session.currentConj = forms[randomIdx];
@@ -1161,36 +1572,37 @@
   // ── MODE-SPECIFIC HANDLERS ──────────────────────────────────────────────────
   window.checkTyping = function() {
     const item = ST.session.queue[ST.session.idx];
-    const input = document.getElementById('typInput').value.trim().toLowerCase();
+    const input = document.getElementById('typInput').value;
     
-    let isCorrect = false;
+    let targets = [];
     let revealText = '';
 
     if (ST.reverseMode) {
-        // We showed German (item.de), we expect English (item.en)
-        // en field can contain multiple translations like "also;too"
-        const targets = item.en.toLowerCase().split(/[;]/).map(s => s.trim());
-        isCorrect = targets.some(t => input === t);
+        targets = (item.en || '').split(/[;/]/).map(s => s.trim()).filter(Boolean);
         revealText = item.en;
     } else {
-        // We showed English (item.en), we expect German (item.de)
-        const target = item.de.toLowerCase().replace(/^(der |die |das )/, '');
-        const fullTarget = item.de.toLowerCase();
-        isCorrect = (input === target || input === fullTarget);
-        revealText = item.de;
+        const target = (item.de || '').replace(/^((der|die|das)\s+)+/i, '');
+        targets = [item.de, target];
+        revealText = `${item.article ? item.article + ' ' : ''}${item.de}`;
     }
 
-    processAnswer(isCorrect ? 'c' : 'w');
-    showFeedback(isCorrect, revealText, 'typFeedback', 'typCheck', 'typNext');
+    const evaluation = evaluateTyping(input, targets);
+    const isPassing = (evaluation.status === 'exact' || evaluation.status === 'typo');
+    processAnswer(isPassing ? 'c' : 'w');
+    showFeedback(evaluation.status, revealText, 'typFeedback', 'typCheck', 'typNext');
   };
   window.nextTyping = function() { ST.session.idx++; renderCard(); };
 
   window.checkListening = function() {
     const item = ST.session.queue[ST.session.idx];
-    const input = document.getElementById('listenInput').value.trim().toLowerCase();
-    const isCorrect = (input === item.de.toLowerCase());
-    processAnswer(isCorrect ? 'c' : 'w');
-    showFeedback(isCorrect, item.de, 'listenFb', 'listenCheck', 'listenNext');
+    const input = document.getElementById('listenInput').value;
+    const target = (item.de || '').replace(/^((der|die|das)\s+)+/i, '');
+    const targets = [item.de, target];
+
+    const evaluation = evaluateTyping(input, targets);
+    const isPassing = (evaluation.status === 'exact' || evaluation.status === 'typo');
+    processAnswer(isPassing ? 'c' : 'w');
+    showFeedback(evaluation.status, `${item.article ? item.article + ' ' : ''}${item.de}`, 'listenFb', 'listenCheck', 'listenNext');
   };
   window.nextListening = function() { ST.session.idx++; renderCard(); };
 
@@ -1201,7 +1613,7 @@
     ST.session.currentAnswered = true;
     const isCorrect = (art === item.article);
     processAnswer(isCorrect ? 'c' : 'w');
-    showFeedback(isCorrect, `${item.article} ${item.de}`, 'artFb', '', 'artNext');
+    showFeedback(isCorrect ? 'exact' : 'wrong', `${item.article} ${item.de}`, 'artFb', '', 'artNext');
     document.querySelectorAll('#articleWrap .art-btn').forEach(b => b.disabled = true);
   };
   window.nextArticle = function() {
@@ -1212,20 +1624,40 @@
   };
 
   window.checkConj = function() {
-      const input = document.getElementById('conjInput').value.trim().toLowerCase();
-      const isCorrect = (input === ST.session.currentConj.toLowerCase());
-      processAnswer(isCorrect ? 'c' : 'w');
-      showFeedback(isCorrect, ST.session.currentConj, 'conjFb', 'conjCheck', 'conjNext');
+      const input = document.getElementById('conjInput').value;
+      const targets = [ST.session.currentConj];
+      const evaluation = evaluateTyping(input, targets);
+      const isPassing = (evaluation.status === 'exact' || evaluation.status === 'typo');
+      processAnswer(isPassing ? 'c' : 'w');
+      showFeedback(evaluation.status, ST.session.currentConj, 'conjFb', 'conjCheck', 'conjNext');
   };
   window.nextConj = function() { ST.session.idx++; renderCard(); };
 
-  function showFeedback(isCorrect, reveal, fbId, btnId, nextId) {
+  function showFeedback(status, reveal, fbId, btnId, nextId) {
     const fb = document.getElementById(fbId);
+    if (!fb) return;
     fb.style.display = 'block';
-    fb.className = 'typ-fb ' + (isCorrect ? 'correct' : 'wrong');
-    fb.innerHTML = isCorrect ? '<span class="material-symbols-sharp">check_circle</span> Richtig!' : `Falsch. <br><span style="font-size:20px;font-weight:700">${reveal}</span>`;
-    if(btnId) document.getElementById(btnId).style.display = 'none';
-    document.getElementById(nextId).style.display = 'block';
+
+    if (status === 'exact') {
+      fb.className = 'typ-fb correct';
+      fb.innerHTML = '<span class="material-symbols-sharp" style="vertical-align:middle;font-size:22px;">check_circle</span> <strong>Richtig!</strong>';
+    } else if (status === 'typo') {
+      fb.className = 'typ-fb typo';
+      fb.innerHTML = `<span class="material-symbols-sharp" style="vertical-align:middle;font-size:22px;">edit_note</span> <strong>Fast richtig!</strong> <small style="opacity:0.85">(Kleiner Tippfehler)</small><br><span style="font-size:18px;font-weight:700">${reveal}</span>`;
+    } else {
+      fb.className = 'typ-fb wrong';
+      fb.innerHTML = `<span class="material-symbols-sharp" style="vertical-align:middle;font-size:22px;">cancel</span> Falsch.<br><span style="font-size:20px;font-weight:700">${reveal}</span>`;
+    }
+
+    if(btnId) {
+      const b = document.getElementById(btnId);
+      if (b) b.style.display = 'none';
+    }
+    const n = document.getElementById(nextId);
+    if (n) {
+      n.style.display = 'block';
+      n.focus();
+    }
   }
 
   // ── BROWSE ─────────────────────────────────────────────────────────────────
@@ -1258,6 +1690,8 @@
     const lvl = lvlEl.value;
     const cat = catEl.value;
     const query = queryEl.value.trim().toLowerCase();
+    const qNorm = normalizeGerman(query);
+    const qSimple = getSimpleVowels(qNorm);
 
     const key = `${lvl}::${cat}::${query}`;
     if (key !== ST.browseState.lastKey) {
@@ -1265,11 +1699,15 @@
       ST.browseState.page = 1;
     }
     
-    const source = ST.vocabSorted || ST.vocab;
+    const source = getVocabSorted();
     let filtered = source.filter(v => {
-      if (lvl !== 'all' && v.level !== lvl) return false;
+      if (lvl === 'goethe-a1') {
+        if (!isGoetheA1(v)) return false;
+      } else if (lvl === 'telc-a2') {
+        if (!isTelcA2(v)) return false;
+      } else if (lvl !== 'all' && v.level !== lvl) return false;
       if (cat !== 'all' && v.type !== cat) return false;
-      if (query && !v.deLower.includes(query) && !v.enLower.includes(query)) return false;
+      if (query && !germanFuzzyMatch(v, qNorm, qSimple) && !v.enLower.includes(query)) return false;
       return true;
     });
 
@@ -1282,10 +1720,17 @@
     const start = (page - 1) * pageSize;
     const slice = filtered.slice(start, start + pageSize);
 
-    container.innerHTML = slice.map(v => `
+    container.innerHTML = slice.map(v => {
+      const verbRekt = (v.type === 'verb') ? getVerbRektion(v.de) : null;
+      const nounMnem = (v.type === 'noun') ? getGenderAndPluralMnemonic(v) : null;
+      return `
         <div class="word-row" onclick='toggleBrowseDetails(${JSON.stringify(String(v.id))}, this)'>
           <div class="w-info">
-            <div class="de">${v.article ? `<span class="art-b" style="color:${getArtColor(v.article)}">${v.article}</span> ` : ''}${v.de}</div>
+            <div class="de">
+              ${v.article ? `<span class="art-b" style="color:${getArtColor(v.article)}">${v.article}</span> ` : ''}${v.de}
+              ${verbRekt ? `<span class="badge-rektion" style="margin-left:6px;font-size:10px;padding:2px 6px;"><span class="material-symbols-sharp" style="font-size:11px">link</span> ${verbRekt}</span>` : ''}
+              ${nounMnem ? `<span class="mnemonic-inline" style="margin-left:6px;font-size:10px;" title="${nounMnem.rule}">💡 ${nounMnem.rule}</span>` : ''}
+            </div>
             <div class="en">${v.en}</div>
           </div>
           <div class="w-meta">
@@ -1293,7 +1738,8 @@
             <span class="stars">${'★'.repeat(ST.progress[v.id]?.rate || 0)}${'☆'.repeat(5 - (ST.progress[v.id]?.rate || 0))}</span>
           </div>
         </div>
-    `).join('') || '<div style="text-align:center;padding:40px;color:var(--tx3)">No words found matching the filters.</div>';
+      `;
+    }).join('') || '<div style="text-align:center;padding:40px;color:var(--tx3)">No words found matching the filters.</div>';
 
     if (pagesEl) {
       if (total <= pageSize) {
@@ -1312,6 +1758,7 @@
 
   // ── TENSES ────────────────────────────────────────────────────────────────
   window.renderTenses = function() {
+    if (window.GrammarUI) { window.GrammarUI.render(ST.tenses); return; }
     const grid = document.getElementById('vgrid');
     if(!grid) return;
     const sortedTenses = [...ST.tenses].sort((a,b) => (a.de || a.id || "").localeCompare(b.de || b.id || ""));
@@ -1320,6 +1767,7 @@
   };
 
   window.showVerb = function(id) {
+    if (window.GrammarUI) { window.GrammarUI.showVerb(id, ST.tenses); return; }
     const targetId = String(id);
     const v = ST.tensesById.get(targetId);
     if (!v) return;
@@ -1529,6 +1977,21 @@
   function buildDetailsHTML(item) {
     if(!item) return '';
     let html = '';
+    
+    // Curriculum Badges (Rektion & Gender Mnemonic)
+    const verbRekt = (item.type === 'verb') ? getVerbRektion(item.de) : null;
+    const nounMnem = (item.type === 'noun') ? getGenderAndPluralMnemonic(item) : null;
+    if (verbRekt || nounMnem) {
+      html += `<div style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px;">`;
+      if (verbRekt) {
+        html += `<span class="badge-rektion" style="font-size:12px;padding:4px 10px;"><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">link</span> Rektion: <strong>${verbRekt}</strong></span>`;
+      }
+      if (nounMnem) {
+        html += `<div class="gender-rule-note" style="margin:0;font-size:12px;padding:4px 10px;"><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">lightbulb</span> <strong>Merkregel:</strong> ${nounMnem.rule}${nounMnem.pluralRule ? ` · ${nounMnem.pluralRule}` : ''}</div>`;
+      }
+      html += `</div>`;
+    }
+
     if(item.meta) {
         html += `<div style="font-size:13px;color:var(--tx2);margin-bottom:16px;display:flex;flex-wrap:wrap;gap:16px;">`;
         if(item.meta.gender) html += `<span><span class="material-symbols-sharp" style="font-size:14px;vertical-align:middle;">male</span> ${item.meta.gender}</span>`;
@@ -1590,8 +2053,15 @@
   };
 
   // ── UI TOGGLES & SETTINGS ──────────────────────────────────────────────────
-  window.toggleMobile = () => document.body.classList.toggle('menu-open');
-  window.closeMobile = () => document.body.classList.remove('menu-open');
+  window.toggleMobile = () => {
+    const open = document.body.classList.toggle('menu-open');
+    document.querySelector('.hamburger')?.setAttribute('aria-expanded', String(open));
+  };
+  window.closeMobile = () => {
+    document.body.classList.remove('menu-open');
+    document.querySelector('.hamburger')?.setAttribute('aria-expanded', 'false');
+  };
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobile(); });
   window.toggleDark = () => {
       document.body.classList.toggle('dark');
       localStorage.setItem('ld_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
@@ -1755,13 +2225,17 @@
   };
 
   window.handleQuickSearchInput = function() {
-      const q = document.getElementById('qsInput').value.toLowerCase().trim();
+      const q = document.getElementById('qsInput').value.trim();
       const results = document.getElementById('qsResults');
       if (!q) { results.innerHTML = ''; return; }
 
-      const matches = (ST.vocabSorted || ST.vocab).filter(v =>
-          v.deLower.includes(q) ||
-          v.enLower.includes(q)
+      const qLower = q.toLowerCase();
+      const qNorm = normalizeGerman(q);
+      const qSimple = getSimpleVowels(qNorm);
+
+      const matches = getVocabSorted().filter(v =>
+          germanFuzzyMatch(v, qNorm, qSimple) ||
+          v.enLower.includes(qLower)
       ).slice(0, 10);
 
       if (matches.length === 0) {

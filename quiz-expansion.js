@@ -840,7 +840,7 @@
     ]
   });
 
-  console.info('Quiz expansion loaded:', {
+  console.log('Quiz expansion loaded:', {
     lesen: QUIZ_BANK.lesen.length,
     schreiben: QUIZ_BANK.schreiben.length,
     strukturen: QUIZ_BANK.strukturen.length,
